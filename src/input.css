@@ -121,17 +121,43 @@ body {
 .content header {
   grid-area: 1 / 1 / 2 / 3;
   display: grid;
-  grid-template-columns: 3rem 10rem;
-  gap: 0.3rem;
-  justify-items: start;
-  align-items: center;
+  grid-template-columns: 3rem 25rem 1fr 3rem;
+  justify-items: stretch;
+  align-items: stretch;
   background: linear-gradient(to right, rgb(255, 238, 0), rgb(255, 162, 0));
   padding: 0 2rem;
 }
 
-.content header h1 {
+.content header > * {
+  height: 100%;
+}
+
+.content .heading {
+  grid-area: 1 / 2 / 2 / 3;
+  display: grid;
+  grid-template-columns: 3rem 1fr;
+  justify-items: start;
+  align-items: center;
+  padding-left: 3.85rem;
+}
+
+.heading .logo {
+  justify-self: start;
+}
+
+.heading h1 {
   justify-self: start;
   font-size: 2rem;
+}
+
+.header .view-options {
+  grid-area: 1 / 4 / 2 / 5;
+}
+
+.header .aside-icon {
+  grid-area: 1 / 1 / 2 / 2;
+  justify-items: center;
+  align-items: center;
 }
 
 .content aside {
@@ -227,7 +253,7 @@ body {
   background-color: whitesmoke;
   display: grid;
   grid-template-rows: 5rem auto 1fr 4em;
-  padding: 1rem 2rem;
+  padding: 1rem 10rem;
   gap: 2rem;
 }
 
@@ -250,23 +276,59 @@ main .header span {
 
 main .task-menu {
   display: grid;
-  align-content: center;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  align-content: end;
+  grid-template-columns: auto 35rem 3rem;
+  justify-content: space-between;
   gap: 0.75rem;
+  border-bottom: 1px solid black;
+}
+
+.buttons-task-submenu {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+}
+
+.buttons-task-submenu > * {
+  background-color: rgb(255, 249, 165);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  font-size: 1.2rem;
 }
 
 .task-menu > * {
-  background-color: rgb(255, 249, 165);
   border-radius: 0.5rem;
   padding: 0.5rem;
 }
 
 .task-menu .task-number {
   display: grid;
-  justify-items: center;
+  justify-items: start;
+  background: none;
+  padding-left: 1rem;
 }
 
 .task-menu span {
   align-self: center;
-  justify-self: center;
+  justify-self: start;
+}
+
+.task-list {
+  display: grid;
+  grid-auto-rows: 4rem;
+  gap: 1rem;
+}
+
+.task {
+  display: grid;
+  background-color: white;
+  grid-template-columns: 2rem 1fr 10rem 2rem 2rem 2rem;
+  justify-items: stretch;
+  align-items: center;
+  border-radius: 0.5rem;
+  padding: 0.5rem 2rem;
+  gap: 2rem;
+}
+
+.task * {
+  font-size: 1.2rem;
 }
