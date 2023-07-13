@@ -1,4 +1,4 @@
-class Task {
+export class Task {
     constructor(projectName, title, dueDate, status, priority, description, notes) {
         let taskProjectName = projectName;
         this.projectName = () => taskProjectName;
@@ -9,5 +9,11 @@ class Task {
         this.priority = priority;
         this.description = description;
         this.notes = notes;
+
+        let id = 1;
+        this.getNewTaskId = () => id;
+        this.incrementNewTaskId = () => {
+            id++;
+        };
     }
 }

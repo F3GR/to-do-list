@@ -1,18 +1,20 @@
-import Task from './task.js';
-import { checkIfUnique } from './utils.js';
+import { Task } from './task.js';
 
-const taskController = (function() {
-    !!!TODO!!!
-    this.createNew = (project, projectName, newTitle, newDueDate, newStatus, newPriority, newDescription, newNotes) => {
-        if (checkIfUnique(project, 'title', newTitle)) {
+export const taskController = (function() {
+    this.createNew = (project, newTitle, newDueDate, newStatus, newPriority, newDescription, newNotes) => {
+        if (checkIfTaskUnique(project.taskList, newTitle)) {
+            const projectName = project.projectName;
+            const newTaskId = Task.getNewTaskId;
             const newTask = new Task(projectName, newTitle, newDueDate, newStatus, newPriority, newDescription, newNotes);
-            project.set(project.size - 1, newTask);
+            project.taskList.set(newTaskId, newTask);
+            Task.incrementNewTaskId;
         } else {
             console.log('The new task is not unique in the project, change the title of the task and try to submit again!')
         }
     }
+
     this.editTitle = (task, editedTitle) => {
-        if (checkIfUnique(project, 'title', editedTitle)) {
+        if (checkIfTaskUnique(project.taskList, editedTitle)) {
             task.title = editedTitle;
         } else {
             console.log('The edited task is not unique in the project, change the title of the task and try to submit again!')
@@ -34,10 +36,19 @@ const taskController = (function() {
         task.notes = editedNotes;
     }
 
-    this.remove = (project, id) => {
-        const removedFoundTask = project.delete(id);
+    this.remove = (taskList, id) => {
+        const removedFoundTask = taskList.delete(id);
         if (!removedFoundTask) {
             console.log('The task is not found, please, enter the existing task in the current project')
         }
+    }
+
+    function checkIfTaskUnique(taskList, title) {
+        for (let [id, task] of taskList.entries()) {
+            if (task.title === title) {
+                return false;
+            }
+        }
+        return true;
     }
 });

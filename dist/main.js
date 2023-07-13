@@ -146,7 +146,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
   \**********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _components_utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/utils.js */ \"./src/components/utils.js\");\n/* harmony import */ var _input_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./input.css */ \"./src/input.css\");\n/* harmony import */ var _components_page_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/page.js */ \"./src/components/page.js\");\n\n\n\n\n(function() {\n})();\n\n\n//# sourceURL=webpack://restaurant-page/./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _components_utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/utils.js */ \"./src/components/utils.js\");\n/* harmony import */ var _input_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./input.css */ \"./src/input.css\");\n/* harmony import */ var _components_page_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/page.js */ \"./src/components/page.js\");\nObject(function webpackMissingModule() { var e = new Error(\"Cannot find module './components/app.js'\"); e.code = 'MODULE_NOT_FOUND'; throw e; }());\n\n\n\n\n\n(function() {\n})();\n\n\n//# sourceURL=webpack://restaurant-page/./src/index.js?");
 
 /***/ }),
 
