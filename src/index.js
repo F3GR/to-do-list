@@ -7,5 +7,4 @@ import { Application } from './components/main-app.js';
     application.initialize();
     const toDoList = application.getToDoList();
     application.renderMainPage();
-
 })();

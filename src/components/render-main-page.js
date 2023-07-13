@@ -1,4 +1,5 @@
 import { checkIfCurrent, removeCurrentStatus, createElementWithAttributes } from './utils.js';
+import { addEventListeners } from './event-listeners.js';
 
 export function renderMainPage() {
     const content = document.querySelector('.content');
@@ -8,7 +9,7 @@ export function renderMainPage() {
     const sideBarIcon = createElementWithAttributes('img', {
         src: '../src/originals/menu.svg',
         alt: `Sidebar menu icon`,
-        class: 'sidebar-icon'
+        class: 'sidebar-icon hidden'
     }, header);
 
     const heading = createElementWithAttributes('div', {class: `heading`}, header);
@@ -209,5 +210,34 @@ export function renderMainPage() {
         class: 'unfold'
     }, exampleTask);
 
+    const pageMenuBox = createElementWithAttributes('div', {class: `page-menu`, }, main);
+
+    const firstPageIcon = createElementWithAttributes('img', {
+        src: `../src/originals/first-page.svg`, 
+        alt: `First page icon`,
+        class: 'first-page'
+    }, pageMenuBox);
+    const previousPageIcon = createElementWithAttributes('img', {
+        src: `../src/originals/previous-page.svg`, 
+        alt: `Previous page icon`,
+        class: 'previous-page'
+    }, pageMenuBox);
+    const inputPage = createElementWithAttributes('input', {
+        type: 'number',
+        min: "1",
+        max: "99", 
+    }, pageMenuBox);
+    const nextPageIcon = createElementWithAttributes('img', {
+        src: `../src/originals/next-page.svg`, 
+        alt: `Next page icon`,
+        class: 'next-page'
+    }, pageMenuBox);
+    const lastPageIcon = createElementWithAttributes('img', {
+        src: `../src/originals/last-page.svg`, 
+        alt: `Last page icon`,
+        class: 'last-page'
+    }, pageMenuBox);
+
+    addEventListeners();
 };
 

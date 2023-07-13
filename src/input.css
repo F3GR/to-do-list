@@ -95,6 +95,16 @@ margin: 0;
 padding: 0;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 
 /* START */
 
@@ -133,8 +143,7 @@ body {
 }
 
 header .sidebar-icon {
-  grid-area: 1 / 1 / 2 / 2;
-  display: none;
+  visibility: hidden;
 }
 
 header .heading {
@@ -147,6 +156,7 @@ header .heading {
 }
 
 header .sidebar-icon:hover {
+  cursor: pointer;
   transform: scale(1.2);
 }
 
@@ -164,6 +174,7 @@ header .options {
 }
 
 header .options:hover {
+  cursor: pointer;
   transform: scale(1.2);
 }
 
@@ -182,6 +193,7 @@ header .aside-icon {
 }
 
 .content aside {
+  height: 100%;
   grid-area: 2 / 1 / 3 / 2;
   background-color: var(--yellow-light);
   display: grid;
@@ -196,6 +208,7 @@ header .aside-icon {
 }
 
 .bar-footer:hover {
+  cursor: pointer;
   transform: scale(1.05);
 }
 
@@ -222,6 +235,7 @@ header .aside-icon {
 }
 
 .bar-types > *:hover {
+  cursor: pointer;
   transform: scale(1.05);
 }
 
@@ -261,10 +275,12 @@ header .aside-icon {
 .projects-menu .add-new:hover,
 .project .edit:hover,
 .project .remove:hover {
+  cursor: pointer;
   transform: scale(1.2);
 }
 
 .project:hover {
+  cursor: pointer;
   transform: scale(1.05);
 }
 
@@ -304,7 +320,7 @@ header .aside-icon {
   grid-area: 2 / 2 / 3 / 3;
   background-color: whitesmoke;
   display: grid;
-  grid-template-rows: 5rem auto 1fr 4em;
+  grid-template-rows: 5rem auto 1fr 3rem;
   padding: 1rem clamp(2rem, 40px, 5rem);
   gap: 2rem;
   position: relative;
@@ -314,7 +330,7 @@ main .view-options-bar {
   position: absolute;
   top: 0;
   right: 0;
-  height: auto;
+  height: 30rem;
   width: 20rem;
   background-color: var(--orange);
   border-radius: 0 0 0 0.5rem;
@@ -324,7 +340,11 @@ main .view-options-bar {
   padding: 1rem 2rem 2rem;
   gap: 1rem;
   z-index: 1;
-  display: none;
+  visibility: hidden;
+}
+
+main .view-options-bar.shown {
+  visibility: visible;
 }
 
 main .view-options-bar > * {
@@ -343,6 +363,7 @@ main .view-options-bar > *:not(span) {
 }
 
 main .view-options-bar > *:not(span):hover {
+  cursor: pointer;
   transform: scale(1.05);
 }
 
@@ -406,17 +427,18 @@ main .task-menu {
   border-radius: 0.5rem;
   padding: 0.5rem 2rem;
   gap: 2rem;
-  
 }
 
 .task .status:hover,
 .task .remove:hover,
 .task .edit:hover,
 .task .unfold:hover {
+  cursor: pointer;
   transform: scale(1.2);
 }
 
 .task-menu .add-new:hover {
+  cursor: pointer;
   transform: scale(1.2);
 }
 
@@ -428,14 +450,46 @@ main .task-menu {
   font-size: 1.2rem;
 }
 
+.page-menu {
+  grid-row-gap: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 3rem);
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.page-menu input {
+  grid-template-columns: repeat(5, 3rem);
+  align-items: center;
+  background-color: white;
+  border: 0.1rem solid black;
+  border-radius: 0.5rem;
+  padding: 0 0.5rem;
+}
+
+.page-menu img:hover {
+  cursor: pointer;
+  transform: scale(1.2);
+}
+
 @media (max-width: 950px) {
   .content {
     grid-template-columns: 1fr;
+    position: relative;
   }
   .content main {
     grid-area: 2 / 1 / 3 / 3;
   }
+  .content aside {
+    visibility: hidden;
+  }
+  .content aside.shown {
+    visibility: visible;
+    position: absolute;
+    z-index: 1;
+  }
   header .sidebar-icon {
-    display: block;
+    visibility: visible;
   }
 }
