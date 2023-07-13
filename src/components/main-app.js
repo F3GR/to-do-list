@@ -1,3 +1,5 @@
+import { renderMainPage } from "./render-main-page";
+
 export class Application {
     constructor() {
         if (Application.instance) {
@@ -21,4 +23,6 @@ export class Application {
         }
         return storedToDoList;
     }
+    
+    renderMainPage = () => renderMainPage();
 }

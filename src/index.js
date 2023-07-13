@@ -6,6 +6,6 @@ import { Application } from './components/main-app.js';
     const application = new Application();
     application.initialize();
     const toDoList = application.getToDoList();
-    
+    application.renderMainPage();
 
 })();
