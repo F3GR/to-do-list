@@ -1,5 +1,5 @@
 import { checkIfCurrent, removeCurrentStatus, createElementWithAttributes } from './utils.js';
-import { addEventListeners } from './event-listeners.js';
+import { addEventListenersMainPage } from './event-listeners.js';
 
 export function renderMainPage() {
     const content = document.querySelector('.content');
@@ -109,7 +109,6 @@ export function renderMainPage() {
         class: 'remove'
     }, exampleProject);
 
-
     const barFooter = createElementWithAttributes('div', {class: `bar-footer`}, sidebar);
 
     const footerLink = createElementWithAttributes('a', {
@@ -120,6 +119,10 @@ export function renderMainPage() {
 
     const main = createElementWithAttributes('main', {}, content);
 
+    const sidebarCover = createElementWithAttributes('div', {
+        class: 'sidebar-cover'
+    }, main);
+
     const viewOptionsBox = createElementWithAttributes('div', {
         class: 'view-options-bar'
     }, main);
@@ -127,19 +130,24 @@ export function renderMainPage() {
     const viewOptionsText = createElementWithAttributes('span', {class: ``}, viewOptionsBox);
     viewOptionsText.textContent = `Filter options:`;
 
-    const buttonHighPriority = createElementWithAttributes('button', {class: `select-high-priority`}, viewOptionsBox);
+    const buttonHighPriority = createElementWithAttributes('button', {
+        class: `high-priority enabled`}, viewOptionsBox);
     buttonHighPriority.textContent = `High`;
 
-    const buttonMediumPriority = createElementWithAttributes('button', {class: `select-medium-priority`}, viewOptionsBox);
+    const buttonMediumPriority = createElementWithAttributes('button', {
+        class: `medium-priority enabled`}, viewOptionsBox);
     buttonMediumPriority.textContent = `Medium`;
 
-    const buttonNormalPriority = createElementWithAttributes('button', {class: `select-normal-priority`}, viewOptionsBox);
+    const buttonNormalPriority = createElementWithAttributes('button', {
+        class: `normal-priority enabled`}, viewOptionsBox);
     buttonNormalPriority.textContent = `Normal`;
 
-    const buttonCompleted = createElementWithAttributes('button', {class: `select-completed`}, viewOptionsBox);
+    const buttonCompleted = createElementWithAttributes('button', {
+        class: `completed enabled`}, viewOptionsBox);
     buttonCompleted.textContent = `Completed`;
 
-    const buttonOverdue = createElementWithAttributes('button', {class: `select-overdue`}, viewOptionsBox);
+    const buttonOverdue = createElementWithAttributes('button', {
+        class: `overdue enabled`}, viewOptionsBox);
     buttonOverdue.textContent = `Overdue`;
 
     const selectSortOption = createElementWithAttributes('select', {name: `sorting-option`}, viewOptionsBox);
@@ -168,9 +176,9 @@ export function renderMainPage() {
     const taskMenuText = createElementWithAttributes('span', {}, mainTaskNumber);
     taskMenuText.textContent = `Tasks (0)`;
 
-    const addNewProjectIcon = createElementWithAttributes('img', { 
+    const addNewTaskIcon = createElementWithAttributes('img', { 
         src: '../src/originals/add-new.svg',
-        alt: `Add new project icon`,
+        alt: `Add new Task icon`,
         class: 'add-new'
     }, mainTaskMenu);
 
@@ -238,6 +246,155 @@ export function renderMainPage() {
         class: 'last-page'
     }, pageMenuBox);
 
-    addEventListeners();
+
+    renderAddNewProjectMenu();
+    addEventListenersMainPage();
 };
 
+
+export function renderAddNewProjectMenu() {
+    const content = document.querySelector('.content');
+
+    const menuCover = createElementWithAttributes('div', {
+        class: 'menu-cover'
+    }, content);
+
+    const projectMenu = createElementWithAttributes('div', {
+        class: 'project-menu'
+    }, content);
+
+    const projectMenuTitleBox = createElementWithAttributes('div', {
+        class: 'title-box'
+    }, projectMenu);
+
+    const projectMenuTitle = createElementWithAttributes('span', {
+        class: 'title'
+    }, projectMenuTitleBox);
+    projectMenuTitle.textContent = '';
+
+    const projectMenuExitIcon = createElementWithAttributes('img', {
+        class: 'exit',
+        src: '../src/originals/close.svg',
+        alt: 'Exit icon'
+    }, projectMenuTitleBox);
+
+    const projectMenuForm = createElementWithAttributes('form', {
+    }, projectMenu);
+    
+    const formNameLabel = createElementWithAttributes('label', {
+        for: 'title'
+    }, projectMenuForm);
+    formNameLabel.textContent = 'Title*:'
+    const formName = createElementWithAttributes('input', {
+        id: 'name',
+        name: 'projectName',
+        required: 'required'
+    }, projectMenuForm);
+
+    const formIconFieldset = createElementWithAttributes('fieldset', {}, projectMenuForm);
+    const formIconLegend = createElementWithAttributes('legend', {}, formIconFieldset);
+    formIconLegend.textContent = 'Icon*:'
+
+    const iconCategoryJobLabel = createElementWithAttributes('label', {}, formIconFieldset);
+    const buttonCategoryJob = createElementWithAttributes('input', {
+        type: 'radio',
+        name: 'iconURL',
+        value: '../src/originals/category-job.svg'
+    }, iconCategoryJobLabel);
+    const iconCategoryJob = createElementWithAttributes('img', {
+        src: '../src/originals/category-job.svg',
+        alt: 'Category Job icon'
+    }, iconCategoryJobLabel);
+
+    const iconCategoryStudyLabel = createElementWithAttributes('label', {}, formIconFieldset);
+    const buttonCategoryStudy = createElementWithAttributes('input', {
+        type: 'radio',
+        name: 'iconURL',
+        value: '../src/originals/category-study.svg'
+    }, iconCategoryStudyLabel);
+    const iconCategoryStudy = createElementWithAttributes('img', {
+        src: '../src/originals/category-study.svg',
+        alt: 'Category Study icon'
+    }, iconCategoryStudyLabel);
+
+    const iconCategoryGiftLabel = createElementWithAttributes('label', {}, formIconFieldset);
+    const buttonCategoryGift = createElementWithAttributes('input', {
+        type: 'radio',
+        name: 'iconURL',
+        value: '../src/originals/category-gift.svg'
+    }, iconCategoryGiftLabel);
+    const iconCategoryGift = createElementWithAttributes('img', {
+        src: '../src/originals/category-gift.svg',
+        alt: 'Category Gift icon'
+    }, iconCategoryGiftLabel);
+
+    const iconCategoryInternationalLabel = createElementWithAttributes('label', {}, formIconFieldset);
+    const buttonCategoryInternational = createElementWithAttributes('input', {
+        type: 'radio',
+        name: 'iconURL',
+        value: '../src/originals/category-international-activity.svg'
+    }, iconCategoryInternationalLabel);
+    const iconCategoryInternational = createElementWithAttributes('img', {
+        src: '../src/originals/category-international-activity.svg',
+        alt: 'Category International activity icon'
+    }, iconCategoryInternationalLabel);
+
+    const iconCategoryPeopleLabel = createElementWithAttributes('label', {}, formIconFieldset);
+    const buttonCategoryPeople = createElementWithAttributes('input', {
+        type: 'radio',
+        name: 'iconURL',
+        value: '../src/originals/category-people.svg'
+    }, iconCategoryPeopleLabel);
+    const iconCategoryPeople = createElementWithAttributes('img', {
+        src: '../src/originals/category-people.svg',
+        alt: 'Category People icon'
+    }, iconCategoryPeopleLabel);
+
+    const iconCategoryScienceLabel = createElementWithAttributes('label', {}, formIconFieldset);
+    const buttonCategoryScience = createElementWithAttributes('input', {
+        type: 'radio',
+        name: 'iconURL',
+        value: '../src/originals/category-science.svg'
+    }, iconCategoryScienceLabel);
+    const iconCategoryScience = createElementWithAttributes('img', {
+        src: '../src/originals/category-science.svg',
+        alt: 'Category Science icon'
+    }, iconCategoryScienceLabel);
+
+    const iconCategoryITLabel = createElementWithAttributes('label', {}, formIconFieldset);
+    const buttonCategoryIT = createElementWithAttributes('input', {
+        type: 'radio',
+        name: 'iconURL',
+        value: '../src/originals/category-it.svg'
+    }, iconCategoryITLabel);
+    const iconCategoryIT = createElementWithAttributes('img', {
+        src: '../src/originals/category-it.svg',
+        alt: 'Category IT icon'
+    }, iconCategoryITLabel);
+
+    const iconCategoryOtherLabel = createElementWithAttributes('label', {}, formIconFieldset);
+    const buttonCategoryOther = createElementWithAttributes('input', {
+        type: 'radio',
+        name: 'iconURL',
+        value: '../src/originals/category-other.svg'
+    }, iconCategoryOtherLabel);
+    const iconCategoryOther = createElementWithAttributes('img', {
+        src: '../src/originals/category-other.svg',
+        alt: 'Category Other icon'
+    }, iconCategoryOtherLabel);
+
+    const buttonsGrid = createElementWithAttributes('div', {
+        class: 'button-box',
+    }, projectMenuForm);
+
+    const buttonAddIcon = createElementWithAttributes('button', {
+        class: 'add',
+    }, buttonsGrid);
+    buttonAddIcon.textContent = 'Add';
+
+    const buttonCancelIcon = createElementWithAttributes('button', {
+        class: 'cancel',
+    }, buttonsGrid);
+    buttonCancelIcon.textContent = 'Cancel';
+
+}
