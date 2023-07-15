@@ -57,7 +57,7 @@ export function renderMainPage() {
     const tasksWeekText = createElementWithAttributes('span', {}, tasksWeek);
     tasksWeekText.textContent = `Week`;
 
-    const tasksCompleted = createElementWithAttributes('div', {class: `tasks-Completed`}, barTypes);
+    const tasksCompleted = createElementWithAttributes('div', {class: `tasks-completed`}, barTypes);
     const tasksCompletedImage = createElementWithAttributes('img', {
         src: '../src/originals/calendar-finished.svg',
         alt: `Completed tasks icon`
@@ -75,7 +75,7 @@ export function renderMainPage() {
 
     const barProjects = createElementWithAttributes('div', {class: `bar-projects`}, sidebar);
 
-    const projectsBar = createElementWithAttributes('div', {class: `projects-bar`}, barProjects);
+    const projectsBar = createElementWithAttributes('div', {class: `projects-menu`}, barProjects);
     const projectsBarImage = createElementWithAttributes('img', {
         src: '../src/originals/projects.svg',
         alt: `Projects icon`
@@ -601,6 +601,17 @@ export function addEventListenersMainPage() {
         selectedAddTaskButton.textContent = '';
         selectedMenuCover.classList.remove('shown');
         selectedTaskMenu.classList.remove('shown');
+    });
+
+    const selectedSidebarDisplayTypes = document.querySelectorAll('aside .bar-types > *');
+    selectedSidebarDisplayTypes.forEach((button) => {
+        button.addEventListener('click', function() {
+            if (!button.classList.contains('current')) {
+                button.classList.add('current');
+            } else {
+                button.classList.remove('current');
+            }
+        });
     });
 }
 

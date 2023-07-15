@@ -38,4 +38,19 @@ export function addListenersToANewProject() {
         selectedMenuCover.classList.add('shown');
         selectedProjectMenu.classList.add('shown');
     });
+
+    const selectedProject = document.querySelector('aside .projects-list .project');
+    selectedProject.addEventListener('click', function() {
+            if (!selectedProject.classList.contains('current')) {
+                selectedProject.classList.add('current');
+            } else {
+                selectedProject.classList.remove('current');
+            }
+    });
+
+    const selectedRemoveProjectButton = document.querySelector('.projects-list li img.remove');
+    selectedRemoveProjectButton.addEventListener('click', function() {
+        const removedProject = selectedRemoveProjectButton.closest('.project');
+        removedProject.remove();
+    });
 }
