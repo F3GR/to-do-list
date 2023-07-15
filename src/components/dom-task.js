@@ -25,13 +25,7 @@ export function renderNewTask() {
     svg.appendChild(path);
     label.appendChild(svg);
     
-    checkbox.addEventListener('change', () => {
-        if (checkbox.checked) {
-          svg.classList.add('checked');
-        } else {
-          svg.classList.remove('checked');
-        }
-    });
+
 
     const taskNameBox = createElementWithAttributes('div', {class: `task-name-box`}, exampleTask);
     const taskName = createElementWithAttributes('span', {class: `task-name-box`}, taskNameBox);
@@ -92,6 +86,18 @@ export function addListenersToANewTask() {
         } else {
             unfoldedTask.classList.remove('unfolded');
             selectedUnfoldButton.setAttribute('src', '../src/originals/fold.svg');
+        }
+    });
+
+    const checkbox = document.querySelector('.task input.status');
+    const svg = document.querySelector('.task label svg');
+    const path = document.querySelector('.task label svg path');
+
+    checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+          svg.classList.add('checked');
+        } else {
+          svg.classList.remove('checked');
         }
     });
 }
