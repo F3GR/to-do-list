@@ -4,31 +4,34 @@ export function renderNewTask() {
     const taskList = document.querySelector('.task-list');
     const exampleTask = createElementWithAttributes('li', {class: `task`, data: `0`}, taskList);
 
-    const radioButtonContainer = createElementWithAttributes('div', {class: `radio-button-box`, data: `0`}, exampleTask);
+    const checkbox = createElementWithAttributes('input', {
+        type: `checkbox`, 
+        id: `task-status`,
+        class: 'status'
+    }, exampleTask);
 
-    const taskStatusIcon  = createElementWithAttributes('input', {
-        id: 'task-status',
-        type: 'checkbox',
-        class: 'status',
-        name: 'status',
-        value: 'on-going',
-    }, radioButtonContainer);
-
-    const labelStatusIcon  = createElementWithAttributes('label', {
-        for: 'task-status',
+    const label = createElementWithAttributes('label', {
+        for: `task-status`, 
         class: 'status-label'
-    }, radioButtonContainer);
+    }, exampleTask);
 
-    const statusIcon  = createElementWithAttributes('svg', {
-        xmlns: 'http://www.w3.org/2000/svg',
-        viewBox: "0 0 20 20"
-    }, labelStatusIcon);
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    svg.setAttribute('viewBox', '0 0 20 20');
 
-    const statusIconPath  = createElementWithAttributes('path', {
-        d: "M2,10 L8,16 L18,5",
-    }, statusIcon);
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', 'M2,10 L8,16 L18,5');
 
-
+    svg.appendChild(path);
+    label.appendChild(svg);
+    
+    checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+          svg.classList.add('checked');
+        } else {
+          svg.classList.remove('checked');
+        }
+    });
 
     const taskNameBox = createElementWithAttributes('div', {class: `task-name-box`}, exampleTask);
     const taskName = createElementWithAttributes('span', {class: `task-name-box`}, taskNameBox);
