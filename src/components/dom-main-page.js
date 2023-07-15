@@ -1,5 +1,4 @@
-import { checkIfCurrent, removeCurrentStatus, createElementWithAttributes } from './utils.js';
-import { addEventListenersMainPage } from './event-listeners.js';
+import { createElementWithAttributes } from './utils.js';
 
 export function renderMainPage() {
     const content = document.querySelector('.content');
@@ -76,38 +75,20 @@ export function renderMainPage() {
 
     const barProjects = createElementWithAttributes('div', {class: `bar-projects`}, sidebar);
 
-    const projectsMenu = createElementWithAttributes('div', {class: `projects-menu`}, barProjects);
-    const projectsMenuImage = createElementWithAttributes('img', {
+    const projectsBar = createElementWithAttributes('div', {class: `projects-bar`}, barProjects);
+    const projectsBarImage = createElementWithAttributes('img', {
         src: '../src/originals/projects.svg',
         alt: `Projects icon`
-    }, projectsMenu);
-    const projectsMenuText = createElementWithAttributes('span', {}, projectsMenu);
-    projectsMenuText.textContent = `Projects (0)`;
-    const projectsMenuAddImage = createElementWithAttributes('img', {
+    }, projectsBar);
+    const projectsBarText = createElementWithAttributes('span', {}, projectsBar);
+    projectsBarText.textContent = `Projects (0)`;
+    const projectsBarAddImage = createElementWithAttributes('img', {
         src: '../src/originals/add-new.svg',
         alt: `Add new project icon`,
         class: 'add-new',
-    }, projectsMenu);
+    }, projectsBar);
 
     const projectsList = createElementWithAttributes('ul', {class: `projects-list`}, barProjects);
-
-    const exampleProject = createElementWithAttributes('li', { class: `project`, data: `0` }, projectsList);
-    const exampleProjectImage = createElementWithAttributes('img', {
-        src: '../src/originals/category-other.svg',
-        alt: `Add new project icon`
-    }, exampleProject);
-    const exampleProjectText = createElementWithAttributes('span', {}, exampleProject);
-    exampleProjectText.textContent = `New project`;
-    const exampleProjectEditImage = createElementWithAttributes('img', {
-        src: '../src/originals/edit.svg',
-        alt: `Edit project icon`,
-        class: 'edit'
-    }, exampleProject);
-    const exampleProjectDeleteImage = createElementWithAttributes('img', {
-        src: '../src/originals/delete.svg',
-        alt: `Remove project icon`,
-        class: 'remove'
-    }, exampleProject);
 
     const barFooter = createElementWithAttributes('div', {class: `bar-footer`}, sidebar);
 
@@ -170,53 +151,19 @@ export function renderMainPage() {
     const mainHeadText = createElementWithAttributes('span', {}, mainHeadBox);
     mainHeadText.textContent = "All";
 
-    const mainTaskMenu = createElementWithAttributes('div', {class: `task-menu`}, main);
+    const mainTaskBar = createElementWithAttributes('div', {class: `task-bar`}, main);
 
-    const mainTaskNumber = createElementWithAttributes('div', {class: `task-number`}, mainTaskMenu);
-    const taskMenuText = createElementWithAttributes('span', {}, mainTaskNumber);
-    taskMenuText.textContent = `Tasks (0)`;
+    const mainTaskNumber = createElementWithAttributes('div', {class: `task-number`}, mainTaskBar);
+    const taskBarText = createElementWithAttributes('span', {}, mainTaskNumber);
+    taskBarText.textContent = `Tasks (0)`;
 
     const addNewTaskIcon = createElementWithAttributes('img', { 
         src: '../src/originals/add-new.svg',
         alt: `Add new Task icon`,
         class: 'add-new'
-    }, mainTaskMenu);
+    }, mainTaskBar);
 
     const taskList = createElementWithAttributes('ul', {class: `task-list`}, main);
-
-    const exampleTask = createElementWithAttributes('li', {class: `task`, data: `0`}, taskList);
-
-    const taskStatusIcon  = createElementWithAttributes('img', {
-        src: `../src/originals/radio-unchecked.svg`, 
-        alt: `Task status icon`,
-        class: 'status'
-    }, exampleTask);
-
-    const taskNameBox = createElementWithAttributes('div', {class: `task-name-box`}, exampleTask);
-    const taskName = createElementWithAttributes('span', {class: `task-name-box`}, taskNameBox);
-    taskName.textContent = `New task`;
-
-    const taskDueDateBox = createElementWithAttributes('div', {class: `task-due-date`, }, exampleTask);
-    const taskDueDateText = createElementWithAttributes('span', {class: ``, }, taskDueDateBox);
-    taskDueDateText.textContent = `2023-01-07`;
-
-    const taskEditIcon = createElementWithAttributes('img', {
-        src: `../src/originals/edit.svg`, 
-        alt: `Task edit information icon`,
-        class: 'edit'
-    }, exampleTask);
-
-    const taskRemoveIcon = createElementWithAttributes('img', {
-        src: `../src/originals/delete.svg`, 
-        alt: `Task remove icon`,
-        class: 'remove'
-    }, exampleTask);
-
-    const taskUnfoldIcon = createElementWithAttributes('img', {
-        src: `../src/originals/unfold.svg`, 
-        alt: `Task information unfold or fold icon`,
-        class: 'unfold'
-    }, exampleTask);
 
     const pageMenuBox = createElementWithAttributes('div', {class: `page-menu`, }, main);
 
@@ -246,13 +193,13 @@ export function renderMainPage() {
         class: 'last-page'
     }, pageMenuBox);
 
-
-    renderAddNewProjectMenu();
+    renderTaskMenu();
+    renderProjectMenu();
+    
     addEventListenersMainPage();
 };
 
-
-export function renderAddNewProjectMenu() {
+export function renderProjectMenu() {
     const content = document.querySelector('.content');
 
     const menuCover = createElementWithAttributes('div', {
@@ -282,10 +229,11 @@ export function renderAddNewProjectMenu() {
     }, projectMenu);
     
     const formNameLabel = createElementWithAttributes('label', {
-        for: 'title'
+        for: 'name'
     }, projectMenuForm);
-    formNameLabel.textContent = 'Title*:'
+    formNameLabel.textContent = 'Name*:'
     const formName = createElementWithAttributes('input', {
+        type: 'text',
         id: 'name',
         name: 'projectName',
         required: 'required'
@@ -387,6 +335,169 @@ export function renderAddNewProjectMenu() {
         class: 'button-box',
     }, projectMenuForm);
 
+    const buttonSaveIcon = createElementWithAttributes('button', {
+        class: 'save',
+    }, buttonsGrid);
+    buttonSaveIcon.textContent = '';
+
+    const buttonCancelIcon = createElementWithAttributes('button', {
+        class: 'cancel',
+    }, buttonsGrid);
+    buttonCancelIcon.textContent = 'Cancel';
+}
+
+export function renderTaskMenu() {
+    const content = document.querySelector('.content');
+
+    const taskMenu = createElementWithAttributes('div', {
+        class: 'task-menu'
+    }, content);
+
+    const taskMenuTitleBox = createElementWithAttributes('div', {
+        class: 'title-box'
+    }, taskMenu);
+
+    const taskMenuTitle = createElementWithAttributes('span', {
+        class: 'title'
+    }, taskMenuTitleBox);
+    taskMenuTitle.textContent = '';
+
+    const taskMenuExitIcon = createElementWithAttributes('img', {
+        class: 'exit',
+        src: '../src/originals/close.svg',
+        alt: 'Exit icon'
+    }, taskMenuTitleBox);
+
+    const taskMenuForm = createElementWithAttributes('form', {
+    }, taskMenu);
+
+    const formTitleLabel = createElementWithAttributes('label', {
+        for: 'title'
+    }, taskMenuForm);
+    formTitleLabel.textContent = 'Title*:'
+
+    const formTitle = createElementWithAttributes('input', {
+        type: 'text',
+        id: 'title',
+        name: 'title',
+        required: 'required'
+    }, taskMenuForm);
+
+    const formDueDateLabel = createElementWithAttributes('label', {
+        for: 'dueDate'
+    }, taskMenuForm);
+    formDueDateLabel.textContent = 'Due Date:'
+
+    const formDueDate = createElementWithAttributes('input', {
+        type: 'date',
+        id: 'dueDate',
+        name: 'dueDate',
+    }, taskMenuForm);
+
+    const formStatusFieldset = createElementWithAttributes('fieldset', {
+        class: 'status'
+    }, taskMenuForm);
+
+    const formStatusLegend = createElementWithAttributes('legend', {}, formStatusFieldset);
+    formStatusLegend.textContent = 'Is the task finished?'
+
+    const radioStatusInProgress = createElementWithAttributes('input', {
+        id: 'status-in-progress',
+        type: 'radio',
+        name: 'status',
+        value: 'in-progress'
+    }, formStatusFieldset);
+
+    const labelStatusInProgress = createElementWithAttributes('label', {
+        for: 'status-in-progress'
+    }, formStatusFieldset);
+    labelStatusInProgress.textContent = 'In progress';
+
+    const radioStatusCompleted = createElementWithAttributes('input', {
+        id: 'status-completed',
+        type: 'radio',
+        name: 'status',
+        value: 'completed'
+    }, formStatusFieldset);
+
+    const labelStatusCompleted = createElementWithAttributes('label', {
+        for: 'status-completed'
+    }, formStatusFieldset);
+    labelStatusCompleted.textContent = 'Completed';
+
+    const formPriorityFieldset = createElementWithAttributes('fieldset', {
+        class: 'priority'
+    }, taskMenuForm);
+
+    const formPriorityLegend = createElementWithAttributes('legend', {}, formPriorityFieldset);
+    formPriorityLegend.textContent = 'What is the task\'s priority?'
+
+    const radioPriorityHigh = createElementWithAttributes('input', {
+        id: 'priority-high',
+        type: 'radio',
+        name: 'priority',
+        value: 'high'
+    }, formPriorityFieldset);
+
+    const labelPriorityHigh = createElementWithAttributes('label', {
+        for: 'priority-high'
+    }, formPriorityFieldset);
+    labelPriorityHigh.textContent = 'High';
+
+    const radioPriorityMedium = createElementWithAttributes('input', {
+        id: 'priority-medium',
+        type: 'radio',
+        name: 'priority',
+        value: 'medium'
+    }, formPriorityFieldset);
+
+    const labelPriorityMedium = createElementWithAttributes('label', {
+        for: 'priority-medium'
+    }, formPriorityFieldset);
+    labelPriorityMedium.textContent = 'Medium';
+    
+    const radioPriorityNormal = createElementWithAttributes('input', {
+        id: 'priority-normal',
+        type: 'radio',
+        name: 'priority',
+        value: 'normal'
+    }, formPriorityFieldset);
+
+    const labelPriorityNormal = createElementWithAttributes('label', {
+        for: 'priority-normal'
+    }, formPriorityFieldset);
+    labelPriorityNormal.textContent = 'Normal';
+
+    const descriptionBox = createElementWithAttributes('div', {
+        class: 'description-box',
+    }, taskMenuForm);
+    const descriptionLabel = createElementWithAttributes('label', {
+        for: 'description',
+    }, descriptionBox);
+    descriptionLabel.textContent = 'Description:'
+    const descriptionTextarea = createElementWithAttributes('textarea', {
+        id: 'description',
+        name: 'description',
+        maxlength: '200'
+    }, descriptionBox);
+
+    const notesBox = createElementWithAttributes('div', {
+        class: 'notes-box',
+    }, taskMenuForm);
+    const notesLabel = createElementWithAttributes('label', {
+        for: 'notes',
+    }, notesBox);
+    notesLabel.textContent = 'Notes:'
+    const notesTextarea = createElementWithAttributes('textarea', {
+        id: 'notes',
+        name: 'notes',
+        maxlength: '100'
+    }, notesBox);
+
+    const buttonsGrid = createElementWithAttributes('div', {
+        class: 'button-box',
+    }, taskMenuForm);
+
     const buttonAddIcon = createElementWithAttributes('button', {
         class: 'add',
     }, buttonsGrid);
@@ -396,5 +507,100 @@ export function renderAddNewProjectMenu() {
         class: 'cancel',
     }, buttonsGrid);
     buttonCancelIcon.textContent = 'Cancel';
-
 }
+
+export function addEventListenersMainPage() {
+    const selectedSideBarIcon = document.querySelector('header > img.sidebar-icon');
+    const selectedSideBar = document.querySelector('.content aside');
+    const selectedMain = document.querySelector('.content main');
+    const selectedSidebarCover = document.querySelector('main .sidebar-cover');
+
+    selectedSideBarIcon.addEventListener('click', function() {
+        if (!selectedSideBar.classList.contains('shown')) {
+            selectedSideBar.classList.add('shown');
+            selectedSidebarCover.classList.add('shown');
+        } else {
+            selectedSideBar.classList.remove('shown');
+            selectedSidebarCover.classList.remove('shown');
+        }
+    });
+
+    const selectedViewOptions = document.querySelector('header > img.options');
+    const selectedViewBox = document.querySelector('main > .view-options-bar');
+    selectedViewOptions.addEventListener('click', function() {
+        if (!selectedViewBox.classList.contains('shown')) {
+            selectedViewBox.classList.add('shown');
+        } else {
+            selectedViewBox.classList.remove('shown');
+        }
+    });
+
+    const selectedButtonsFilterOptions = document.querySelectorAll('.view-options-bar button');
+    selectedButtonsFilterOptions.forEach((button) => {
+        button.addEventListener('click', function() {
+            if (!button.classList.contains('enabled')) {
+                button.classList.add('enabled');
+            } else {
+                button.classList.remove('enabled');
+            }
+        });
+    });
+
+    const selectedMenuCover = document.querySelector('.menu-cover');
+
+    const selectedProjectMenu = document.querySelector('.project-menu');
+    const selectedAddNewProjectButton = document.querySelector('img.add-new');
+    const selectedProjectMenuTitle = document.querySelector('.project-menu .title-box span');
+    const selectedSaveProjectButton = document.querySelector('.project-menu button.save');
+
+    selectedAddNewProjectButton.addEventListener('click', function() {
+        selectedProjectMenuTitle.textContent = 'Add a new project';
+        selectedSaveProjectButton.textContent = 'Add';
+        selectedMenuCover.classList.add('shown');
+        selectedProjectMenu.classList.add('shown');
+    });
+
+    const selectedExitButton = document.querySelector('.project-menu .exit');
+    selectedExitButton.addEventListener('click', function() {
+        selectedProjectMenuTitle.textContent = '';
+        selectedSaveProjectButton.textContent = '';
+        selectedMenuCover.classList.remove('shown');
+        selectedProjectMenu.classList.remove('shown');
+    });
+
+    const selectedCancelButton = document.querySelector('.project-menu .cancel');
+    selectedCancelButton.addEventListener('click', function() {
+        selectedProjectMenuTitle.textContent = '';
+        selectedSaveProjectButton.textContent = '';
+        selectedMenuCover.classList.remove('shown');
+        selectedProjectMenu.classList.remove('shown');
+    });
+
+    const selectedTaskMenu = document.querySelector('.content .task-menu');
+    const selectedTaskMenuTitle = document.querySelector('.task-menu .title');
+    const selectedAddTaskButton = document.querySelector('.task-bar > .add-new');
+
+    selectedAddTaskButton.addEventListener('click', function() {
+        selectedTaskMenuTitle.textContent = 'Add a new task';
+        selectedAddTaskButton.textContent = 'Add';
+        selectedMenuCover.classList.add('shown');
+        selectedTaskMenu.classList.add('shown');
+    });
+
+    const selectedTaskExitButton = document.querySelector('.task-menu .exit');
+    selectedTaskExitButton.addEventListener('click', function() {
+        selectedTaskMenuTitle.textContent = '';
+        selectedAddTaskButton.textContent = '';
+        selectedMenuCover.classList.remove('shown');
+        selectedTaskMenu.classList.remove('shown');
+    });
+
+    const selectedTaskCancelButton = document.querySelector('.task-menu .cancel');
+    selectedTaskCancelButton.addEventListener('click', function() {
+        selectedTaskMenuTitle.textContent = '';
+        selectedAddTaskButton.textContent = '';
+        selectedMenuCover.classList.remove('shown');
+        selectedTaskMenu.classList.remove('shown');
+    });
+}
+

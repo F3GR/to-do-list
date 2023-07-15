@@ -1,4 +1,6 @@
-import { renderMainPage } from "./render-main-page";
+import { renderMainPage } from "./dom-main-page.js";
+import { renderNewProject } from "./dom-project.js";
+import { renderNewTask } from "./dom-task.js";
 
 export class Application {
     constructor() {
@@ -25,4 +27,6 @@ export class Application {
     }
     
     renderMainPage = () => renderMainPage();
+    renderNewProject = () => renderNewProject();
+    renderNewTask = () => renderNewTask();
 }

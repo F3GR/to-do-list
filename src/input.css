@@ -287,7 +287,7 @@ header .aside-icon {
   gap: 0.3rem;
 }
 
-.projects-menu {
+.projects-bar {
   display: grid;
   grid-template-columns: 2rem 1fr 2rem;
   align-content: center;
@@ -295,7 +295,7 @@ header .aside-icon {
   border-bottom: 1px solid black;
 }
 
-.projects-menu {
+.projects-bar {
   display: grid;
   grid-template-columns: 2rem 1fr 2rem;
   align-content: center;
@@ -304,21 +304,21 @@ header .aside-icon {
   cursor: default;
 }
 
-.projects-menu .add-new,
+.projects-bar .add-new,
 .project .edit,
 .project .remove {
   position: relative;
   transition: transform 0.05s;
 }
 
-.projects-menu .add-new:hover,
+.projects-bar .add-new:hover,
 .project .edit:hover,
 .project .remove:hover {
   cursor: pointer;
   transform: scale(1.2);
 }
 
-.projects-menu .add-new:active,
+.projects-bar .add-new:active,
 .project .edit:active,
 .project .remove:active {
   transform: scale(1);
@@ -451,7 +451,7 @@ main .header span {
   font-size: 3rem;
 }
 
-main .task-menu {
+main .task-bar {
   display: grid;
   align-content: end;
   grid-template-columns: auto 3rem;
@@ -460,20 +460,20 @@ main .task-menu {
   border-bottom: 1px solid black;
 }
 
-.task-menu > * {
+.task-bar > * {
   border-radius: 0.5rem;
   padding: 0.5rem;
   cursor: default;
 }
 
-.task-menu .task-number {
+.task-bar .task-number {
   display: grid;
   justify-items: start;
   background: none;
   padding-left: 1rem;
 }
 
-.task-menu span {
+.task-bar span {
   align-self: center;
   justify-self: start;
 }
@@ -515,14 +515,14 @@ main .task-menu {
   transform: scale(1);
 }
 
-.task-menu .add-new:hover {
+.task-bar .add-new:hover {
   cursor: pointer;
   transform: scale(1.2);
   position: relative;
   transition: transform 0.05s;
 }
 
-.task-menu .add-new:active {
+.task-bar .add-new:active {
   transform: scale(1);
 }
 
@@ -567,6 +567,8 @@ main .sidebar-cover {
   background-color: black;
   opacity: 50%;
 }
+
+/* Project menu */
 
 .content .project-menu {
   position: absolute;
@@ -705,6 +707,8 @@ main .sidebar-cover {
   max-height: 100%;
 }
 
+/* Menus' cover */
+
 .content .menu-cover {
   position: absolute;
   width: 100%;
@@ -717,6 +721,75 @@ main .sidebar-cover {
 
 .content .menu-cover.shown {
   display: block;
+}
+
+/* Task menu */
+
+.content .task-menu {
+  position: absolute;
+  margin-top: calc((100dvh - 50rem)/2);
+  margin-bottom: calc((100dvh - 50rem)/2);
+  margin-left: calc((100% - var(--menu-width))/2);
+  margin-right: calc((100% - var(--menu-width))/2);
+  width: var(--menu-width);
+  height: 50rem;
+  background-color: var(--white);
+  z-index: 4;
+  border: 0.1rem solid var(--whitesmoke);
+  border-radius: 0.5rem;
+  padding: 0 0 1rem 0;
+  display: none;
+}
+.content .task-menu.shown {
+  display: grid;
+  grid-template-rows: 4rem 1fr;
+  gap: 1rem;
+}
+
+.content .task-menu > * {
+  padding: 0 1rem;
+}
+
+.task-menu * {
+  font-size: 1.2rem;
+}
+
+.task-menu .title-box {
+  grid-area: 1 / 1 / 2 / 3;
+  font-size: 1.5rem;
+  font-weight: bolder;
+  display: grid;
+  grid-template-columns: 1fr 2rem;
+  align-items: center;
+  align-content: center;
+  background: linear-gradient(to right, var(--light-emerald), var(--light-blue));
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.task-menu form {
+  grid-area: 2 / 1 / 3 / 3;
+  display: grid;
+}
+
+.task-menu form .description-box,
+.task-menu form .notes-box {
+  display: grid;
+}
+
+.task-menu form input {
+  appearance: auto;
+}
+
+.task-menu fieldset {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-menu textarea {
+  resize: none;
 }
 
 @media (max-width: 950px) {
