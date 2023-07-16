@@ -1,6 +1,6 @@
 import { createElementWithAttributes } from './utils.js';
 
-export function renderMainPage() {
+export function createMainPage() {
     const content = document.querySelector('.content');
 
     const header = createElementWithAttributes('header', {}, content);
@@ -104,35 +104,47 @@ export function renderMainPage() {
         class: 'sidebar-cover'
     }, main);
 
+
+
     const viewOptionsBox = createElementWithAttributes('div', {
         class: 'view-options-bar'
     }, main);
 
-    const viewOptionsText = createElementWithAttributes('span', {class: ``}, viewOptionsBox);
+    const filterOptionsBox = createElementWithAttributes('div', {
+        class: 'filter-options-box'
+    }, viewOptionsBox);
+
+    const viewOptionsText = createElementWithAttributes('span', {class: ``}, filterOptionsBox);
     viewOptionsText.textContent = `Filter options:`;
 
     const buttonHighPriority = createElementWithAttributes('button', {
-        class: `high-priority enabled`}, viewOptionsBox);
+        class: `high-priority enabled`}, filterOptionsBox);
     buttonHighPriority.textContent = `High`;
 
     const buttonMediumPriority = createElementWithAttributes('button', {
-        class: `medium-priority enabled`}, viewOptionsBox);
+        class: `medium-priority enabled`}, filterOptionsBox);
     buttonMediumPriority.textContent = `Medium`;
 
     const buttonNormalPriority = createElementWithAttributes('button', {
-        class: `normal-priority enabled`}, viewOptionsBox);
+        class: `normal-priority enabled`}, filterOptionsBox);
     buttonNormalPriority.textContent = `Normal`;
 
     const buttonCompleted = createElementWithAttributes('button', {
-        class: `completed enabled`}, viewOptionsBox);
+        class: `completed enabled`}, filterOptionsBox);
     buttonCompleted.textContent = `Completed`;
 
     const buttonOverdue = createElementWithAttributes('button', {
-        class: `overdue enabled`}, viewOptionsBox);
+        class: `overdue enabled`}, filterOptionsBox);
     buttonOverdue.textContent = `Overdue`;
 
-    const selectSortOption = createElementWithAttributes('select', {name: `sorting-option`}, viewOptionsBox);
-    selectSortOption.textContent = `Sort by: `;
+    const sortOptionsBox = createElementWithAttributes('div', {
+        class: 'sort-options-box'
+    }, viewOptionsBox);
+
+    const sortOptionsText = createElementWithAttributes('span', {class: ``}, sortOptionsBox);
+    sortOptionsText.textContent = 'Sort by:';
+
+    const selectSortOption = createElementWithAttributes('select', {name: `sorting-option`}, sortOptionsBox);
 
     const sortByDate = createElementWithAttributes('option', {value: `date-from-oldest`},selectSortOption);
     sortByDate.textContent = `Date`;
@@ -142,6 +154,15 @@ export function renderMainPage() {
 
     const sortByStatus = createElementWithAttributes('option', {value: `priority-from-due`},selectSortOption);
     sortByStatus.textContent = `Status`;
+
+    const sortOrderIcon = createElementWithAttributes('img', { 
+        src: '../src/originals/arrow-upward.svg',
+        alt: `Sort order icon`,
+        class: 'is-upward'
+    }, sortOptionsBox);
+
+
+
 
     const mainHeadBox = createElementWithAttributes('div', {class: `header`}, main);
     const mainHeadImage = createElementWithAttributes('img', { 
@@ -612,6 +633,17 @@ export function addEventListenersMainPage() {
                 button.classList.remove('current');
             }
         });
+    });
+
+    const selectedSortOrderIcon = document.querySelector('.sort-options-box img');
+    selectedSortOrderIcon.addEventListener('click', function() {
+        if (!selectedSortOrderIcon.classList.contains('is-upward')) {
+            selectedSortOrderIcon.classList.add('is-upward');
+            selectedSortOrderIcon.setAttribute('src', '../src/originals/arrow-upward.svg');
+        } else {
+            selectedSortOrderIcon.classList.remove('is-upward');
+            selectedSortOrderIcon.setAttribute('src', '../src/originals/arrow-downward.svg');
+        }
     });
 }
 

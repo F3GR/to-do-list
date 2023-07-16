@@ -1,6 +1,6 @@
 import { renderMainPage } from "./dom-main-page.js";
-import { renderNewProject } from "./dom-project.js";
-import { renderNewTask } from "./dom-task.js";
+import { createExampleTaskPanels, createExampleProjectPanel } from "./dom-examples-panels.js";
+import { createMainPage } from "./dom-main-page.js";
 
 export class Application {
     constructor() {
@@ -8,10 +8,10 @@ export class Application {
             return Application.instance;
         }
         Application.instance = this;
-        this.initialize();
+        this.firstLoad();
     }
 
-    initialize() {
+    firstLoad = function() {
         if (!localStorage.getItem('toDoList')) {
             const toDoList = new Map();
             localStorage.setItem('toDoList', toDoList);
@@ -20,13 +20,13 @@ export class Application {
     getToDoList() {
         const storedToDoList = localStorage.getItem('toDoList');
         if (!storedToDoList) {
-            this.initialize();
+            this.firstLoad;
             return localStorage.getItem('toDoList');
         }
         return storedToDoList;
     }
     
-    renderMainPage = () => renderMainPage();
-    renderNewProject = () => renderNewProject();
-    renderNewTask = () => renderNewTask();
+    createMainPage = () => createMainPage();
+    createExampleTaskPanels = () => createExampleTaskPanels();
+    createExampleProjectPanel = () => createExampleProjectPanel();
 }

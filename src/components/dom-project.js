@@ -2,7 +2,8 @@ import { createElementWithAttributes } from './utils.js';
 
 export function renderNewProject() {
     const projectsList = document.querySelector('.projects-list');
-    const exampleProject = createElementWithAttributes('li', { class: `project`, data: `0` }, projectsList);
+    const exampleProject = createElementWithAttributes('li', { class: `project`}, projectsList);
+    exampleProject.setAttribute('data-project-id', '0');
 
     const exampleProjectImage = createElementWithAttributes('img', {
         src: '../src/originals/category-other.svg',

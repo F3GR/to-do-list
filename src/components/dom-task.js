@@ -1,8 +1,14 @@
 import { createElementWithAttributes } from './utils.js';
 
-export function renderNewTask() {
+export function createNewTaskPanel() {
+    renderNewTask();
+    addListenersToANewTask();
+}
+
+function renderNewTask() {
     const taskList = document.querySelector('.task-list');
-    const exampleTask = createElementWithAttributes('li', {class: `task`, data: `0`}, taskList);
+    const exampleTask = createElementWithAttributes('li', {class: `task`}, taskList);
+    exampleTask.setAttribute('data-task-id', '0');
 
     const checkbox = createElementWithAttributes('input', {
         type: `checkbox`, 
@@ -21,12 +27,9 @@ export function renderNewTask() {
 
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', 'M2,10 L8,16 L18,5');
-
     svg.appendChild(path);
     label.appendChild(svg);
     
-
-
     const taskNameBox = createElementWithAttributes('div', {class: `task-name-box`}, exampleTask);
     const taskName = createElementWithAttributes('span', {class: `task-name-box`}, taskNameBox);
     taskName.textContent = `New task`;
@@ -52,11 +55,9 @@ export function renderNewTask() {
         alt: `Task information unfold or fold icon`,
         class: 'unfold'
     }, exampleTask);
-
-    addListenersToANewTask();
 }
 
-export function addListenersToANewTask() {
+function addListenersToANewTask() {
     const selectedTaskMenu = document.querySelector('.content .task-menu');
     const selectedTaskMenuTitle = document.querySelector('.task-menu .title');
     const selectedAddTaskButton = document.querySelector('.task-bar > .add-new');
