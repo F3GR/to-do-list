@@ -1,8 +1,6 @@
 export class Task {
     constructor(projectName, title, dueDate, status, priority, description, notes) {
-        let taskProjectName = projectName;
-        this.projectName = () => taskProjectName;
-
+        this.projectName = projectName;
         this.title = title;
         this.dueDate = dueDate;
         this.status = status;

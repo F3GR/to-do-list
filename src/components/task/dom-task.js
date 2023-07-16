@@ -1,4 +1,4 @@
-import { createElementWithAttributes } from './utils.js';
+import { createElementWithAttributes } from '../utils.js';
 
 export function createNewTaskPanel() {
     renderNewTask();

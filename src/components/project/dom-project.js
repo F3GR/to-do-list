@@ -1,4 +1,5 @@
-import { createElementWithAttributes } from './utils.js';
+import { createElementWithAttributes } from '../utils.js';
+import { application } from '../index.js';
 
 export function renderNewProject() {
     const projectsList = document.querySelector('.projects-list');
@@ -38,6 +39,16 @@ export function addListenersToANewProject() {
         selectedSaveProjectButton.textContent = 'Save';
         selectedMenuCover.classList.add('shown');
         selectedProjectMenu.classList.add('shown');
+        selectedProjectMenu.classList.add('edit');
+    });
+
+    const selectedExitButton = document.querySelector('.project-menu .exit');
+    selectedExitButton.addEventListener('click', function() {
+        selectedProjectMenu.classList.remove('edit');
+    });
+    const selectedCancelButton = document.querySelector('.project-menu .cancel');
+    selectedCancelButton.addEventListener('click', function() {
+        selectedProjectMenu.classList.remove('edit');
     });
 
     const selectedProject = document.querySelector('aside .projects-list .project');
@@ -51,7 +62,14 @@ export function addListenersToANewProject() {
 
     const selectedRemoveProjectButton = document.querySelector('.projects-list li img.remove');
     selectedRemoveProjectButton.addEventListener('click', function() {
-        const removedProject = selectedRemoveProjectButton.closest('.project');
-        removedProject.remove();
+        const removedProjectNode = selectedRemoveProjectButton.closest('.project');
+        const projectId = removedProjectNode.getAttribute('data-project-id');
+        const removedProject = application.remove(projectId);
+
+        if (removedProject) {
+            removedProject.remove();
+        } else {
+            alert('Error: project wasn\'t found');
+        }   
     });
 }

@@ -1,10 +1,11 @@
 import './input.css';
-import { Application } from './components/main-app.js';
+import { application } from './components/main-app.js';
 
-(function() {
-    const application = new Application();
-    const toDoList = application.getToDoList();
-    application.createMainPage();
-    application.createExampleProjectPanel();
-    application.createExampleTaskPanels();
-})();
+
+application.createMainPage();
+application.addEventListenersMainPage();
+
+application.createExampleProjectPanel();
+application.createExampleTaskPanels();
+
+const toDoList = application.getToDoList();

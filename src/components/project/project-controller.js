@@ -7,27 +7,26 @@ export const projectController = (function() {
             const newProject = new Project(newName, newIconURL);
             toDoList.set(newProjectId, newProject);
             Project.incrementNewProjectId;
+            return true;
         } else {
-            console.log('The new project is not unique, change the name of the project and try to submit again!')
+            return false;
         }
     }
 
-    this.editName = (toDoList, project, editedName) => {
+    this.edit = (toDoList, projectId, editedName, editedIcon) => {
+        const project = toDoList[projectId];
         if (checkIfProjectUnique(toDoList, editedName)) {
             project.name = editedName;
+            project.iconURL = editedIcon;
+            return true;
         } else {
-            console.log('The edited project is not unique, change the name of the project and try to submit again!')
+            return false;
         }
-    }
-    this.editIcon = (project, editedIcon) => {
-        project.iconURL = editedIcon;
     }
 
-    this.remove = (toDoList, id) => {
-        const removedFoundProject = toDoList.delete(id);
-        if (!removedFoundProject) {
-            console.log('The project is not found, please, enter the existing project')
-        }
+    this.remove = (toDoList, projectId) => {
+        const removedFoundProject = toDoList.delete(projectId);
+        return true;
     }
 
     function checkIfProjectUnique(toDoList, name) {
