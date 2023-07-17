@@ -247,8 +247,7 @@ function renderProjectMenu() {
         alt: 'Exit icon'
     }, projectMenuTitleBox);
 
-    const projectMenuForm = createElementWithAttributes('form', {
-    }, projectMenu);
+    const projectMenuForm = createElementWithAttributes('form', {}, projectMenu);
     
     const formNameLabel = createElementWithAttributes('label', {
         for: 'name'
@@ -261,93 +260,121 @@ function renderProjectMenu() {
         required: 'required'
     }, projectMenuForm);
 
-    const formIconFieldset = createElementWithAttributes('fieldset', {}, projectMenuForm);
+    const formIconFieldset = createElementWithAttributes('fieldset', {
+        required: 'required'
+    }, projectMenuForm);
     const formIconLegend = createElementWithAttributes('legend', {}, formIconFieldset);
     formIconLegend.textContent = 'Icon*:'
 
-    const iconCategoryJobLabel = createElementWithAttributes('label', {}, formIconFieldset);
-    const buttonCategoryJob = createElementWithAttributes('input', {
+    const inputCategoryJob = createElementWithAttributes('input', {
+        id: 'job',
         type: 'radio',
         name: 'iconURL',
         value: '../src/originals/category-job.svg'
-    }, iconCategoryJobLabel);
+    }, formIconFieldset);
+    const iconCategoryJobLabel = createElementWithAttributes('label', {
+        for: 'job'
+    }, formIconFieldset);
     const iconCategoryJob = createElementWithAttributes('img', {
         src: '../src/originals/category-job.svg',
         alt: 'Category Job icon'
     }, iconCategoryJobLabel);
 
-    const iconCategoryStudyLabel = createElementWithAttributes('label', {}, formIconFieldset);
-    const buttonCategoryStudy = createElementWithAttributes('input', {
+    const inputCategoryStudy = createElementWithAttributes('input', {
+        id: 'study',
         type: 'radio',
         name: 'iconURL',
         value: '../src/originals/category-study.svg'
-    }, iconCategoryStudyLabel);
+    }, formIconFieldset);
+    const iconCategoryStudyLabel = createElementWithAttributes('label', {
+        for: 'study',
+    }, formIconFieldset);
     const iconCategoryStudy = createElementWithAttributes('img', {
         src: '../src/originals/category-study.svg',
         alt: 'Category Study icon'
     }, iconCategoryStudyLabel);
 
-    const iconCategoryGiftLabel = createElementWithAttributes('label', {}, formIconFieldset);
-    const buttonCategoryGift = createElementWithAttributes('input', {
+    const inputCategoryGift = createElementWithAttributes('input', {
+        id: 'gift',
         type: 'radio',
         name: 'iconURL',
         value: '../src/originals/category-gift.svg'
-    }, iconCategoryGiftLabel);
+    }, formIconFieldset);
+    const iconCategoryGiftLabel = createElementWithAttributes('label', {
+        for: 'gift',
+    }, formIconFieldset);
     const iconCategoryGift = createElementWithAttributes('img', {
         src: '../src/originals/category-gift.svg',
         alt: 'Category Gift icon'
     }, iconCategoryGiftLabel);
 
-    const iconCategoryInternationalLabel = createElementWithAttributes('label', {}, formIconFieldset);
-    const buttonCategoryInternational = createElementWithAttributes('input', {
+    const inputCategoryInternational = createElementWithAttributes('input', {
+        id: 'international',
         type: 'radio',
         name: 'iconURL',
         value: '../src/originals/category-international-activity.svg'
-    }, iconCategoryInternationalLabel);
+    }, formIconFieldset);
+    const iconCategoryInternationalLabel = createElementWithAttributes('label', {
+        for: 'international',
+    }, formIconFieldset);
     const iconCategoryInternational = createElementWithAttributes('img', {
         src: '../src/originals/category-international-activity.svg',
         alt: 'Category International activity icon'
     }, iconCategoryInternationalLabel);
 
-    const iconCategoryPeopleLabel = createElementWithAttributes('label', {}, formIconFieldset);
-    const buttonCategoryPeople = createElementWithAttributes('input', {
+    const inputCategoryPeople = createElementWithAttributes('input', {
+        id: 'people',
         type: 'radio',
         name: 'iconURL',
         value: '../src/originals/category-people.svg'
-    }, iconCategoryPeopleLabel);
+    }, formIconFieldset);
+    const iconCategoryPeopleLabel = createElementWithAttributes('label', {
+        for: 'people',
+    }, formIconFieldset);
     const iconCategoryPeople = createElementWithAttributes('img', {
         src: '../src/originals/category-people.svg',
         alt: 'Category People icon'
     }, iconCategoryPeopleLabel);
 
-    const iconCategoryScienceLabel = createElementWithAttributes('label', {}, formIconFieldset);
-    const buttonCategoryScience = createElementWithAttributes('input', {
+
+    const inputCategoryScience = createElementWithAttributes('input', {
+        id: 'science',
         type: 'radio',
         name: 'iconURL',
         value: '../src/originals/category-science.svg'
-    }, iconCategoryScienceLabel);
+    }, formIconFieldset);
+    const iconCategoryScienceLabel = createElementWithAttributes('label', {
+        for: 'science',
+    }, formIconFieldset);
     const iconCategoryScience = createElementWithAttributes('img', {
         src: '../src/originals/category-science.svg',
         alt: 'Category Science icon'
     }, iconCategoryScienceLabel);
 
-    const iconCategoryITLabel = createElementWithAttributes('label', {}, formIconFieldset);
-    const buttonCategoryIT = createElementWithAttributes('input', {
+    const inputCategoryIT = createElementWithAttributes('input', {
+        id: 'it',
         type: 'radio',
         name: 'iconURL',
         value: '../src/originals/category-it.svg'
-    }, iconCategoryITLabel);
+    }, formIconFieldset);
+    const iconCategoryITLabel = createElementWithAttributes('label', {
+        for: 'it',
+    }, formIconFieldset);
     const iconCategoryIT = createElementWithAttributes('img', {
         src: '../src/originals/category-it.svg',
         alt: 'Category IT icon'
     }, iconCategoryITLabel);
 
-    const iconCategoryOtherLabel = createElementWithAttributes('label', {}, formIconFieldset);
-    const buttonCategoryOther = createElementWithAttributes('input', {
+
+    const inputCategoryOther = createElementWithAttributes('input', {
+        id: 'other',
         type: 'radio',
         name: 'iconURL',
         value: '../src/originals/category-other.svg'
-    }, iconCategoryOtherLabel);
+    }, formIconFieldset);
+    const iconCategoryOtherLabel = createElementWithAttributes('label', {
+        for: 'other',
+    }, formIconFieldset);
     const iconCategoryOther = createElementWithAttributes('img', {
         src: '../src/originals/category-other.svg',
         alt: 'Category Other icon'
@@ -357,10 +384,11 @@ function renderProjectMenu() {
         class: 'button-box',
     }, projectMenuForm);
 
-    const buttonSaveIcon = createElementWithAttributes('button', {
-        class: 'save',
+    const buttonSubmitIcon = createElementWithAttributes('button', {
+        type: 'submit',
+        class: 'submit'
     }, buttonsGrid);
-    buttonSaveIcon.textContent = '';
+    buttonSubmitIcon.textContent = '';
 
     const buttonCancelIcon = createElementWithAttributes('button', {
         class: 'cancel',
@@ -417,6 +445,7 @@ function renderTaskMenu() {
     }, taskMenuForm);
 
     const formStatusFieldset = createElementWithAttributes('fieldset', {
+        required: 'required',
         class: 'status'
     }, taskMenuForm);
 
@@ -448,6 +477,7 @@ function renderTaskMenu() {
     labelStatusCompleted.textContent = 'Completed';
 
     const formPriorityFieldset = createElementWithAttributes('fieldset', {
+        required: 'required',
         class: 'priority'
     }, taskMenuForm);
 
@@ -521,7 +551,8 @@ function renderTaskMenu() {
     }, taskMenuForm);
 
     const buttonAddIcon = createElementWithAttributes('button', {
-        class: 'add',
+        type: 'submit',
+        class: 'submit',
     }, buttonsGrid);
     buttonAddIcon.textContent = 'Add';
 

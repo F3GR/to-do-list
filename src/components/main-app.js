@@ -15,29 +15,40 @@ class Application {
 
     getToDoList() {
         const storedToDoList = localStorage.getItem('toDoList');
-        if (!storedToDoList) {
-            const toDoList = new Map();
-            localStorage.setItem('toDoList', toDoList);
-            return toDoList;
+        if (storedToDoList === null) {
+          const toDoList = [];
+          localStorage.setItem('toDoList', JSON.stringify(toDoList));
+          return toDoList;
         }
-        return storedToDoList;
+      
+        return JSON.parse(storedToDoList);
     }
     
     createMainPage = () => createMainPage();
     addEventListenersMainPage = () => addEventListenersMainPage();
 
-    createNewProject = (newName, newIconURL) => {
-        projectController.createNewProject(this.toDoList, newName, newIconURL);
+    createNewProject(newName, newIconURL) {
+        const newProject = projectController.createNew(this.toDoList, newName, newIconURL);
+        localStorage.setItem('toDoList', JSON.stringify(this.toDoList));
+        return newProject;
     }
     editProject = (projectId, editedName, editedIconURL) => {
-        projectController.edit(this.toDoList, projectId, editedName, editedIconURL);
+        const editedProject = projectController.edit(this.toDoList, projectId, editedName, editedIconURL);
+        localStorage.setItem('toDoList', JSON.stringify(this.toDoList));
+        return editedProject;
     }
     removeProject = (projectId) => {
-        projectController.remove(this.toDoList, projectId);
+        const removedProject = projectController.remove(this.toDoList, projectId);
+        if (removedProject) {
+            return true;
+        }
+        return false;
     }
-
-    createExampleTaskPanels = () => createExampleTaskPanels();
-    createExampleProjectPanel = () => createExampleProjectPanel();
 }
 
 export const application = new Application();
+
+/*     createExampleTaskPanels = () => createExampleTaskPanels();
+    createExampleProjectPanel = () => createExampleProjectPanel();
+
+    */

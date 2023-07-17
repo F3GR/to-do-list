@@ -1,23 +1,27 @@
 import { Project } from './project.js';
 
-export const projectController = (function() {
+export const projectController = function() {
     this.createNew = (toDoList, newName, newIconURL) => {
-        if (checkIfProjectUnique(toDoList, newName)) {
-            const newProjectId = Project.getNewProjectId;
+        if (noDuplicateName(toDoList, newName, "")) {
             const newProject = new Project(newName, newIconURL);
-            toDoList.set(newProjectId, newProject);
-            Project.incrementNewProjectId;
-            return true;
+            toDoList.push(newProject);
+            Project.incrementNewProjectId();
+            return newProject;
         } else {
             return false;
         }
     }
 
     this.edit = (toDoList, projectId, editedName, editedIcon) => {
-        const project = toDoList[projectId];
-        if (checkIfProjectUnique(toDoList, editedName)) {
-            project.name = editedName;
-            project.iconURL = editedIcon;
+        const project = toDoList.find((project) => { return project.getProjectId == projectId });
+
+        if (noDuplicateName(toDoList, editedName, projectId)) {
+            if (project.name !== editedName) {
+                project.name = editedName;
+            }
+            if (project.iconURL !== editedIcon) {
+                project.iconURL = editedIcon;
+            }
             return true;
         } else {
             return false;
@@ -25,16 +29,21 @@ export const projectController = (function() {
     }
 
     this.remove = (toDoList, projectId) => {
-        const removedFoundProject = toDoList.delete(projectId);
+        const removedFoundProject = toDoList.splice(index, 1);
         return true;
     }
 
-    function checkIfProjectUnique(toDoList, name) {
-        for (let [id, project] of toDoList.entries()) {
-            if (project.name === name) {
+    function noDuplicateName(toDoList, name, projectId) {
+        const n = toDoList.length();
+        let i = 0;
+        for (; i < n; i++) {
+            if (toDoList[i].getProjectId === projectId) {
+                continue;
+            }
+            if (toDoList[i].name === name) {
                 return false;
             }
         }
         return true;
     }
-});
+};

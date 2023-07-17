@@ -2,10 +2,10 @@ export class Project {
     constructor(projectName, iconURL) {
         this.projectName = projectName;
         this.iconURL = iconURL;
-        this.taskList = new Map();
+        this.taskList = [];
 
         let id = 1;
-        this.getNewProjectId = () => id;
+        this.getProjectId = () => id.toString();
         this.incrementNewProjectId = () => {
             id++;
         };

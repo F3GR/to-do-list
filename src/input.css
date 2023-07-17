@@ -850,6 +850,16 @@ main .sidebar-cover {
   max-height: 100%;
 }
 
+.project-menu input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.project-menu input[type="radio"]:checked + label img {
+  border: 1px solid blue;
+}
+
 /* Menus' cover */
 
 .content .menu-cover {
