@@ -1,7 +1,8 @@
 import { createExampleTaskPanels, createExampleProjectPanel } from "./dom-examples-panels.js";
 import { createMainPage } from './main-page/dom-main-page.js';
 import { addEventListenersMainPage } from './main-page/event-listeners-main-page.js';
-import { projectController } from "./project/project-controller.js";
+import { projectController } from './project/project-controller.js';
+import { updateLocalStorage } from './utils.js'
 
 class Application {
     constructor() {
@@ -10,35 +11,42 @@ class Application {
         }
         Application.instance = this;
 
-        this.toDoList = this.getToDoList();
+        this.projectList = this.getProjectList();
     }
 
-    getToDoList() {
-        const storedToDoList = localStorage.getItem('toDoList');
-        if (storedToDoList === null) {
-          const toDoList = [];
-          localStorage.setItem('toDoList', JSON.stringify(toDoList));
-          return toDoList;
+    getProjectList() {
+        const storedProjectList = localStorage.getItem('TrackIt: project-list');
+        if (storedProjectList === null || 
+            storedProjectList === undefined || 
+            storedProjectList === "") {
+          const projectList = [];
+          updateLocalStorage(projectList);
+          return projectList;
         }
-      
-        return JSON.parse(storedToDoList);
+        return JSON.parse(storedProjectList);
     }
     
     createMainPage = () => createMainPage();
     addEventListenersMainPage = () => addEventListenersMainPage();
 
     createNewProject(newName, newIconURL) {
-        const newProject = projectController.createNew(this.toDoList, newName, newIconURL);
-        localStorage.setItem('toDoList', JSON.stringify(this.toDoList));
+        const currentProjectList = this.getProjectList(); 
+        const newProject = projectController.createNew(currentProjectList, newName, newIconURL);
+        if (newProject) {
+            currentProjectList.push(newProject);
+            updateLocalStorage(currentProjectList);
+        }
         return newProject;
     }
+
     editProject = (projectId, editedName, editedIconURL) => {
-        const editedProject = projectController.edit(this.toDoList, projectId, editedName, editedIconURL);
-        localStorage.setItem('toDoList', JSON.stringify(this.toDoList));
+        const editedProject = projectController.edit(this.getProjectList(), projectId, editedName, editedIconURL);
+        updateLocalStorage(this.getProjectList());
         return editedProject;
     }
     removeProject = (projectId) => {
-        const removedProject = projectController.remove(this.toDoList, projectId);
+        const removedProject = projectController.remove(this.getProjectList(), projectId);
+        updateLocalStorage(this.getProjectList());
         if (removedProject) {
             return true;
         }

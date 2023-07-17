@@ -1,21 +1,21 @@
 import { Project } from './project.js';
 
-export const projectController = function() {
-    this.createNew = (toDoList, newName, newIconURL) => {
-        if (noDuplicateName(toDoList, newName, "")) {
-            const newProject = new Project(newName, newIconURL);
-            toDoList.push(newProject);
+const projectController = {
+    createNew: function(projectList, newName, newIconURL) {
+        if (noDuplicateName(projectList, newName, "")) {
+            const newId = Project.getNewId();
+            const newProject = new Project(newId, newName, newIconURL);
             Project.incrementNewProjectId();
             return newProject;
         } else {
             return false;
         }
-    }
+    },
 
-    this.edit = (toDoList, projectId, editedName, editedIcon) => {
-        const project = toDoList.find((project) => { return project.getProjectId == projectId });
+    edit: function(projectList, projectId, editedName, editedIcon) {
+        const project = projectList.find((project) => { return project.getProjectId == projectId });
 
-        if (noDuplicateName(toDoList, editedName, projectId)) {
+        if (noDuplicateName(projectList, editedName, projectId)) {
             if (project.name !== editedName) {
                 project.name = editedName;
             }
@@ -26,24 +26,26 @@ export const projectController = function() {
         } else {
             return false;
         }
-    }
+    },
 
-    this.remove = (toDoList, projectId) => {
-        const removedFoundProject = toDoList.splice(index, 1);
+    remove: function(projectList, projectId) {
+        const removedFoundProject = projectList.splice(index, 1);
         return true;
-    }
-
-    function noDuplicateName(toDoList, name, projectId) {
-        const n = toDoList.length();
-        let i = 0;
-        for (; i < n; i++) {
-            if (toDoList[i].getProjectId === projectId) {
-                continue;
-            }
-            if (toDoList[i].name === name) {
-                return false;
-            }
-        }
-        return true;
-    }
+    },
 };
+
+function noDuplicateName(projectList, name, projectId) {
+    const n = projectList.length;
+    let i = 0;
+    for (; i < n; i++) {
+        if (projectList[i].getProjectId === projectId) {
+            continue;
+        }
+        if (projectList[i].name === name) {
+            return false;
+        }
+    }
+    return true;
+}
+
+export { projectController };

@@ -22,3 +22,7 @@ export function checkIfCurrent(element) {
 export function removeCurrentStatus(element) {
   element.removeAttribute('data-value');
 }
+
+export function updateLocalStorage(projectList) {
+  localStorage.setItem('TrackIt: project-list', JSON.stringify(projectList));
+}

@@ -256,7 +256,7 @@ function renderProjectMenu() {
     const formName = createElementWithAttributes('input', {
         type: 'text',
         id: 'name',
-        name: 'projectName',
+        name: 'name',
         required: 'required'
     }, projectMenuForm);
 

@@ -57,7 +57,7 @@ function addEventListenersProjectMenu() {
             const newProject = application.createNewProject(
                 selectNameInput.value, selectIconInput.value);
             if (newProject) {
-                renderNewProject(newProject.name, newProject.iconURL, newProject.getNewProjectId);
+                renderNewProject(newProject.name, newProject.iconURL, newProject.getProjectId);
             } else {
                 alert('The project with this title already exists!');
             }

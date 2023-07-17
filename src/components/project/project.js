@@ -1,13 +1,18 @@
 export class Project {
-    constructor(projectName, iconURL) {
-        this.projectName = projectName;
+    constructor(id, name, iconURL) {
+        this.id = id;
+        this.name = name;
         this.iconURL = iconURL;
-        this.taskList = [];
-
-        let id = 1;
-        this.getProjectId = () => id.toString();
-        this.incrementNewProjectId = () => {
-            id++;
-        };
+        this.tasksNumber = 0;        
     }
+
+    static projectId = 1;
+
+    static getNewId = () => {
+        return this.projectId;
+    }
+
+    static incrementNewProjectId = () => {
+        this.projectId++;
+    };
 }
