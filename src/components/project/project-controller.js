@@ -13,7 +13,7 @@ const projectController = {
     },
 
     edit: function(projectList, projectId, editedName, editedIcon) {
-        const project = projectList.find((project) => { return project.getProjectId == projectId });
+        const project = projectList.find((project) => { return project.id === projectId });
 
         if (noDuplicateName(projectList, editedName, projectId)) {
             if (project.name !== editedName) {
@@ -29,9 +29,17 @@ const projectController = {
     },
 
     remove: function(projectList, projectId) {
-        const removedFoundProject = projectList.splice(index, 1);
-        return true;
-    },
+        let index;
+        let n = projectList.length;
+        let i = 0;
+        for (; i < n; i++) {
+            if (projectList[i].id === projectId) {
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
 };
 
 function noDuplicateName(projectList, name, projectId) {

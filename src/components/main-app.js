@@ -10,8 +10,6 @@ class Application {
             return Application.instance;
         }
         Application.instance = this;
-
-        this.projectList = this.getProjectList();
     }
 
     getProjectList() {
@@ -39,15 +37,23 @@ class Application {
         return newProject;
     }
 
+
     editProject = (projectId, editedName, editedIconURL) => {
         const editedProject = projectController.edit(this.getProjectList(), projectId, editedName, editedIconURL);
         updateLocalStorage(this.getProjectList());
         return editedProject;
     }
+
+
     removeProject = (projectId) => {
-        const removedProject = projectController.remove(this.getProjectList(), projectId);
-        updateLocalStorage(this.getProjectList());
-        if (removedProject) {
+        const currentProjectList = this.getProjectList();
+        const removedProjectIndex = projectController.remove(currentProjectList, projectId);
+        
+        if (removedProjectIndex !== null || 
+            removedProjectIndex !== undefined ||
+            removedProjectIndex !== "undefined") {
+            currentProjectList.splice(removedProjectIndex, 1);
+            updateLocalStorage(currentProjectList);
             return true;
         }
         return false;

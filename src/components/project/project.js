@@ -6,10 +6,10 @@ export class Project {
         this.tasksNumber = 0;        
     }
 
-    static projectId = 1;
+    static projectId = 0;
 
     static getNewId = () => {
-        return this.projectId;
+        return String(this.projectId);
     }
 
     static incrementNewProjectId = () => {

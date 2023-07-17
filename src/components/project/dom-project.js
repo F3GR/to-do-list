@@ -27,12 +27,12 @@ export function renderNewProject(name, iconURL, id) {
 }
 
 export function addListenersToANewProject(id) {
-    const projectSelector = `.project[data-project-${id}]`;
+    const projectSelector = `.project[data-project-id="${id}"]`;
     const selectedProject = document.querySelector(projectSelector);
 
     const selectedProjectMenu = document.querySelector('.project-menu');
     const selectedProjectMenuTitle = document.querySelector('.project-menu .title-box span');
-    const selectedSaveProjectButton = document.querySelector('.project-menu button.save');
+    const selectedSaveProjectButton = document.querySelector('.project-menu button.submit');
     const selectedMenuCover = document.querySelector('.menu-cover');
 
     const selectedEditProjectButton = document.querySelector(`${projectSelector} img.edit`);
@@ -63,13 +63,13 @@ export function addListenersToANewProject(id) {
 
     const selectedRemoveProjectButton = document.querySelector(`${projectSelector} img.remove`);
     selectedRemoveProjectButton.addEventListener('click', function() {
-        const removedProjectNode = selectedRemoveProjectButton.closest('.project');
+        const removedProjectNode = selectedRemoveProjectButton.closest(`${projectSelector}`);
         const projectId = removedProjectNode.getAttribute('data-project-id');
         
-        const removedProject = application.remove(projectId);
+        const removedProject = application.removeProject(projectId);
 
         if (removedProject) {
-            removedProject.remove();
+            removedProjectNode.remove();
         } else {
             alert('Error: project wasn\'t found');
         }   
