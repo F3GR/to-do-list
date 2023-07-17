@@ -1,4 +1,5 @@
 import { Project } from './project.js';
+import { noDuplicateName, findIndex } from '../utils.js';
 
 const projectController = {
     createNew: function(projectList, newName, newIconURL) {
@@ -13,7 +14,8 @@ const projectController = {
     },
 
     edit: function(projectList, projectId, editedName, editedIcon) {
-        const project = projectList.find((project) => { return project.id === projectId });
+        const editedProjectIndex = findIndex(projectList, projectId);
+        const project = projectList[editedProjectIndex];
 
         if (noDuplicateName(projectList, editedName, projectId)) {
             if (project.name !== editedName) {
@@ -22,38 +24,15 @@ const projectController = {
             if (project.iconURL !== editedIcon) {
                 project.iconURL = editedIcon;
             }
-            return true;
+            return { project, editedProjectIndex };
         } else {
             return false;
         }
     },
 
     remove: function(projectList, projectId) {
-        let index;
-        let n = projectList.length;
-        let i = 0;
-        for (; i < n; i++) {
-            if (projectList[i].id === projectId) {
-                index = i;
-                break;
-            }
-        }
-        return index;
+        return findIndex(projectList, projectId);
     }
 };
-
-function noDuplicateName(projectList, name, projectId) {
-    const n = projectList.length;
-    let i = 0;
-    for (; i < n; i++) {
-        if (projectList[i].getProjectId === projectId) {
-            continue;
-        }
-        if (projectList[i].name === name) {
-            return false;
-        }
-    }
-    return true;
-}
 
 export { projectController };

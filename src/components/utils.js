@@ -26,3 +26,44 @@ export function removeCurrentStatus(element) {
 export function updateLocalStorage(projectList) {
   localStorage.setItem('TrackIt: project-list', JSON.stringify(projectList));
 }
+
+export function noDuplicateName(list, name, id) {
+  const n = list.length;
+  let i = 0;
+  for (; i < n; i++) {
+      if (list[i].id === id) {
+          continue;
+      }
+      if (list[i].name === name) {
+          return false;
+      }
+  }
+  return true;
+}
+
+export function noDuplicateTitle(list, title, id) {
+  const n = list.length;
+  let i = 0;
+  for (; i < n; i++) {
+      if (list[i].id === id) {
+          continue;
+      }
+      if (list[i].title === title) {
+          return false;
+      }
+  }
+  return true;
+}
+
+export function findIndex(list, id) {
+  let index;
+  let n = list.length;
+  let i = 0;
+  for (; i < n; i++) {
+      if (list[i].id === id) {
+          index = i;
+          break;
+      }
+  }
+  return index;
+}

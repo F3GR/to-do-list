@@ -39,9 +39,14 @@ class Application {
 
 
     editProject = (projectId, editedName, editedIconURL) => {
-        const editedProject = projectController.edit(this.getProjectList(), projectId, editedName, editedIconURL);
-        updateLocalStorage(this.getProjectList());
-        return editedProject;
+        const currentProjectList = this.getProjectList();
+        const editedProject = projectController.edit(currentProjectList, projectId, editedName, editedIconURL);
+
+        if (editedProject) {
+            currentProjectList[editedProject.editedProjectIndex] = editedProject.project;
+            updateLocalStorage(currentProjectList);
+        }
+        return editedProject.project;
     }
 
 
