@@ -292,7 +292,7 @@ header .aside-icon {
   gap: 0.3rem;
 }
 
-.projects-menu {
+.bar-projects .header {
   display: grid;
   grid-template-columns: 2rem 1fr 2rem;
   align-content: center;
@@ -300,7 +300,7 @@ header .aside-icon {
   border-bottom: 1px solid var(--black);
 }
 
-.projects-menu {
+.bar-projects .header {
   display: grid;
   grid-template-columns: 2rem 1fr 2rem;
   align-content: center;
@@ -321,21 +321,21 @@ aside .projects-list .project.current * {
 
 /* Project */
 
-.projects-menu .add-new,
+.bar-projects .header .add-new,
 .project .edit,
 .project .remove {
   position: relative;
   transition: transform 0.05s;
 }
 
-.projects-menu .add-new:hover,
+.bar-projects .header .add-new:hover,
 .project .edit:hover,
 .project .remove:hover {
   cursor: pointer;
   transform: scale(1.2);
 }
 
-.projects-menu .add-new:active,
+.bar-projects .header .add-new:active,
 .project .edit:active,
 .project .remove:active {
   transform: scale(1);

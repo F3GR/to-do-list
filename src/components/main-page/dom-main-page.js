@@ -2,6 +2,7 @@ import { createElementWithAttributes } from '../utils.js';
 
 export function createMainPage() {
     renderMainPage();
+    renderFilterOptionsMenu();
     renderTaskMenu();
     renderProjectMenu();
 };
@@ -81,18 +82,18 @@ function renderMainPage() {
 
     const barProjects = createElementWithAttributes('div', {class: `bar-projects`}, sidebar);
 
-    const projectsBar = createElementWithAttributes('div', {class: `projects-menu`}, barProjects);
-    const projectsBarImage = createElementWithAttributes('img', {
+    const projectsBarHeader = createElementWithAttributes('div', {class: `header`}, barProjects);
+    const projectsBarHeaderImage = createElementWithAttributes('img', {
         src: '../src/originals/projects.svg',
         alt: `Projects icon`
-    }, projectsBar);
-    const projectsBarText = createElementWithAttributes('span', {}, projectsBar);
-    projectsBarText.textContent = `Projects (0)`;
-    const projectsBarAddImage = createElementWithAttributes('img', {
+    }, projectsBarHeader);
+    const projectsBarHeaderText = createElementWithAttributes('span', {}, projectsBarHeader);
+    projectsBarHeaderText.textContent = `Projects (0)`;
+    const projectsBarHeaderAddImage = createElementWithAttributes('img', {
         src: '../src/originals/add-new.svg',
         alt: `Add new project icon`,
         class: 'add-new',
-    }, projectsBar);
+    }, projectsBarHeader);
 
     const projectsList = createElementWithAttributes('ul', {class: `projects-list`}, barProjects);
 
@@ -110,7 +111,60 @@ function renderMainPage() {
         class: 'sidebar-cover'
     }, main);
 
+    const mainHeadBox = createElementWithAttributes('div', {class: `header`}, main);
+    const mainHeadImage = createElementWithAttributes('img', { 
+        src: '../src/originals/calendar-all.svg',
+        alt: `All tasks icon`
+    }, mainHeadBox);
+    const mainHeadText = createElementWithAttributes('span', {}, mainHeadBox);
+    mainHeadText.textContent = "All";
 
+    const mainTaskBar = createElementWithAttributes('div', {class: `task-bar`}, main);
+
+    const mainTaskNumber = createElementWithAttributes('div', {class: `task-number`}, mainTaskBar);
+    const taskBarText = createElementWithAttributes('span', {}, mainTaskNumber);
+    taskBarText.textContent = `Tasks (0)`;
+
+    const addNewTaskIcon = createElementWithAttributes('img', { 
+        src: '../src/originals/add-new.svg',
+        alt: `Add new Task icon`,
+        class: 'add-new'
+    }, mainTaskBar);
+
+    const taskList = createElementWithAttributes('ul', {class: `task-list`}, main);
+
+    const pageMenuBox = createElementWithAttributes('div', {class: `page-menu`, }, main);
+
+    const firstPageIcon = createElementWithAttributes('img', {
+        src: `../src/originals/first-page.svg`, 
+        alt: `First page icon`,
+        class: 'first-page'
+    }, pageMenuBox);
+    const previousPageIcon = createElementWithAttributes('img', {
+        src: `../src/originals/previous-page.svg`, 
+        alt: `Previous page icon`,
+        class: 'previous-page'
+    }, pageMenuBox);
+    const inputPage = createElementWithAttributes('input', {
+        type: 'number',
+        min: "1",
+        max: "99", 
+    }, pageMenuBox);
+    const nextPageIcon = createElementWithAttributes('img', {
+        src: `../src/originals/next-page.svg`, 
+        alt: `Next page icon`,
+        class: 'next-page'
+    }, pageMenuBox);
+    const lastPageIcon = createElementWithAttributes('img', {
+        src: `../src/originals/last-page.svg`, 
+        alt: `Last page icon`,
+        class: 'last-page'
+    }, pageMenuBox);
+}
+
+function renderFilterOptionsMenu() {
+    
+    const main = document.querySelector('.content main');
 
     const viewOptionsBox = createElementWithAttributes('div', {
         class: 'view-options-bar'
@@ -166,59 +220,6 @@ function renderMainPage() {
         alt: `Sort order icon`,
         class: 'is-upward'
     }, sortOptionsBox);
-
-
-
-
-    const mainHeadBox = createElementWithAttributes('div', {class: `header`}, main);
-    const mainHeadImage = createElementWithAttributes('img', { 
-        src: '../src/originals/calendar-all.svg',
-        alt: `All tasks icon`
-    }, mainHeadBox);
-    const mainHeadText = createElementWithAttributes('span', {}, mainHeadBox);
-    mainHeadText.textContent = "All";
-
-    const mainTaskBar = createElementWithAttributes('div', {class: `task-bar`}, main);
-
-    const mainTaskNumber = createElementWithAttributes('div', {class: `task-number`}, mainTaskBar);
-    const taskBarText = createElementWithAttributes('span', {}, mainTaskNumber);
-    taskBarText.textContent = `Tasks (0)`;
-
-    const addNewTaskIcon = createElementWithAttributes('img', { 
-        src: '../src/originals/add-new.svg',
-        alt: `Add new Task icon`,
-        class: 'add-new'
-    }, mainTaskBar);
-
-    const taskList = createElementWithAttributes('ul', {class: `task-list`}, main);
-
-    const pageMenuBox = createElementWithAttributes('div', {class: `page-menu`, }, main);
-
-    const firstPageIcon = createElementWithAttributes('img', {
-        src: `../src/originals/first-page.svg`, 
-        alt: `First page icon`,
-        class: 'first-page'
-    }, pageMenuBox);
-    const previousPageIcon = createElementWithAttributes('img', {
-        src: `../src/originals/previous-page.svg`, 
-        alt: `Previous page icon`,
-        class: 'previous-page'
-    }, pageMenuBox);
-    const inputPage = createElementWithAttributes('input', {
-        type: 'number',
-        min: "1",
-        max: "99", 
-    }, pageMenuBox);
-    const nextPageIcon = createElementWithAttributes('img', {
-        src: `../src/originals/next-page.svg`, 
-        alt: `Next page icon`,
-        class: 'next-page'
-    }, pageMenuBox);
-    const lastPageIcon = createElementWithAttributes('img', {
-        src: `../src/originals/last-page.svg`, 
-        alt: `Last page icon`,
-        class: 'last-page'
-    }, pageMenuBox);
 }
 
 function renderProjectMenu() {

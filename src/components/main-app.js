@@ -1,8 +1,8 @@
-import { createExampleTaskPanels, createExampleProjectPanel } from "./dom-examples-panels.js";
 import { createMainPage } from './main-page/dom-main-page.js';
 import { addEventListenersMainPage } from './main-page/event-listeners-main-page.js';
 import { projectController } from './project/project-controller.js';
 import { updateLocalStorage } from './utils.js'
+import { addListenersManageProjects } from './project/event-listeners-project-menu';
 
 class Application {
     constructor() {
@@ -26,6 +26,7 @@ class Application {
     
     createMainPage = () => createMainPage();
     addEventListenersMainPage = () => addEventListenersMainPage();
+    addListenersManageProjects = () => addListenersManageProjects();
 
     createNewProject(newName, newIconURL) {
         const currentProjectList = this.getProjectList(); 

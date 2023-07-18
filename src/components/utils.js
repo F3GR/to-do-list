@@ -45,7 +45,7 @@ export function noDuplicateTitle(list, title, id) {
   const n = list.length;
   let i = 0;
   for (; i < n; i++) {
-      if (list[i].id === id) {
+      if (Number(list[i].id) === Number(id)) {
           continue;
       }
       if (list[i].title === title) {
@@ -60,7 +60,7 @@ export function findIndex(list, id) {
   let n = list.length;
   let i = 0;
   for (; i < n; i++) {
-      if (list[i].id === id) {
+      if (Number(list[i].id) === Number(id)) {
           index = i;
           break;
       }

@@ -1,70 +1,7 @@
-import { renderNewProject, addListenersToANewProject } from '../project/dom-project.js';
-import { application } from '../main-app.js';
-
 export function addEventListenersMainPage() {
     addEventListenersSidebar();
     addEventListenersViewOptions();
-    addEventListenersProjectMenu();
     addEventListenersTaskMenu();
-}
-
-function addEventListenersProjectMenu() {
-    const selectedMenuCover = document.querySelector('.menu-cover');
-
-    const selectedProjectMenu = document.querySelector('.project-menu');
-    const selectedAddNewProjectButton = document.querySelector('img.add-new');
-    const selectedProjectMenuTitle = document.querySelector('.project-menu .title-box span');
-    const selectedSubmitProjectButton = document.querySelector('.project-menu button.submit');
-
-    selectedAddNewProjectButton.addEventListener('click', function() {
-        selectedProjectMenuTitle.textContent = 'Add a new project';
-        selectedSubmitProjectButton.textContent = 'Add';
-        selectedMenuCover.classList.add('shown');
-        selectedProjectMenu.classList.add('shown');
-        selectedProjectMenu.classList.add('add');
-    });
-
-    const selectedExitButton = document.querySelector('.project-menu .exit');
-    selectedExitButton.addEventListener('click', function() {
-        selectedProjectMenuTitle.textContent = '';
-        selectedSubmitProjectButton.textContent = '';
-        selectedMenuCover.classList.remove('shown');
-        selectedProjectMenu.classList.remove('shown');
-        selectedProjectMenu.classList.remove('add');
-    });
-
-    const selectedCancelButton = document.querySelector('.project-menu .cancel');
-    selectedCancelButton.addEventListener('click', function() {
-        selectedProjectMenuTitle.textContent = '';
-        selectedSubmitProjectButton.textContent = '';
-        selectedMenuCover.classList.remove('shown');
-        selectedProjectMenu.classList.remove('shown');
-        selectedProjectMenu.classList.remove('add');
-    });
-
-    const selectedForm = document.querySelector('.project-menu form');
-    selectedForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const selectedIcon = document.querySelector('input[name="iconURL"]:checked');
-        if (!selectedIcon) {
-          alert('Please select an icon');
-          return;
-        }
-
-        if (selectedProjectMenu.classList.contains('add')) {
-            const selectNameInput = document.querySelector('.project-menu #name');
-            const selectIconInput = document.querySelector('input[name="iconURL"]:checked');
-            const newProject = application.createNewProject(
-                selectNameInput.value, selectIconInput.value);
-            if (newProject) {
-                renderNewProject(newProject.name, newProject.iconURL, newProject.id);
-                addListenersToANewProject(newProject.id);
-            } else {
-                alert('The project with this title already exists!');
-            }
-        }
-    });
-
 }
 
 function addEventListenersTaskMenu() {
