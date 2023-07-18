@@ -10,6 +10,8 @@ export function addListenersManageProjects() {
     const selectedForm = document.querySelector('.project-menu form');
 
     selectedProjectBar.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
         const target = e.target;
     
         if (target.classList.contains('add-new')) {
@@ -73,12 +75,20 @@ export function addListenersManageProjects() {
             }
             const id = selectedProjectMenu.getAttribute('data-project-id');
     
-            const editedProject = application.editProject(id, selectNameInput.value, selectIconInput.value);
-            if (editedProject) {
-                const oldName = document.querySelector(`.project[data-project-id="${id}"] span`);
+            const editProject = application.editProject(id, selectNameInput.value, selectIconInput.value);
+            if (editProject) {
                 const oldIcon = document.querySelector(`.project[data-project-id="${id}"] .icon`);
-                oldName.textContent = selectNameInput.value;
+                const oldName = document.querySelector(`.project[data-project-id="${id}"] span`);
                 oldIcon.src = selectIconInput.value;
+                oldName.textContent = selectNameInput.value;
+
+                const editedProject = document.querySelector(`.project[data-project-id="${id}"]`);
+                if (editedProject.classList.contains('current')) {
+                    const mainGroupIcon = document.querySelector('main .header img');
+                    const mainGroupName = document.querySelector('main .header span');
+                    mainGroupIcon.src = selectIconInput.value;
+                    mainGroupName.textContent = selectNameInput.value;
+                }
             } else {
                 alert('The project with this title already exists!');
             }

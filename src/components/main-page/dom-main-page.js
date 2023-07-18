@@ -3,8 +3,8 @@ import { createElementWithAttributes } from '../utils.js';
 export function createMainPage() {
     renderMainPage();
     renderFilterOptionsMenu();
-    renderTaskMenu();
-    renderProjectMenu();
+    renderProjectMenuTemplate();
+    renderTaskMenuTemplate();
 };
 
 function renderMainPage() {
@@ -41,6 +41,7 @@ function renderMainPage() {
     const barTypes = createElementWithAttributes('div', {class: `bar-types`}, sidebar);
 
     const tasksAll = createElementWithAttributes('div', {class: `tasks-all`}, barTypes);
+    tasksAll.setAttribute('data-id', 'all');
     const tasksAllImage = createElementWithAttributes('img', { 
         src: '../src/originals/calendar-all.svg',
         alt: `All tasks icon`
@@ -49,6 +50,7 @@ function renderMainPage() {
     tasksAllText.textContent = `All`;
 
     const tasksToday = createElementWithAttributes('div', {class: `tasks-today`}, barTypes);
+    tasksAll.setAttribute('data-id', 'today');
     const tasksTodayImage = createElementWithAttributes('img', {
         src: '../src/originals/calendar-today.svg',
         alt: `Today tasks icon`
@@ -57,6 +59,7 @@ function renderMainPage() {
     tasksTodayText.textContent = `Today`;
 
     const tasksWeek = createElementWithAttributes('div', {class: `tasks-week`}, barTypes);
+    tasksAll.setAttribute('data-id', 'week');
     const tasksWeekImage = createElementWithAttributes('img', {
         src: '../src/originals/calendar-week.svg',
         alt: `Week tasks icon`
@@ -65,6 +68,7 @@ function renderMainPage() {
     tasksWeekText.textContent = `Week`;
 
     const tasksCompleted = createElementWithAttributes('div', {class: `tasks-completed`}, barTypes);
+    tasksAll.setAttribute('data-id', 'completed');
     const tasksCompletedImage = createElementWithAttributes('img', {
         src: '../src/originals/calendar-finished.svg',
         alt: `Completed tasks icon`
@@ -73,6 +77,7 @@ function renderMainPage() {
     tasksCompletedText.textContent = `Completed`;
 
     const tasksOverdue = createElementWithAttributes('div', {class: `tasks-overdue`}, barTypes);
+    tasksAll.setAttribute('data-id', 'overdue');
     const tasksOverdueImage = createElementWithAttributes('img', {
         src: '../src/originals/calendar-overdue.svg',
         alt: `Overdue tasks icon`
@@ -222,7 +227,7 @@ function renderFilterOptionsMenu() {
     }, sortOptionsBox);
 }
 
-function renderProjectMenu() {
+function renderProjectMenuTemplate() {
     const content = document.querySelector('.content');
 
     const menuCover = createElementWithAttributes('div', {
@@ -397,7 +402,7 @@ function renderProjectMenu() {
     buttonCancelIcon.textContent = 'Cancel';
 }
 
-function renderTaskMenu() {
+function renderTaskMenuTemplate() {
     const content = document.querySelector('.content');
 
     const taskMenu = createElementWithAttributes('div', {

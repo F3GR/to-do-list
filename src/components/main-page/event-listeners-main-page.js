@@ -63,6 +63,31 @@ function addEventListenersSidebar() {
             selectedViewBox.classList.remove('shown');
         }
     });
+
+    let currentGroup;
+    const mainGroupIcon = document.querySelector('main .header img');
+    const mainGroupName = document.querySelector('main .header span');
+    const barTypes = document.querySelector('.bar-types');
+    const projectsList = document.querySelector('.projects-list');
+    
+    barTypes.addEventListener('click', handleGroupSelection);
+    projectsList.addEventListener('click', handleGroupSelection);
+    
+    function handleGroupSelection(e) {
+        const target = e.target.closest('.bar-types > *, .projects-list > li.project');
+    
+        if (target && target !== currentGroup) {
+            const selectedGroupIcon = target.querySelector('img');
+            const selectedGroupName = target.querySelector('span');
+            if (currentGroup) {
+                currentGroup.classList.remove('current');
+            }
+            target.classList.add('current');
+            mainGroupIcon.src = selectedGroupIcon.src;
+            mainGroupName.textContent = selectedGroupName.textContent;
+            currentGroup = target;
+        }
+    }
 }
 
 function addEventListenersViewOptions() {
@@ -73,17 +98,6 @@ function addEventListenersViewOptions() {
                 button.classList.add('enabled');
             } else {
                 button.classList.remove('enabled');
-            }
-        });
-    });
-
-    const selectedSidebarDisplayTypes = document.querySelectorAll('aside .bar-types > *');
-    selectedSidebarDisplayTypes.forEach((button) => {
-        button.addEventListener('click', function() {
-            if (!button.classList.contains('current')) {
-                button.classList.add('current');
-            } else {
-                button.classList.remove('current');
             }
         });
     });

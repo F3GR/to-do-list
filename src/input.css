@@ -310,12 +310,12 @@ header .aside-icon {
 }
 
 .bar-types > *.current,
-aside .projects-list li.current {
+aside .projects-list > .project.current {
   background-color: var(--blue);
 }
 
 .bar-types > *.current *,
-aside .projects-list .project.current * {
+aside .projects-list > .project.current * {
   color: var(--white);
 }
 
