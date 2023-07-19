@@ -1,25 +1,24 @@
 import { createElementWithAttributes } from '../utils.js';
 
-export function createNewTaskPanel() {
-    renderNewTask();
-    addListenersToANewTask();
-}
-
-function renderNewTask() {
+export function renderTask(projectId, taskId, title, dueDate, status, priority, description, notes) {
     const taskList = document.querySelector('.task-list');
-    const exampleTask = createElementWithAttributes('li', {class: `task`}, taskList);
-    exampleTask.setAttribute('data-task-id', '0');
+    const task = createElementWithAttributes('li', {class: `task`}, taskList);
+    task.setAttribute('data-project-id', `${projectId}`);
+    task.setAttribute('data-task-id', `${taskId}`);
+    task.setAttribute('data-task-status', `${status}`);
+    task.setAttribute('data-task-priority', `${priority}`);
+    
 
     const checkbox = createElementWithAttributes('input', {
         type: `checkbox`, 
         id: `task-status`,
         class: 'status'
-    }, exampleTask);
+    }, task);
 
     const label = createElementWithAttributes('label', {
         for: `task-status`, 
         class: 'status-label'
-    }, exampleTask);
+    }, task);
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
@@ -30,75 +29,70 @@ function renderNewTask() {
     svg.appendChild(path);
     label.appendChild(svg);
     
-    const taskNameBox = createElementWithAttributes('div', {class: `task-name-box`}, exampleTask);
-    const taskName = createElementWithAttributes('span', {class: `task-name-box`}, taskNameBox);
-    taskName.textContent = `New task`;
+    const taskTitleBox = createElementWithAttributes('div', {class: `task-title-box`}, task);
+    const taskTitle = createElementWithAttributes('span', {class: `task-title`}, taskTitleBox);
+    taskTitle.textContent = `${title}`;
 
-    const taskDueDateBox = createElementWithAttributes('div', {class: `task-due-date`, }, exampleTask);
+    const taskOverDueBox = createElementWithAttributes('div', {
+        class: 'overdue-box'
+    }, task); 
+    const taskOverDueIcon = createElementWithAttributes('img', {
+        src: `../src/originals/status-overdue.svg`, 
+        alt: `Task overdue status icon`,
+        class: `overdue`
+    }, taskOverDueBox);
+
+    const taskDueDateBox = createElementWithAttributes('div', {class: `task-due-date`, }, task);
     const taskDueDateText = createElementWithAttributes('span', {class: ``, }, taskDueDateBox);
-    taskDueDateText.textContent = `2023-01-07`;
+    taskDueDateText.textContent = `${dueDate}`;
 
     const taskEditIcon = createElementWithAttributes('img', {
         src: `../src/originals/edit.svg`, 
         alt: `Task edit information icon`,
         class: 'edit'
-    }, exampleTask);
+    }, task);
 
     const taskRemoveIcon = createElementWithAttributes('img', {
         src: `../src/originals/delete.svg`, 
         alt: `Task remove icon`,
         class: 'remove'
-    }, exampleTask);
+    }, task);
 
     const taskUnfoldIcon = createElementWithAttributes('img', {
         src: `../src/originals/unfold.svg`, 
         alt: `Task information unfold or fold icon`,
         class: 'unfold'
-    }, exampleTask);
-}
+    }, task);
 
-function addListenersToANewTask() {
-    const selectedTaskMenu = document.querySelector('.content .task-menu');
-    const selectedTaskMenuTitle = document.querySelector('.task-menu .title');
-    const selectedAddTaskButton = document.querySelector('.task-bar > .add-new');
-    const selectedMenuCover = document.querySelector('.menu-cover');
+    const taskUnfoldedPanel = createElementWithAttributes('div', {
+        class: 'task-unfold-box',
+    }, task);
 
-    const selectedEditTaskButton = document.querySelector('.task .edit');
+    const taskDescriptionBox = createElementWithAttributes('div', {
+        class: 'task-description-box',
+    }, taskUnfoldedPanel);
 
-    selectedEditTaskButton.addEventListener('click', function() {
-        selectedTaskMenuTitle.textContent = 'Edit the task';
-        selectedAddTaskButton.textContent = 'Save';
-        selectedMenuCover.classList.add('shown');
-        selectedTaskMenu.classList.add('shown');
-    });
+    const taskDescriptionTitle = createElementWithAttributes('span', {
+        class: 'task-description-title',
+    }, taskDescriptionBox);
+    taskDescriptionTitle.textContent = 'Description: ';
 
-    const selectedRemoveTaskButton = document.querySelector('.task img.remove');
-    selectedRemoveTaskButton.addEventListener('click', function() {
-        const removedTask = selectedRemoveTaskButton.closest('.task');
-        removedTask.remove();
-    });
+    const taskDescription = createElementWithAttributes('span', {
+        class: 'task-description',
+    }, taskDescriptionBox);
+    taskDescription.textContent = `${description}`;
 
-    const selectedUnfoldButton = document.querySelector('.task img.unfold');
-    selectedUnfoldButton.addEventListener('click', function() {
-        const unfoldedTask = selectedUnfoldButton.closest('.task');
-        if (!unfoldedTask.classList.contains('unfolded')) {
-            unfoldedTask.classList.add('unfolded');
-            selectedUnfoldButton.setAttribute('src', '../src/originals/unfold.svg');
-        } else {
-            unfoldedTask.classList.remove('unfolded');
-            selectedUnfoldButton.setAttribute('src', '../src/originals/fold.svg');
-        }
-    });
+    const taskNotesBox = createElementWithAttributes('div', {
+        class: 'task-notes-box',
+    }, taskUnfoldedPanel);
 
-    const checkbox = document.querySelector('.task input.status');
-    const svg = document.querySelector('.task label svg');
-    const path = document.querySelector('.task label svg path');
+    const taskNotesTitle = createElementWithAttributes('span', {
+        class: 'task-notes-title',
+    }, taskNotesBox);
+    taskNotesTitle.textContent = 'Notes: ';
 
-    checkbox.addEventListener('change', () => {
-        if (checkbox.checked) {
-          svg.classList.add('checked');
-        } else {
-          svg.classList.remove('checked');
-        }
-    });
+    const taskNotes = createElementWithAttributes('span', {
+        class: 'task-notes',
+    }, taskNotesBox);
+    taskNotes.textContent = `${notes}`;
 }

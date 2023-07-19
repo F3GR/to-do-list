@@ -8,6 +8,8 @@ export function addListenersManageProjects() {
     const selectedSubmitProjectButton = document.querySelector('.project-menu button.submit');
     const selectedProjectBar = document.querySelector('aside .bar-projects');
     const selectedForm = document.querySelector('.project-menu form');
+    const mainGroupIcon = document.querySelector('main .header img');
+    const mainGroupName = document.querySelector('main .header span');
 
     selectedProjectBar.addEventListener('click', function(e) {
         e.preventDefault();
@@ -41,6 +43,12 @@ export function addListenersManageProjects() {
             const removedProject = application.removeProject(id);
         
             if (removedProject) {
+                /**** TODO ****/
+                if (selectedProject.classList.contains('current')) {
+                    mainGroupIcon.src = ``;
+                    mainGroupName.textContent = ``;
+                }
+                
                 selectedProject.remove();
             } else {
                 alert('Error: project wasn\'t found');
@@ -84,8 +92,6 @@ export function addListenersManageProjects() {
 
                 const editedProject = document.querySelector(`.project[data-project-id="${id}"]`);
                 if (editedProject.classList.contains('current')) {
-                    const mainGroupIcon = document.querySelector('main .header img');
-                    const mainGroupName = document.querySelector('main .header span');
                     mainGroupIcon.src = selectIconInput.value;
                     mainGroupName.textContent = selectNameInput.value;
                 }

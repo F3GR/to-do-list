@@ -1,9 +1,9 @@
 import { Project } from './project.js';
 import { noDuplicateName, findIndex } from '../utils.js';
 
-const projectController = {
-    createNew: function(projectList, newName, newIconURL) {
-        if (noDuplicateName(projectList, newName, "")) {
+export const projectsController = {
+    createNew: function(projectsList, newName, newIconURL) {
+        if (noDuplicateName(projectsList, newName, "")) {
             const newId = Project.getNewId();
             const newProject = new Project(newId, newName, newIconURL);
             Project.incrementNewProjectId();
@@ -13,11 +13,11 @@ const projectController = {
         }
     },
 
-    edit: function(projectList, projectId, editedName, editedIcon) {
-        const editedProjectIndex = findIndex(projectList, projectId);
-        const project = projectList[editedProjectIndex];
+    edit: function(projectsList, projectId, editedName, editedIcon) {
+        const editedProjectIndex = findIndex(projectsList, projectId);
+        const project = projectsList[editedProjectIndex];
 
-        if (noDuplicateName(projectList, editedName, projectId)) {
+        if (noDuplicateName(projectsList, editedName, projectId)) {
             if (project.name !== editedName) {
                 project.name = editedName;
             }
@@ -30,9 +30,7 @@ const projectController = {
         }
     },
 
-    remove: function(projectList, projectId) {
-        return findIndex(projectList, projectId);
+    remove: function(projectsList, projectId) {
+        return findIndex(projectsList, projectId);
     }
 };
-
-export { projectController };

@@ -1,41 +1,6 @@
 export function addEventListenersMainPage() {
     addEventListenersSidebar();
     addEventListenersViewOptions();
-    addEventListenersTaskMenu();
-}
-
-function addEventListenersTaskMenu() {
-    const selectedMenuCover = document.querySelector('.menu-cover');
-
-    const selectedTaskMenu = document.querySelector('.task-menu');
-    const selectedTaskMenuTitle = document.querySelector('.task-menu .title');
-    const selectedAddTaskButton = document.querySelector('.task-bar > .add-new');
-
-    selectedAddTaskButton.addEventListener('click', function() {
-        selectedTaskMenuTitle.textContent = 'Add a new task';
-        selectedAddTaskButton.textContent = 'Add';
-        selectedMenuCover.classList.add('shown');
-        selectedTaskMenu.classList.add('shown');
-        selectedTaskMenu.classList.add('add');
-    });
-
-    const selectedTaskExitButton = document.querySelector('.task-menu .exit');
-    selectedTaskExitButton.addEventListener('click', function() {
-        selectedTaskMenuTitle.textContent = '';
-        selectedAddTaskButton.textContent = '';
-        selectedMenuCover.classList.remove('shown');
-        selectedTaskMenu.classList.remove('shown');
-        selectedTaskMenu.classList.remove('add');
-    });
-
-    const selectedTaskCancelButton = document.querySelector('.task-menu .cancel');
-    selectedTaskCancelButton.addEventListener('click', function() {
-        selectedTaskMenuTitle.textContent = '';
-        selectedAddTaskButton.textContent = '';
-        selectedMenuCover.classList.remove('shown');
-        selectedTaskMenu.classList.remove('shown');
-        selectedTaskMenu.classList.remove('add');
-    });
 }
 
 function addEventListenersSidebar() {

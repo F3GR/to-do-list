@@ -4,5 +4,6 @@ import { application } from './components/main-app.js';
 application.createMainPage();
 application.addEventListenersMainPage();
 application.addListenersManageProjects();
-application.getProjectList();
+application.addListenersManageTasks();
+application.getProjectsList();
 

@@ -23,8 +23,12 @@ export function removeCurrentStatus(element) {
   element.removeAttribute('data-value');
 }
 
-export function updateLocalStorage(projectList) {
+export function updateProjectsList(projectList) {
   localStorage.setItem('TrackIt: project-list', JSON.stringify(projectList));
+}
+
+export function updateTasksList(projectId, tasksList) {
+  localStorage.setItem(`TrackIt: ${projectId}`, JSON.stringify(tasksList));
 }
 
 export function noDuplicateName(list, name, id) {

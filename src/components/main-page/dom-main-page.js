@@ -390,16 +390,16 @@ function renderProjectMenuTemplate() {
         class: 'button-box',
     }, projectMenuForm);
 
-    const buttonSubmitIcon = createElementWithAttributes('button', {
+    const buttonSubmit = createElementWithAttributes('button', {
         type: 'submit',
         class: 'submit'
     }, buttonsGrid);
-    buttonSubmitIcon.textContent = '';
+    buttonSubmit.textContent = '';
 
-    const buttonCancelIcon = createElementWithAttributes('button', {
+    const buttonCancel = createElementWithAttributes('button', {
         class: 'cancel',
     }, buttonsGrid);
-    buttonCancelIcon.textContent = 'Cancel';
+    buttonCancel.textContent = 'Cancel';
 }
 
 function renderTaskMenuTemplate() {
@@ -416,7 +416,6 @@ function renderTaskMenuTemplate() {
     const taskMenuTitle = createElementWithAttributes('span', {
         class: 'title'
     }, taskMenuTitleBox);
-    taskMenuTitle.textContent = '';
 
     const taskMenuExitIcon = createElementWithAttributes('img', {
         class: 'exit',
@@ -450,40 +449,7 @@ function renderTaskMenuTemplate() {
         name: 'dueDate',
     }, taskMenuForm);
 
-    const formStatusFieldset = createElementWithAttributes('fieldset', {
-        required: 'required',
-        class: 'status'
-    }, taskMenuForm);
-
-    const formStatusLegend = createElementWithAttributes('legend', {}, formStatusFieldset);
-    formStatusLegend.textContent = 'Is the task finished?'
-
-    const radioStatusInProgress = createElementWithAttributes('input', {
-        id: 'status-in-progress',
-        type: 'radio',
-        name: 'status',
-        value: 'in-progress'
-    }, formStatusFieldset);
-
-    const labelStatusInProgress = createElementWithAttributes('label', {
-        for: 'status-in-progress'
-    }, formStatusFieldset);
-    labelStatusInProgress.textContent = 'In progress';
-
-    const radioStatusCompleted = createElementWithAttributes('input', {
-        id: 'status-completed',
-        type: 'radio',
-        name: 'status',
-        value: 'completed'
-    }, formStatusFieldset);
-
-    const labelStatusCompleted = createElementWithAttributes('label', {
-        for: 'status-completed'
-    }, formStatusFieldset);
-    labelStatusCompleted.textContent = 'Completed';
-
     const formPriorityFieldset = createElementWithAttributes('fieldset', {
-        required: 'required',
         class: 'priority'
     }, taskMenuForm);
 
@@ -491,38 +457,38 @@ function renderTaskMenuTemplate() {
     formPriorityLegend.textContent = 'What is the task\'s priority?'
 
     const radioPriorityHigh = createElementWithAttributes('input', {
-        id: 'priority-high',
+        id: 'priority',
         type: 'radio',
         name: 'priority',
         value: 'high'
     }, formPriorityFieldset);
 
     const labelPriorityHigh = createElementWithAttributes('label', {
-        for: 'priority-high'
+        for: 'priority'
     }, formPriorityFieldset);
     labelPriorityHigh.textContent = 'High';
 
     const radioPriorityMedium = createElementWithAttributes('input', {
-        id: 'priority-medium',
+        id: 'priority',
         type: 'radio',
         name: 'priority',
         value: 'medium'
     }, formPriorityFieldset);
 
     const labelPriorityMedium = createElementWithAttributes('label', {
-        for: 'priority-medium'
+        for: 'priority'
     }, formPriorityFieldset);
     labelPriorityMedium.textContent = 'Medium';
     
     const radioPriorityNormal = createElementWithAttributes('input', {
-        id: 'priority-normal',
+        id: 'priority',
         type: 'radio',
         name: 'priority',
         value: 'normal'
     }, formPriorityFieldset);
 
     const labelPriorityNormal = createElementWithAttributes('label', {
-        for: 'priority-normal'
+        for: 'priority'
     }, formPriorityFieldset);
     labelPriorityNormal.textContent = 'Normal';
 
@@ -556,15 +522,14 @@ function renderTaskMenuTemplate() {
         class: 'button-box',
     }, taskMenuForm);
 
-    const buttonAddIcon = createElementWithAttributes('button', {
+    const buttonAdd = createElementWithAttributes('button', {
         type: 'submit',
         class: 'submit',
     }, buttonsGrid);
-    buttonAddIcon.textContent = 'Add';
 
-    const buttonCancelIcon = createElementWithAttributes('button', {
+    const buttonCancel = createElementWithAttributes('button', {
         class: 'cancel',
     }, buttonsGrid);
-    buttonCancelIcon.textContent = 'Cancel';
+    buttonCancel.textContent = 'Cancel';
 }
 
