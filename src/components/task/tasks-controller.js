@@ -1,5 +1,5 @@
 import { Task } from './task.js';
-import { noDuplicateTitle } from '../utils.js';
+import { noDuplicateTitle, findIndex } from '../utils.js';
 
 export const tasksController = {
     createNew: function(taskList, newTitle, newDueDate, newPriority, newDescription, newNotes) {
@@ -42,10 +42,7 @@ export const tasksController = {
         }
     },
 
-    remove: function(taskList, id) {
-        const removedFoundTask = taskList.delete(id);
-        if (!removedFoundTask) {
-            console.log('The task is not found, please, enter the existing task in the current project')
-        }
+    remove: function(taskList, taskId) {
+        return findIndex(taskList, taskId);
     }
 };

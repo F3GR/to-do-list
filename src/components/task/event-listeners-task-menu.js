@@ -54,10 +54,13 @@ export function addListenersManageTasks() {
             selectedTaskMenu.classList.add('shown');
 
         } else if (target.classList.contains('remove')) {
-            const removedTask = target.closest('.task');
+            const selectedTask = target.closest('.task');
+            const projectId = selectedTask.getAttribute('data-project-id');
+            const taskId = selectedTask.getAttribute('data-task-id');
+            const removedTask = application.removeTask(projectId, taskId);
 
             if (removedTask) {
-                removedTask.remove();
+                selectedTask.remove();
             } else {
                 alert('Error: task wasn\'t found.')
             }
