@@ -15,9 +15,9 @@ export function addListenersManageTasks() {
 
         if (target.classList.contains('add-new')) {
             const currentProject = document.querySelector('.projects-list .project.current');
-            const id = currentProject.getAttribute('data-project-id');
+            const id = currentProject.getAttribute('data-group-id');
 
-            selectedTaskMenu.setAttribute('data-project-id', `${id}`);
+            selectedTaskMenu.setAttribute('data-group-id', `${id}`);
             selectedTaskMenu.setAttribute('data-task-action', 'add-new');
 
             selectedTaskMenuTitle.textContent = 'Add a new task';
@@ -42,10 +42,10 @@ export function addListenersManageTasks() {
 
         } else if (target.classList.contains('edit')) {
             const currentProject = document.querySelector('.projects-list .project.current');
-            const projectId = currentProject.getAttribute('data-project-id');
+            const projectId = currentProject.getAttribute('data-group-id');
             const taskId = target.closest('.task').getAttribute('data-task-id');
 
-            selectedTaskMenu.setAttribute('data-project-id', `${projectId}`);
+            selectedTaskMenu.setAttribute('data-group-id', `${projectId}`);
             selectedTaskMenu.setAttribute('data-task-action', 'edit');
             selectedTaskMenu.setAttribute('data-task-id', `${taskId}`);
 
@@ -56,7 +56,7 @@ export function addListenersManageTasks() {
 
         } else if (target.classList.contains('remove')) {
             const selectedTask = target.closest('.task');
-            const projectId = selectedTask.getAttribute('data-project-id');
+            const projectId = selectedTask.getAttribute('data-group-id');
             const taskId = selectedTask.getAttribute('data-task-id');
             const removedTask = application.removeTask(projectId, taskId);
 
@@ -85,13 +85,13 @@ export function addListenersManageTasks() {
     selectedTaskForm.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        const titleInput = document.querySelector('.task-menu #title');
-        const dueDateInput = document.querySelector('.task-menu #dueDate');
+        const titleInput = document.querySelector('.task-menu #task-title');
+        const dueDateInput = document.querySelector('.task-menu #task-dueDate');
         const priorityInput = document.querySelector('.task-menu input[name="priority"]:checked');
-        const descriptionInput = document.querySelector('.task-menu #description');
-        const notesInput = document.querySelector('.task-menu #notes');
+        const descriptionInput = document.querySelector('.task-menu #task-description');
+        const notesInput = document.querySelector('.task-menu #task-notes');
 
-        const projectId = selectedTaskMenu.getAttribute('data-project-id');
+        const projectId = selectedTaskMenu.getAttribute('data-group-id');
         const taskId = selectedTaskMenu.getAttribute('data-task-id');
 
         if (!titleInput.value) {
@@ -120,7 +120,7 @@ export function addListenersManageTasks() {
                 priorityInput.value, descriptionInput.value, notesInput.value);
 
             if (editedTask) {
-                const taskSelector = `.task[data-project-id="${projectId}"][data-task-id="${taskId}"]`;
+                const taskSelector = `.task[data-group-id="${projectId}"][data-task-id="${taskId}"]`;
 
                 const oldTitle = document.querySelector(taskSelector + ' .task-title');
                 const oldDueDate = document.querySelector(taskSelector + ' .task-due-date span');
@@ -149,7 +149,7 @@ export function addListenersManageTasks() {
         selectedTaskMenu.classList.remove('shown');
         selectedTaskMenu.classList.remove('add');
         selectedTaskMenu.removeAttribute('data-task-action');
-        selectedTaskMenu.removeAttribute('data-project-id');
+        selectedTaskMenu.removeAttribute('data-group-id');
         selectedTaskMenu.removeAttribute('data-task-id');
     });
 
@@ -163,55 +163,9 @@ export function addListenersManageTasks() {
         selectedTaskMenu.classList.remove('shown');
         selectedTaskMenu.classList.remove('add');
         selectedTaskMenu.removeAttribute('data-task-action');
-        selectedTaskMenu.removeAttribute('data-project-id');
+        selectedTaskMenu.removeAttribute('data-group-id');
         selectedTaskMenu.removeAttribute('data-task-id');
     });
 }
 
-
-/*
-
-import { application } from '../main-app.js';
-import { renderProject } from './dom-project.js';
-
-export function addListenersManageProjects() {
-    const selectedProjectBar = document.querySelector('aside .bar-projects');
-    const mainGroupIcon = document.querySelector('main .header img');
-    const mainGroupName = document.querySelector('main .header span');
-
-    selectedForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        
-        if (selectedProjectMenu.getAttribute('data-project-action') === 'add-new') {
-
-        } else if (selectedProjectMenu.getAttribute('data-project-action') === 'edit') {
-            const selectNameInput = document.querySelector('.project-menu[data-project-action="edit"] #name');
-            const selectIconInput = document.querySelector('.project-menu[data-project-action="edit"] input[name="iconURL"]:checked');
-            if (!selectIconInput || !selectIconInput.value) {
-                alert('Please select an icon');
-                return;
-            }
-            const id = selectedProjectMenu.getAttribute('data-project-id');
-    
-            const editProject = application.editProject(id, selectNameInput.value, selectIconInput.value);
-            if (editProject) {
-                const oldIcon = document.querySelector(`.project[data-project-id="${id}"] .icon`);
-                const oldName = document.querySelector(`.project[data-project-id="${id}"] span`);
-                oldIcon.src = selectIconInput.value;
-                oldName.textContent = selectNameInput.value;
-
-                const editedProject = document.querySelector(`.project[data-project-id="${id}"]`);
-                if (editedProject.classList.contains('current')) {
-                    mainGroupIcon.src = selectIconInput.value;
-                    mainGroupName.textContent = selectNameInput.value;
-                }
-            } else {
-                alert('The project with this title already exists!');
-            }
-        }
-    });
-}
-
-*/
 

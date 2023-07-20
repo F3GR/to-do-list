@@ -41,7 +41,7 @@ function renderMainPage() {
     const barTypes = createElementWithAttributes('div', {class: `bar-types`}, sidebar);
 
     const tasksAll = createElementWithAttributes('div', {class: `tasks-all`}, barTypes);
-    tasksAll.setAttribute('data-id', 'all');
+    tasksAll.setAttribute('data-group-id', 'all');
     const tasksAllImage = createElementWithAttributes('img', { 
         src: '../src/originals/calendar-all.svg',
         alt: `All tasks icon`
@@ -50,7 +50,7 @@ function renderMainPage() {
     tasksAllText.textContent = `All`;
 
     const tasksToday = createElementWithAttributes('div', {class: `tasks-today`}, barTypes);
-    tasksAll.setAttribute('data-id', 'today');
+    tasksToday.setAttribute('data-group-id', 'today');
     const tasksTodayImage = createElementWithAttributes('img', {
         src: '../src/originals/calendar-today.svg',
         alt: `Today tasks icon`
@@ -59,7 +59,7 @@ function renderMainPage() {
     tasksTodayText.textContent = `Today`;
 
     const tasksWeek = createElementWithAttributes('div', {class: `tasks-week`}, barTypes);
-    tasksAll.setAttribute('data-id', 'week');
+    tasksWeek.setAttribute('data-group-id', 'week');
     const tasksWeekImage = createElementWithAttributes('img', {
         src: '../src/originals/calendar-week.svg',
         alt: `Week tasks icon`
@@ -68,7 +68,7 @@ function renderMainPage() {
     tasksWeekText.textContent = `Week`;
 
     const tasksCompleted = createElementWithAttributes('div', {class: `tasks-completed`}, barTypes);
-    tasksAll.setAttribute('data-id', 'completed');
+    tasksCompleted.setAttribute('data-group-id', 'completed');
     const tasksCompletedImage = createElementWithAttributes('img', {
         src: '../src/originals/calendar-finished.svg',
         alt: `Completed tasks icon`
@@ -77,7 +77,7 @@ function renderMainPage() {
     tasksCompletedText.textContent = `Completed`;
 
     const tasksOverdue = createElementWithAttributes('div', {class: `tasks-overdue`}, barTypes);
-    tasksAll.setAttribute('data-id', 'overdue');
+    tasksOverdue.setAttribute('data-group-id', 'overdue');
     const tasksOverdueImage = createElementWithAttributes('img', {
         src: '../src/originals/calendar-overdue.svg',
         alt: `Overdue tasks icon`
@@ -256,12 +256,12 @@ function renderProjectMenuTemplate() {
     const projectMenuForm = createElementWithAttributes('form', {}, projectMenu);
     
     const formNameLabel = createElementWithAttributes('label', {
-        for: 'name'
+        for: 'project-name'
     }, projectMenuForm);
     formNameLabel.textContent = 'Name*:'
     const formName = createElementWithAttributes('input', {
         type: 'text',
-        id: 'name',
+        id: 'project-name',
         name: 'name',
         required: 'required'
     }, projectMenuForm);
@@ -273,13 +273,13 @@ function renderProjectMenuTemplate() {
     formIconLegend.textContent = 'Icon*:'
 
     const inputCategoryJob = createElementWithAttributes('input', {
-        id: 'job',
+        id: 'project-category-job',
         type: 'radio',
         name: 'iconURL',
         value: '../src/originals/category-job.svg'
     }, formIconFieldset);
     const iconCategoryJobLabel = createElementWithAttributes('label', {
-        for: 'job'
+        for: 'project-category-job'
     }, formIconFieldset);
     const iconCategoryJob = createElementWithAttributes('img', {
         src: '../src/originals/category-job.svg',
@@ -287,13 +287,13 @@ function renderProjectMenuTemplate() {
     }, iconCategoryJobLabel);
 
     const inputCategoryStudy = createElementWithAttributes('input', {
-        id: 'study',
+        id: 'project-category-study',
         type: 'radio',
         name: 'iconURL',
         value: '../src/originals/category-study.svg'
     }, formIconFieldset);
     const iconCategoryStudyLabel = createElementWithAttributes('label', {
-        for: 'study',
+        for: 'project-category-study',
     }, formIconFieldset);
     const iconCategoryStudy = createElementWithAttributes('img', {
         src: '../src/originals/category-study.svg',
@@ -301,13 +301,13 @@ function renderProjectMenuTemplate() {
     }, iconCategoryStudyLabel);
 
     const inputCategoryGift = createElementWithAttributes('input', {
-        id: 'gift',
+        id: 'project-category-gift',
         type: 'radio',
         name: 'iconURL',
         value: '../src/originals/category-gift.svg'
     }, formIconFieldset);
     const iconCategoryGiftLabel = createElementWithAttributes('label', {
-        for: 'gift',
+        for: 'project-category-gift',
     }, formIconFieldset);
     const iconCategoryGift = createElementWithAttributes('img', {
         src: '../src/originals/category-gift.svg',
@@ -315,13 +315,13 @@ function renderProjectMenuTemplate() {
     }, iconCategoryGiftLabel);
 
     const inputCategoryInternational = createElementWithAttributes('input', {
-        id: 'international',
+        id: 'project-category-international-activity',
         type: 'radio',
         name: 'iconURL',
         value: '../src/originals/category-international-activity.svg'
     }, formIconFieldset);
     const iconCategoryInternationalLabel = createElementWithAttributes('label', {
-        for: 'international',
+        for: 'project-category-international-activity',
     }, formIconFieldset);
     const iconCategoryInternational = createElementWithAttributes('img', {
         src: '../src/originals/category-international-activity.svg',
@@ -329,13 +329,13 @@ function renderProjectMenuTemplate() {
     }, iconCategoryInternationalLabel);
 
     const inputCategoryPeople = createElementWithAttributes('input', {
-        id: 'people',
+        id: 'project-category-people',
         type: 'radio',
         name: 'iconURL',
         value: '../src/originals/category-people.svg'
     }, formIconFieldset);
     const iconCategoryPeopleLabel = createElementWithAttributes('label', {
-        for: 'people',
+        for: 'project-category-people',
     }, formIconFieldset);
     const iconCategoryPeople = createElementWithAttributes('img', {
         src: '../src/originals/category-people.svg',
@@ -344,13 +344,13 @@ function renderProjectMenuTemplate() {
 
 
     const inputCategoryScience = createElementWithAttributes('input', {
-        id: 'science',
+        id: 'project-category-science',
         type: 'radio',
         name: 'iconURL',
         value: '../src/originals/category-science.svg'
     }, formIconFieldset);
     const iconCategoryScienceLabel = createElementWithAttributes('label', {
-        for: 'science',
+        for: 'project-category-science',
     }, formIconFieldset);
     const iconCategoryScience = createElementWithAttributes('img', {
         src: '../src/originals/category-science.svg',
@@ -358,13 +358,13 @@ function renderProjectMenuTemplate() {
     }, iconCategoryScienceLabel);
 
     const inputCategoryIT = createElementWithAttributes('input', {
-        id: 'it',
+        id: 'project-category-it',
         type: 'radio',
         name: 'iconURL',
         value: '../src/originals/category-it.svg'
     }, formIconFieldset);
     const iconCategoryITLabel = createElementWithAttributes('label', {
-        for: 'it',
+        for: 'project-category-it',
     }, formIconFieldset);
     const iconCategoryIT = createElementWithAttributes('img', {
         src: '../src/originals/category-it.svg',
@@ -373,13 +373,13 @@ function renderProjectMenuTemplate() {
 
 
     const inputCategoryOther = createElementWithAttributes('input', {
-        id: 'other',
+        id: 'project-category-other',
         type: 'radio',
         name: 'iconURL',
         value: '../src/originals/category-other.svg'
     }, formIconFieldset);
     const iconCategoryOtherLabel = createElementWithAttributes('label', {
-        for: 'other',
+        for: 'project-category-other',
     }, formIconFieldset);
     const iconCategoryOther = createElementWithAttributes('img', {
         src: '../src/originals/category-other.svg',
@@ -427,25 +427,25 @@ function renderTaskMenuTemplate() {
     }, taskMenu);
 
     const formTitleLabel = createElementWithAttributes('label', {
-        for: 'title'
+        for: 'task-title'
     }, taskMenuForm);
     formTitleLabel.textContent = 'Title*:'
 
     const formTitle = createElementWithAttributes('input', {
         type: 'text',
-        id: 'title',
+        id: 'task-title',
         name: 'title',
         required: 'required'
     }, taskMenuForm);
 
     const formDueDateLabel = createElementWithAttributes('label', {
-        for: 'dueDate'
+        for: 'task-dueDate'
     }, taskMenuForm);
     formDueDateLabel.textContent = 'Due Date:'
 
     const formDueDate = createElementWithAttributes('input', {
         type: 'date',
-        id: 'dueDate',
+        id: 'task-dueDate',
         name: 'dueDate',
     }, taskMenuForm);
 
@@ -457,38 +457,38 @@ function renderTaskMenuTemplate() {
     formPriorityLegend.textContent = 'What is the task\'s priority?'
 
     const radioPriorityHigh = createElementWithAttributes('input', {
-        id: 'priority',
+        id: 'priority-high',
         type: 'radio',
         name: 'priority',
         value: 'high'
     }, formPriorityFieldset);
 
     const labelPriorityHigh = createElementWithAttributes('label', {
-        for: 'priority'
+        for: 'priority-high'
     }, formPriorityFieldset);
     labelPriorityHigh.textContent = 'High';
 
     const radioPriorityMedium = createElementWithAttributes('input', {
-        id: 'priority',
+        id: 'priority-medium',
         type: 'radio',
         name: 'priority',
         value: 'medium'
     }, formPriorityFieldset);
 
     const labelPriorityMedium = createElementWithAttributes('label', {
-        for: 'priority'
+        for: 'priority-medium'
     }, formPriorityFieldset);
     labelPriorityMedium.textContent = 'Medium';
     
     const radioPriorityNormal = createElementWithAttributes('input', {
-        id: 'priority',
+        id: 'priority-normal',
         type: 'radio',
         name: 'priority',
         value: 'normal'
     }, formPriorityFieldset);
 
     const labelPriorityNormal = createElementWithAttributes('label', {
-        for: 'priority'
+        for: 'priority-normal'
     }, formPriorityFieldset);
     labelPriorityNormal.textContent = 'Normal';
 
@@ -496,11 +496,11 @@ function renderTaskMenuTemplate() {
         class: 'description-box',
     }, taskMenuForm);
     const descriptionLabel = createElementWithAttributes('label', {
-        for: 'description',
+        for: 'task-description',
     }, descriptionBox);
     descriptionLabel.textContent = 'Description:'
     const descriptionTextarea = createElementWithAttributes('textarea', {
-        id: 'description',
+        id: 'task-description',
         name: 'description',
         maxlength: '200'
     }, descriptionBox);
@@ -509,11 +509,11 @@ function renderTaskMenuTemplate() {
         class: 'notes-box',
     }, taskMenuForm);
     const notesLabel = createElementWithAttributes('label', {
-        for: 'notes',
+        for: 'task-notes',
     }, notesBox);
     notesLabel.textContent = 'Notes:'
     const notesTextarea = createElementWithAttributes('textarea', {
-        id: 'notes',
+        id: 'task-notes',
         name: 'notes',
         maxlength: '100'
     }, notesBox);

@@ -3,7 +3,7 @@ import { createElementWithAttributes } from '../utils.js';
 export function renderProject(name, iconURL, id) {
     const projectsList = document.querySelector('.projects-list');
     const newProject = createElementWithAttributes('li', { class: `project`}, projectsList);
-    newProject.setAttribute('data-project-id', `${id}`);
+    newProject.setAttribute('data-group-id', `${id}`);
 
     const newProjectImage = createElementWithAttributes('img', {
         src: `${iconURL}`,

@@ -3,7 +3,7 @@ import { createElementWithAttributes } from '../utils.js';
 export function renderTask(projectId, taskId, title, dueDate, status, priority, description, notes) {
     const taskList = document.querySelector('.task-list');
     const task = createElementWithAttributes('li', {class: `task`}, taskList);
-    task.setAttribute('data-project-id', `${projectId}`);
+    task.setAttribute('data-group-id', `${projectId}`);
     task.setAttribute('data-task-id', `${taskId}`);
     task.setAttribute('data-task-status', `${status}`);
     task.setAttribute('data-task-priority', `${priority}`);

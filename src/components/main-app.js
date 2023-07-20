@@ -2,7 +2,7 @@ import { createMainPage } from './main-page/dom-main-page.js';
 import { addEventListenersMainPage } from './main-page/event-listeners-main-page.js';
 import { projectsController } from './project/projects-controller.js';
 import { tasksController } from './task/tasks-controller.js';
-import { updateProjectsList, updateTasksList } from './utils.js'
+import { updateProjectsList, updateTasksList, updateGroupsList } from './utils.js'
 import { addListenersManageProjects } from './project/event-listeners-project-menu';
 import { addListenersManageTasks } from './task/event-listeners-task-menu.js';
 
@@ -13,6 +13,11 @@ class Application {
         }
         Application.instance = this;
     }
+
+    createMainPage = () => createMainPage();
+    addEventListenersMainPage = () => addEventListenersMainPage();
+    addListenersManageProjects = () => addListenersManageProjects();
+    addListenersManageTasks = () => addListenersManageTasks();
 
     getProjectsList() {
         const storedProjectList = localStorage.getItem('TrackIt: project-list');
@@ -30,27 +35,44 @@ class Application {
         const storedTaskList = localStorage.getItem(`TrackIt: ${projectId}`);
         return JSON.parse(storedTaskList);
     }
-    
-    createMainPage = () => createMainPage();
-    addEventListenersMainPage = () => addEventListenersMainPage();
-    addListenersManageProjects = () => addListenersManageProjects();
-    addListenersManageTasks = () => addListenersManageTasks();
+
+    getAllTasks() {
+        const currentProjectList = this.getProjectsList();
+        const arrayOfProjectNames = [];
+        for (project of currentProjectList) {
+            arrayOfProjectNames.push(project.name);
+        }   
+        console.log(arrayOfProjectNames);
+
+        const allTasksList = [];
+        for (projectName of arrayOfProjectNames) {
+            const currentTasksList = this.getTasksList(projectId);
+            for (taskId of currentTasksList) {
+                const currentTask = currentTasksList[taskId];
+                currentTask.project = projectName;
+                allTasksList.push(currentTask);
+            }
+        }
+        console.log(allTasksList);
+    }
+
 
     createNewProject(newName, newIconURL) {
         const currentProjectList = this.getProjectsList();
-        console.log(`Before (adding a new project): ${localStorage.getItem(`TrackIt: project-list`)}`);
+        console.log(`Before creating a new project (project List): ${localStorage.getItem(`TrackIt: project-list`)}`);
         const newProject = projectsController.createNew(currentProjectList, newName, newIconURL);
         console.log(`New project: ${newProject}`);
+
         if (newProject) {
             currentProjectList.push(newProject);
             updateProjectsList(currentProjectList);
+
             localStorage.setItem(`TrackIt: ${newProject.id}`, `[]`);
-            console.log(`After: ${localStorage.getItem(`TrackIt: project-list`)}`);
-            console.log(`After new item storage: ${localStorage.getItem(`TrackIt: ${newProject.id}`)}`);
+            console.log(`After (project List): ${localStorage.getItem(`TrackIt: project-list`)}`);
+            console.log(`After (new task List): ${localStorage.getItem(`TrackIt: ${newProject.id}`)}`);
         }
         return newProject;
     }
-
 
     editProject = (projectId, editedName, editedIconURL) => {
         const currentProjectList = this.getProjectsList();
@@ -68,9 +90,9 @@ class Application {
 
     removeProject = (projectId) => {
         const currentProjectList = this.getProjectsList();
-        console.log(`Before (deleting): ${localStorage.getItem(`TrackIt: project-list`)}`);
+        console.log(`Before deleting a project (project List): ${localStorage.getItem(`TrackIt: project-list`)}`);
         const removedProjectIndex = projectsController.remove(currentProjectList, projectId);
-        console.log(`Removed item storage: ${localStorage.getItem(`TrackIt: ${currentProjectList[removedProjectIndex].id}`)}`);
+        console.log(`Removed task List: ${localStorage.getItem(`TrackIt: ${currentProjectList[removedProjectIndex].id}`)}`);
         
         if (removedProjectIndex !== null || 
             removedProjectIndex !== undefined ||
@@ -79,11 +101,13 @@ class Application {
             localStorage.removeItem(`TrackIt: ${currentProjectList[removedProjectIndex].id}`);
             currentProjectList.splice(removedProjectIndex, 1);
             updateProjectsList(currentProjectList);
+
             console.log(`After: ${localStorage.getItem(`TrackIt: project-list`)}`);
             return true;
         }
         return false;
     }
+
 
     createNewTask = (projectId, newTitle, newDueDate, newPriority, newDescription, newNotes) => {
         const currentTasksList = this.getTasksList(projectId);
@@ -134,8 +158,9 @@ class Application {
 
 
     changeTaskGroup = (taskGroup) => {
-
+        
     }
+
     sort = (sortOption) => {
 
     }

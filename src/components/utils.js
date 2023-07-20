@@ -31,6 +31,10 @@ export function updateTasksList(projectId, tasksList) {
   localStorage.setItem(`TrackIt: ${projectId}`, JSON.stringify(tasksList));
 }
 
+export function updateGroupsList(groupsList) {
+  localStorage.setItem('TrackIt: groups-list', JSON.stringify(groupsList));
+}
+
 export function noDuplicateName(list, name, id) {
   const n = list.length;
   let i = 0;

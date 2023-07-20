@@ -29,8 +29,8 @@ export function addListenersManageProjects() {
         } else if (target.classList.contains('edit')) {
             selectedProjectMenu.setAttribute('data-project-action', 'edit');
             const selectedProject = target.closest('.project');
-            const id = selectedProject.getAttribute('data-project-id');
-            selectedProjectMenu.setAttribute('data-project-id', id);
+            const id = selectedProject.getAttribute('data-group-id');
+            selectedProjectMenu.setAttribute('data-group-id', id);
 
             selectedMenuCover.classList.add('shown');
             selectedProjectMenu.classList.add('shown');
@@ -39,7 +39,7 @@ export function addListenersManageProjects() {
 
         } else if (target.classList.contains('remove')) {
             const selectedProject = target.closest('.project');
-            const id = selectedProject.getAttribute('data-project-id');
+            const id = selectedProject.getAttribute('data-group-id');
             const removedProject = application.removeProject(id);
         
             if (removedProject) {
@@ -60,7 +60,7 @@ export function addListenersManageProjects() {
         e.preventDefault();
         e.stopImmediatePropagation();
 
-        const selectNameInput = document.querySelector('.project-menu[data-project-action="add-new"] #name');
+        const selectNameInput = document.querySelector('.project-menu[data-project-action="add-new"] #project-name');
         const selectIconInput = document.querySelector('.project-menu[data-project-action="add-new"] input[name="iconURL"]:checked');
         
         if (selectedProjectMenu.getAttribute('data-project-action') === 'add-new') {
@@ -81,16 +81,16 @@ export function addListenersManageProjects() {
                 alert('Please select an icon');
                 return;
             }
-            const id = selectedProjectMenu.getAttribute('data-project-id');
+            const id = selectedProjectMenu.getAttribute('data-group-id');
     
             const editProject = application.editProject(id, selectNameInput.value, selectIconInput.value);
             if (editProject) {
-                const oldIcon = document.querySelector(`.project[data-project-id="${id}"] .icon`);
-                const oldName = document.querySelector(`.project[data-project-id="${id}"] span`);
+                const oldIcon = document.querySelector(`.project[data-group-id="${id}"] .icon`);
+                const oldName = document.querySelector(`.project[data-group-id="${id}"] span`);
                 oldIcon.src = selectIconInput.value;
                 oldName.textContent = selectNameInput.value;
 
-                const editedProject = document.querySelector(`.project[data-project-id="${id}"]`);
+                const editedProject = document.querySelector(`.project[data-group-id="${id}"]`);
                 if (editedProject.classList.contains('current')) {
                     mainGroupIcon.src = selectIconInput.value;
                     mainGroupName.textContent = selectNameInput.value;
@@ -110,7 +110,7 @@ export function addListenersManageProjects() {
         selectedMenuCover.classList.remove('shown');
         selectedProjectMenu.classList.remove('shown');
         selectedProjectMenu.removeAttribute(`data-project-action`);
-        selectedProjectMenu.removeAttribute(`data-project-id`);
+        selectedProjectMenu.removeAttribute(`data-group-id`);
     });
 
     const selectedCancelButton = document.querySelector('.project-menu .cancel');
@@ -122,7 +122,7 @@ export function addListenersManageProjects() {
         selectedMenuCover.classList.remove('shown');
         selectedProjectMenu.classList.remove('shown');
         selectedProjectMenu.removeAttribute(`data-project-action`);
-        selectedProjectMenu.removeAttribute(`data-project-id`);
+        selectedProjectMenu.removeAttribute(`data-group-id`);
     });
 }
 
