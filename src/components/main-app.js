@@ -99,8 +99,19 @@ class Application {
         return false;
     }
 
-    editTask = () => {
+    editTask = (projectId, taskId, editedTitle, editedDueDate, editedPriority, editedDescription, editedNotes) => {
+        const currentTasksList = this.getTasksList(projectId);
+        console.log(`Before tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
+        const editedTask = tasksController.edit(currentTasksList, taskId, editedTitle, editedDueDate, editedPriority, editedDescription, editedNotes);
+        console.log(`Edited task: ${editedTask}`);
 
+        if (editedTask) {
+            currentTasksList[editedTask.editedTaskIndex] = editedTask.task;
+            updateTasksList(projectId, currentTasksList);
+            console.log(`After tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
+            return editedTask.task;
+        }
+        return false;
     }
 
     removeTask = (projectId, taskId) => {

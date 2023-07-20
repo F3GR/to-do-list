@@ -13,7 +13,7 @@ export const tasksController = {
         }
     },
 
-    edit: function(taskList, taskId, editedTitle, editedDueDate, editedStatus, editedPriority, editedDescription, editedNotes) {
+    edit: function(taskList, taskId, editedTitle, editedDueDate, editedPriority, editedDescription, editedNotes) {
         const editedTaskIndex = findIndex(taskList, taskId);
         const task = taskList[editedTaskIndex];
 
@@ -24,10 +24,7 @@ export const tasksController = {
             if (task.dueDate !== editedDueDate) {
                 task.dueDate = editedDueDate;
             }
-            if (task.status !== editedStatus) {
-                task.status = editedStatus;
-            }
-            if (task.dueDate !== editedDueDate) {
+            if (task.priority !== editedPriority) {
                 task.priority = editedPriority;
             }
             if (task.description !== editedDescription) {

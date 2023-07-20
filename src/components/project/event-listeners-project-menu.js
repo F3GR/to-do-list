@@ -59,10 +59,11 @@ export function addListenersManageProjects() {
     selectedForm.addEventListener('submit', function(e) {
         e.preventDefault();
         e.stopImmediatePropagation();
+
+        const selectNameInput = document.querySelector('.project-menu[data-project-action="add-new"] #name');
+        const selectIconInput = document.querySelector('.project-menu[data-project-action="add-new"] input[name="iconURL"]:checked');
         
         if (selectedProjectMenu.getAttribute('data-project-action') === 'add-new') {
-            const selectNameInput = document.querySelector('.project-menu[data-project-action="add-new"] #name');
-            const selectIconInput = document.querySelector('.project-menu[data-project-action="add-new"] input[name="iconURL"]:checked');
             if (!selectIconInput || !selectIconInput.value) {
                 alert('Please select an icon');
                 return;
@@ -74,9 +75,8 @@ export function addListenersManageProjects() {
             } else {
                 alert('The project with this title already exists!');
             }
+            
         } else if (selectedProjectMenu.getAttribute('data-project-action') === 'edit') {
-            const selectNameInput = document.querySelector('.project-menu[data-project-action="edit"] #name');
-            const selectIconInput = document.querySelector('.project-menu[data-project-action="edit"] input[name="iconURL"]:checked');
             if (!selectIconInput || !selectIconInput.value) {
                 alert('Please select an icon');
                 return;

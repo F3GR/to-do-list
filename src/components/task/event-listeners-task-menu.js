@@ -42,11 +42,12 @@ export function addListenersManageTasks() {
 
         } else if (target.classList.contains('edit')) {
             const currentProject = document.querySelector('.projects-list .project.current');
-            const id = currentProject.getAttribute('data-project-id');
+            const projectId = currentProject.getAttribute('data-project-id');
+            const taskId = target.closest('.task').getAttribute('data-task-id');
 
-            selectedTaskMenu.setAttribute('data-project-id', `${id}`);
+            selectedTaskMenu.setAttribute('data-project-id', `${projectId}`);
             selectedTaskMenu.setAttribute('data-task-action', 'edit');
-            selectedTaskMenu.setAttribute('data-task-id', id);
+            selectedTaskMenu.setAttribute('data-task-id', `${taskId}`);
 
             selectedTaskMenuTitle.textContent = 'Edit the task';
             selectedSubmitTaskButton.textContent = 'Save';
@@ -83,24 +84,27 @@ export function addListenersManageTasks() {
 
     selectedTaskForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        e.stopImmediatePropagation();
+
+        const titleInput = document.querySelector('.task-menu #title');
+        const dueDateInput = document.querySelector('.task-menu #dueDate');
+        const priorityInput = document.querySelector('.task-menu input[name="priority"]:checked');
+        const descriptionInput = document.querySelector('.task-menu #description');
+        const notesInput = document.querySelector('.task-menu #notes');
+
+        const projectId = selectedTaskMenu.getAttribute('data-project-id');
+        const taskId = selectedTaskMenu.getAttribute('data-task-id');
+
+        if (!titleInput.value) {
+            alert('Please write title for the task');
+            return;
+        }
+        if (!priorityInput.value) {
+            alert('Please choose a priority for the task');
+            return;
+        }
 
         if (selectedTaskMenu.getAttribute('data-task-action') === 'add-new') {
-
-            const titleInput = document.querySelector('.task-menu[data-task-action="add-new"] #title');
-            const dueDateInput = document.querySelector('.task-menu[data-task-action="add-new"] #dueDate');
-            const priorityInput = document.querySelector('.task-menu[data-task-action="add-new"] input[name="priority"]:checked');
-            const descriptionInput = document.querySelector('.task-menu[data-task-action="add-new"] #description');
-            const notesInput = document.querySelector('.task-menu[data-task-action="add-new"] #notes');
-
-            if (!titleInput.value) {
-                alert('Please write title for the task');
-                return;
-            }
-
-            const currentProject = document.querySelector('.projects-list .project.current');
-            const projectId = currentProject.getAttribute('data-project-id');
-    
+            
             const newTask = application.createNewTask(projectId, titleInput.value, dueDateInput.value, 
                 priorityInput.value, descriptionInput.value, notesInput.value);
 
@@ -111,27 +115,24 @@ export function addListenersManageTasks() {
                 alert('The task with this title already exists!');
             }
 
-        } else if (selectedTaskMenu.getAttribute('data-project-action') === 'edit') {
-            const selectNameInput = document.querySelector('.project-menu[data-project-action="edit"] #name');
-            const selectIconInput = document.querySelector('.project-menu[data-project-action="edit"] input[name="iconURL"]:checked');
-            if (!selectIconInput || !selectIconInput.value) {
-                alert('Please select an icon');
-                return;
-            }
-            const id = selectedTaskMenu.getAttribute('data-task-id');
-    
-            const editProject = application.editProject(id, selectNameInput.value, selectIconInput.value);
-            if (editProject) {
-                const oldIcon = document.querySelector(`.project[data-project-id="${id}"] .icon`);
-                const oldName = document.querySelector(`.project[data-project-id="${id}"] span`);
-                oldIcon.src = selectIconInput.value;
-                oldName.textContent = selectNameInput.value;
+        } else if (selectedTaskMenu.getAttribute('data-task-action') === 'edit') {
+            const editedTask = application.editTask(projectId, taskId, titleInput.value, dueDateInput.value, 
+                priorityInput.value, descriptionInput.value, notesInput.value);
 
-                const editedProject = document.querySelector(`.project[data-project-id="${id}"]`);
-                if (editedProject.classList.contains('current')) {
-                    mainGroupIcon.src = selectIconInput.value;
-                    mainGroupName.textContent = selectNameInput.value;
-                }
+            if (editedTask) {
+                const taskSelector = `.task[data-project-id="${projectId}"][data-task-id="${taskId}"]`;
+
+                const oldTitle = document.querySelector(taskSelector + ' .task-title');
+                const oldDueDate = document.querySelector(taskSelector + ' .task-due-date span');
+                const oldDescription = document.querySelector(taskSelector + ' .task-unfold-box .task-description-box .task-description');
+                const oldNotes = document.querySelector(taskSelector + ' .task-unfold-box .task-notes-box .task-notes');
+
+                oldTitle.textContent = titleInput.value;
+                oldDueDate.textContent = dueDateInput.value;
+                document.querySelector(taskSelector).setAttribute('data-task-priority', `${priorityInput.value}`);
+                oldDescription.textContent = descriptionInput.value;
+                oldNotes.textContent = notesInput.value;
+            
             } else {
                 alert('The project with this title already exists!');
             }
@@ -139,7 +140,9 @@ export function addListenersManageTasks() {
     });
 
     const selectedTaskExitButton = document.querySelector('.task-menu .exit');
-    selectedTaskExitButton.addEventListener('click', function() {
+    selectedTaskExitButton.addEventListener('click', function(e) {
+        e.preventDefault();
+
         selectedTaskMenuTitle.textContent = '';
         selectedSubmitTaskButton.textContent = '';
         selectedMenuCover.classList.remove('shown');
@@ -151,7 +154,9 @@ export function addListenersManageTasks() {
     });
 
     const selectedCancelButton = document.querySelector('.task-menu .cancel');
-    selectedCancelButton.addEventListener('click', function() {
+    selectedCancelButton.addEventListener('click', function(e) {
+        e.preventDefault();
+
         selectedTaskMenuTitle.textContent = '';
         selectedSubmitTaskButton.textContent = '';
         selectedMenuCover.classList.remove('shown');
