@@ -1,9 +1,9 @@
 import { createElementWithAttributes } from '../utils.js';
 
-export function renderTask(projectId, taskId, title, dueDate, status, priority, description, notes) {
+export function renderTask(projectId, projectName, taskId, title, dueDate, status, priority, description, notes) {
     const taskList = document.querySelector('.task-list');
     const task = createElementWithAttributes('li', {class: `task`}, taskList);
-    task.setAttribute('data-group-id', `${projectId}`);
+    task.setAttribute('data-project-id', `${projectId}`);
     task.setAttribute('data-task-id', `${taskId}`);
     task.setAttribute('data-task-status', `${status}`);
     task.setAttribute('data-task-priority', `${priority}`);
@@ -95,4 +95,18 @@ export function renderTask(projectId, taskId, title, dueDate, status, priority, 
         class: 'task-notes',
     }, taskNotesBox);
     taskNotes.textContent = `${notes}`;
+
+    const taskProjectNameBox = createElementWithAttributes('div', {
+        class: 'task-project-name-box',
+    }, taskUnfoldedPanel);
+
+    const taskProjectTitle = createElementWithAttributes('span', {
+        class: 'task-project-title',
+    }, taskProjectNameBox);
+    taskProjectTitle.textContent = 'Project: ';
+
+    const taskProjectName = createElementWithAttributes('span', {
+        class: 'task-project-name',
+    }, taskProjectNameBox);
+    taskProjectName.textContent = `${projectName}`;
 }

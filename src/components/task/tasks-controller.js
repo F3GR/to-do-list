@@ -2,10 +2,10 @@ import { Task } from './task.js';
 import { noDuplicateTitle, findIndex } from '../utils.js';
 
 export const tasksController = {
-    createNew: function(taskList, newTitle, newDueDate, newPriority, newDescription, newNotes) {
+    createNew: function(projectId, projectName, taskList, newTitle, newDueDate, newPriority, newDescription, newNotes) {
         if (noDuplicateTitle(taskList, newTitle)) {
             const newTaskId = Task.getNewTaskId();
-            const newTask = new Task(newTaskId, newTitle, newDueDate, 'on-going', newPriority, newDescription, newNotes);
+            const newTask = new Task(projectId, projectName, newTaskId, newTitle, newDueDate, 'on-going', newPriority, newDescription, newNotes);
             Task.incrementNewTaskId();
             return newTask;
         } else {

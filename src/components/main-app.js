@@ -2,9 +2,11 @@ import { createMainPage } from './main-page/dom-main-page.js';
 import { addEventListenersMainPage } from './main-page/event-listeners-main-page.js';
 import { projectsController } from './project/projects-controller.js';
 import { tasksController } from './task/tasks-controller.js';
-import { updateProjectsList, updateTasksList, updateGroupsList } from './utils.js'
+import { updateProjectsList, updateTasksList, updateGroupsList } from './utils.js';
+import { addListenersSidebar } from './group/event-listeners-sidebar.js';
 import { addListenersManageProjects } from './project/event-listeners-project-menu';
 import { addListenersManageTasks } from './task/event-listeners-task-menu.js';
+import { groupsController } from './group/groupsController.js';
 
 class Application {
     constructor() {
@@ -16,6 +18,7 @@ class Application {
 
     createMainPage = () => createMainPage();
     addEventListenersMainPage = () => addEventListenersMainPage();
+    addListenersSidebar = () => addListenersSidebar();
     addListenersManageProjects = () => addListenersManageProjects();
     addListenersManageTasks = () => addListenersManageTasks();
 
@@ -38,22 +41,14 @@ class Application {
 
     getAllTasks() {
         const currentProjectList = this.getProjectsList();
-        const arrayOfProjectNames = [];
-        for (project of currentProjectList) {
-            arrayOfProjectNames.push(project.name);
-        }   
-        console.log(arrayOfProjectNames);
+        const arrayOfProjectIds = currentProjectList.map(({ id, name, iconURL }) => ({ id }));
+        console.log(`Array of project Id's: ${arrayOfProjectIds}`);
 
-        const allTasksList = [];
-        for (projectName of arrayOfProjectNames) {
-            const currentTasksList = this.getTasksList(projectId);
-            for (taskId of currentTasksList) {
-                const currentTask = currentTasksList[taskId];
-                currentTask.project = projectName;
-                allTasksList.push(currentTask);
-            }
-        }
-        console.log(allTasksList);
+        const allTasksList = arrayOfProjectIds.flatMap(({ id }) => {
+            return Object.values(this.getTasksList(id));
+        });
+        console.log(`Array of all tasks: ${allTasksList}`);
+        return allTasksList;
     }
 
 
@@ -110,9 +105,12 @@ class Application {
 
 
     createNewTask = (projectId, newTitle, newDueDate, newPriority, newDescription, newNotes) => {
+        const projectName = this.getProjectsList()
+                                .find((project) => project.id === projectId)
+                                .name;
         const currentTasksList = this.getTasksList(projectId);
         console.log(`Before tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
-        const newTask = tasksController.createNew(currentTasksList, newTitle, newDueDate, newPriority, newDescription, newNotes);
+        const newTask = tasksController.createNew(projectId, projectName, currentTasksList, newTitle, newDueDate, newPriority, newDescription, newNotes);
         console.log(`Created task: ${newTask}`);
         if (newTask) {
             currentTasksList.push(newTask);
@@ -154,11 +152,14 @@ class Application {
         }
     }
 
-
-
-
-    changeTaskGroup = (taskGroup) => {
-        
+    changeTaskGroup = (groupIdentifier) => {
+        const allTasks = this.getAllTasks();
+        const newGroup = groupsController.getGroup(allTasks, groupIdentifier);
+        console.log(`Selected group: ${newGroup}`);
+        if (newGroup) {
+            return newGroup;
+        }
+        return false;
     }
 
     sort = (sortOption) => {

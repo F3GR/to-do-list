@@ -17,7 +17,7 @@ export function addListenersManageTasks() {
             const currentProject = document.querySelector('.projects-list .project.current');
             const id = currentProject.getAttribute('data-group-id');
 
-            selectedTaskMenu.setAttribute('data-group-id', `${id}`);
+            selectedTaskMenu.setAttribute('data-project-id', `${id}`);
             selectedTaskMenu.setAttribute('data-task-action', 'add-new');
 
             selectedTaskMenuTitle.textContent = 'Add a new task';
@@ -42,10 +42,10 @@ export function addListenersManageTasks() {
 
         } else if (target.classList.contains('edit')) {
             const currentProject = document.querySelector('.projects-list .project.current');
-            const projectId = currentProject.getAttribute('data-group-id');
+            const projectId = currentProject.getAttribute('data-project-id');
             const taskId = target.closest('.task').getAttribute('data-task-id');
 
-            selectedTaskMenu.setAttribute('data-group-id', `${projectId}`);
+            selectedTaskMenu.setAttribute('data-project-id', `${projectId}`);
             selectedTaskMenu.setAttribute('data-task-action', 'edit');
             selectedTaskMenu.setAttribute('data-task-id', `${taskId}`);
 
@@ -56,7 +56,7 @@ export function addListenersManageTasks() {
 
         } else if (target.classList.contains('remove')) {
             const selectedTask = target.closest('.task');
-            const projectId = selectedTask.getAttribute('data-group-id');
+            const projectId = selectedTask.getAttribute('data-project-id');
             const taskId = selectedTask.getAttribute('data-task-id');
             const removedTask = application.removeTask(projectId, taskId);
 
@@ -91,7 +91,7 @@ export function addListenersManageTasks() {
         const descriptionInput = document.querySelector('.task-menu #task-description');
         const notesInput = document.querySelector('.task-menu #task-notes');
 
-        const projectId = selectedTaskMenu.getAttribute('data-group-id');
+        const projectId = selectedTaskMenu.getAttribute('data-project-id');
         const taskId = selectedTaskMenu.getAttribute('data-task-id');
 
         if (!titleInput.value) {
@@ -109,7 +109,7 @@ export function addListenersManageTasks() {
                 priorityInput.value, descriptionInput.value, notesInput.value);
 
             if (newTask) {
-                renderTask(projectId, newTask.id, titleInput.value, dueDateInput.value, 
+                renderTask(newTask.projectId, newTask.projectName, newTask.id, titleInput.value, dueDateInput.value, 
                     newTask.status, priorityInput.value, descriptionInput.value, notesInput.value);
             } else {
                 alert('The task with this title already exists!');
@@ -120,7 +120,7 @@ export function addListenersManageTasks() {
                 priorityInput.value, descriptionInput.value, notesInput.value);
 
             if (editedTask) {
-                const taskSelector = `.task[data-group-id="${projectId}"][data-task-id="${taskId}"]`;
+                const taskSelector = `.task[data-project-id="${projectId}"][data-task-id="${taskId}"]`;
 
                 const oldTitle = document.querySelector(taskSelector + ' .task-title');
                 const oldDueDate = document.querySelector(taskSelector + ' .task-due-date span');
@@ -149,7 +149,7 @@ export function addListenersManageTasks() {
         selectedTaskMenu.classList.remove('shown');
         selectedTaskMenu.classList.remove('add');
         selectedTaskMenu.removeAttribute('data-task-action');
-        selectedTaskMenu.removeAttribute('data-group-id');
+        selectedTaskMenu.removeAttribute('data-project-id');
         selectedTaskMenu.removeAttribute('data-task-id');
     });
 
@@ -163,7 +163,7 @@ export function addListenersManageTasks() {
         selectedTaskMenu.classList.remove('shown');
         selectedTaskMenu.classList.remove('add');
         selectedTaskMenu.removeAttribute('data-task-action');
-        selectedTaskMenu.removeAttribute('data-group-id');
+        selectedTaskMenu.removeAttribute('data-project-id');
         selectedTaskMenu.removeAttribute('data-task-id');
     });
 }
