@@ -622,7 +622,7 @@ main .task-bar {
   display: none;
 }
 
-.task .status-label {
+.task label.status-checkbox {
   display: inline-block;
   width: 2rem;
   height: 2rem;
@@ -634,7 +634,7 @@ main .task-bar {
   overflow: hidden;
 }
 
-.task .status-label svg {
+.task label.status-checkbox svg {
   width: 100%;
   height: 100%;
   fill: none;
@@ -644,7 +644,7 @@ main .task-bar {
   stroke-dashoffset: 100;
 }
 
-.task .status-label svg.checked {
+.task[data-task-status='0'] label.status-checkbox svg {
   animation: fillCheckbox 0.5s forwards;
 }
 
@@ -660,7 +660,7 @@ main .task-bar {
 }
 
 
-.task .status:hover,
+.task label.status-checkbox:hover,
 .task .remove:hover,
 .task .edit:hover,
 .task .unfold:hover {
@@ -670,7 +670,7 @@ main .task-bar {
   transition: transform 0.05s;
 }
 
-.task .status:active,
+.task label.status-checkbox:active,
 .task .remove:active,
 .task .edit:active,
 .task .unfold:active {

@@ -8,7 +8,6 @@ export function renderTask(projectId, projectName, taskId, title, dueDate, statu
     task.setAttribute('data-task-status', `${status}`);
     task.setAttribute('data-task-priority', `${priority}`);
     
-
     const checkbox = createElementWithAttributes('input', {
         type: `checkbox`, 
         id: `task-status`,
@@ -17,18 +16,19 @@ export function renderTask(projectId, projectName, taskId, title, dueDate, statu
 
     const label = createElementWithAttributes('label', {
         for: `task-status`, 
-        class: 'status-label'
+        class: 'status-checkbox'
     }, task);
-
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-    svg.setAttribute('viewBox', '0 0 20 20');
 
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', 'M2,10 L8,16 L18,5');
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    svg.classList.add('status-checkbox');
+    svg.setAttribute('viewBox', '0 0 20 20');
+
     svg.appendChild(path);
     label.appendChild(svg);
-    
+
     const taskTitleBox = createElementWithAttributes('div', {class: `task-title-box`}, task);
     const taskTitle = createElementWithAttributes('span', {class: `task-title`}, taskTitleBox);
     taskTitle.textContent = `${title}`;

@@ -16,11 +16,16 @@ class Application {
         Application.instance = this;
     }
 
-    createMainPage = () => createMainPage();
-    addListenersViewOptions = () => addListenersViewOptions();
-    addListenersSidebar = () => addListenersSidebar();
-    addListenersManageProjects = () => addListenersManageProjects();
-    addListenersManageTasks = () => addListenersManageTasks();
+    start = () => {
+        createMainPage();
+        addListenersViewOptions();
+        addListenersSidebar();
+        addListenersManageProjects();
+        addListenersManageTasks();
+
+
+    }
+
 
     getProjectsList() {
         const storedProjectList = localStorage.getItem('TrackIt: project-list');
@@ -162,10 +167,23 @@ class Application {
         console.log(`Edited task: ${editedTask}`);
 
         if (editedTask) {
-            currentTasksList[editedTask.editedTaskIndex] = editedTask.task;
+            currentTasksList[editedTask.taskIndex] = editedTask.task;
             this.setTasksList(projectId, currentTasksList);
             console.log(`After tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
             return editedTask.task;
+        }
+        return false;
+    }
+
+    toggleTaskStatus = (projectId, taskId) => {
+        const currentTasksList = this.getTasksList(projectId);
+        console.log(`Before tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
+        const taskWithNewStatus = tasksController.toggleTaskStatus(currentTasksList, taskId);
+        if (taskWithNewStatus) {
+            currentTasksList[taskWithNewStatus.taskIndex] = taskWithNewStatus.task;
+            this.setTasksList(projectId, currentTasksList);
+            console.log(`After tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
+            return taskWithNewStatus.task.status;
         }
         return false;
     }

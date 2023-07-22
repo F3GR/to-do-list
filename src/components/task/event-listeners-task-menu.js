@@ -26,20 +26,20 @@ export function addListenersManageTasks() {
             selectedMenuCover.classList.add('shown');
             selectedTaskMenu.classList.add('shown');
 
-        } else if (target.classList.contains('status')) { 
-            const svg = target.closest('.task label svg');
-            const path = target.closest('.task label svg path');
-            const project = target.closest('.task');
-            
-            if (!target.checked) {
-                svg.classList.add('checked');
-                project.setAttribute('data-task-status', 'completed');
+        } else if (target.closest('label.status-checkbox')) {
+            const svg = target.closest('.task').querySelector('label svg');
+            const path = target.closest('.task').querySelector('label svg path');
+            const task = target.closest('.task');
 
-            } else {
-                svg.classList.remove('checked');
-                project.setAttribute('data-task-status', 'on-going');
+            const projectId = task.getAttribute('data-project-id');
+            const taskId = task.getAttribute('data-task-id');
+
+            const currentTaskStatus = task.getAttribute('data-task-status');
+            const updatedTaskStatus = application.toggleTaskStatus(projectId, taskId);
+
+            if (updatedTaskStatus && updatedTaskStatus !== currentTaskStatus) {
+                task.setAttribute('data-task-status', updatedTaskStatus);
             }
-
         } else if (target.classList.contains('edit')) {
             const projectId = target.closest('.task').getAttribute('data-project-id');
             const taskId = target.closest('.task').getAttribute('data-task-id');
