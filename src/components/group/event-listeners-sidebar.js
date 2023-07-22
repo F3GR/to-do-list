@@ -9,13 +9,8 @@ export function addListenersSidebar() {
     const selectedTaskList = document.querySelector('main .task-list');
 
     sidebarIcon.addEventListener('click', function() {
-        if (!sidebar.classList.contains('shown')) {
-            sidebar.classList.add('shown');
-            sidebarCover.classList.add('shown');
-        } else {
-            sidebar.classList.remove('shown');
-            sidebarCover.classList.remove('shown');
-        }
+        sidebar.classList.toggle('shown');
+        sidebarCover.classList.toggle('shown');
     });
 
     let currentGroup;
@@ -34,20 +29,32 @@ export function addListenersSidebar() {
             const groupIdentifier = target.getAttribute('data-group-id');
             const selectedGroupIcon = target.querySelector('img');
             const selectedGroupName = target.querySelector('span');
+
             if (currentGroup) {
                 currentGroup.classList.remove('current');
             }
+
             target.classList.add('current');
             mainGroupIcon.src = selectedGroupIcon.src;
             mainGroupName.textContent = selectedGroupName.textContent;
             currentGroup = target;
             selectedTaskList.innerHTML = '';
-            const groupTasks = application.changeTaskGroup(groupIdentifier);
+
+            const groupTasks = application.getTasksGroup(groupIdentifier);
 
             if (groupTasks) {
                 groupTasks.forEach((task) => {
-                    renderTask(task.projectId, task.projectName, task.id, task.title, task.dueDate, 
-                    task.status, task.priority, task.description, task.notes);
+                    renderTask(
+                        task.projectId, 
+                        task.projectName, 
+                        task.id, 
+                        task.title, 
+                        task.dueDate, 
+                        task.status, 
+                        task.priority, 
+                        task.description, 
+                        task.notes
+                    );
                 });
             }
         }

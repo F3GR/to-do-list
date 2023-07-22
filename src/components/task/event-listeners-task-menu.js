@@ -102,12 +102,27 @@ export function addListenersManageTasks() {
         if (selectedTaskMenu.getAttribute('data-task-action') === 'add-new') {
             const projectId = selectedTaskMenu.getAttribute('data-project-id');
             
-            const newTask = application.createNewTask(projectId, titleInput.value, dueDateInput.value, 
-                priorityInput.value, descriptionInput.value, notesInput.value);
+            const newTask = application.createNewTask(
+                projectId, 
+                titleInput.value, 
+                dueDateInput.value, 
+                priorityInput.value, 
+                descriptionInput.value, 
+                notesInput.value
+            );
 
             if (newTask) {
-                renderTask(newTask.projectId, newTask.projectName, newTask.id, titleInput.value, dueDateInput.value, 
-                    newTask.status, priorityInput.value, descriptionInput.value, notesInput.value);
+                renderTask(
+                    newTask.projectId, 
+                    newTask.projectName, 
+                    newTask.id, 
+                    titleInput.value, 
+                    dueDateInput.value, 
+                    newTask.status, 
+                    priorityInput.value, 
+                    descriptionInput.value, 
+                    notesInput.value
+                );
             } else {
                 alert('The task with this title already exists!');
             }
@@ -116,8 +131,15 @@ export function addListenersManageTasks() {
             const projectId = selectedTaskMenu.getAttribute('data-project-id');
             const taskId = selectedTaskMenu.getAttribute('data-task-id');
 
-            const editedTask = application.editTask(projectId, taskId, titleInput.value, dueDateInput.value, 
-                priorityInput.value, descriptionInput.value, notesInput.value);
+            const editedTask = application.editTask(
+                projectId, 
+                taskId, 
+                titleInput.value, 
+                dueDateInput.value, 
+                priorityInput.value, 
+                descriptionInput.value, 
+                notesInput.value
+            );
 
             if (editedTask) {
                 const taskSelector = `.task[data-project-id="${projectId}"][data-task-id="${taskId}"]`;

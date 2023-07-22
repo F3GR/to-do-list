@@ -1,29 +1,38 @@
+import { parseISO } from "date-fns";
+
 export const viewController = {
-    filter: function(taskList, priorityHigh, priorityMedium, priorityNormal,
-    includeOnGoing, includeCompleted, includeOverdue) {
-        return taskList
-        .filter((task) => {
-            return (task.priority === priorityHigh || 
-                task.priority === priorityMedium ||
-                task.priority === priorityNormal);
-        })
-        .filter((task) => {
-            return (task.status === includeOnGoing ||
-                task.status === includeCompleted ||
-                task.status === includeOverdue);
-        });
+    filter: function(taskList, flagIncludeHigh, flagIncludeMedium, flagIncludeNormal,
+    flagIncludeOnGoing, flagIncludeCompleted, flagIncludeOverdue) {
+        if (taskList) {
+
+            return taskList
+            .filter((task) => {
+                return (
+                    (task.priority === '2') === flagIncludeHigh || 
+                    (task.priority === '1') === flagIncludeMedium ||
+                    (task.priority === '0') === flagIncludeNormal);
+                })
+            .filter((task) => {
+                return (
+                    (task.status === '1') === flagIncludeOnGoing ||
+                    (task.status === '0') === flagIncludeCompleted ||
+                    (task.status === '2') === flagIncludeOverdue);
+                });
+        }
+        return false;
     },
     sort: function(taskList, sortBy, ascendingOrder) {
-        if (oldViewState.sortBy !== sortBy) {
-            switch (sortBy) {
-                case 'date':
-                    return sortTasksByDate(taskList, ascendingOrder);
-                case 'priority':
-                    return sortTasksByPriority(taskList, ascendingOrder);
-                case 'status':
-                    return sortTasksByStatus(taskList, ascendingOrder);
-            }
+        if (taskList) {
+                switch (sortBy) {
+                    case 'date':
+                        return sortTasksByDate(taskList, ascendingOrder);
+                    case 'priority':
+                        return sortTasksByPriority(taskList, ascendingOrder);
+                    case 'status':
+                        return sortTasksByStatus(taskList, ascendingOrder);
+                }
         }
+        return false;
     }   
 }
 

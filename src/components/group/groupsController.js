@@ -1,7 +1,7 @@
 import { isToday, parseISO, differenceInWeeks } from 'date-fns';
 
 export const groupsController = {
-    getGroup: function(taskList, groupIdentifier) {
+    getTaskListByGroup: function(taskList, groupIdentifier) {
         if (taskList) {
             switch (groupIdentifier) {
                 case 'all':
@@ -17,9 +17,9 @@ export const groupsController = {
                         return differenceInWeeks(dueDate, today) === 0;
                     });
                 case 'completed':
-                    return taskList.filter((task) => task.status === 'completed');
+                    return taskList.filter((task) => task.status === '0');
                 case 'overdue':
-                    return taskList.filter((task) => task.status === 'overdue');
+                    return taskList.filter((task) => task.status === '2');
                 default:
                     return taskList.filter((task) => {
                         return task.projectId === groupIdentifier;
