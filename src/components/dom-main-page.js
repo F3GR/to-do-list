@@ -1,4 +1,4 @@
-import { createElementWithAttributes } from '../utils.js';
+import { createElementWithAttributes } from './utils.js';
 
 export function createMainPage() {
     renderMainPage();
@@ -175,56 +175,149 @@ function renderFilterOptionsMenu() {
         class: 'view-options-bar'
     }, main);
 
-    const filterOptionsBox = createElementWithAttributes('div', {
-        class: 'filter-options-box'
+    const priorityOptionsText = createElementWithAttributes('h2', {
+        class: `priority-header`
+    }, viewOptionsBox);
+    priorityOptionsText.textContent = `Priority:`;
+
+    const labelPriorityHigh = createElementWithAttributes('label', {
+        class: `priority-high`,
+        for: 'view-priority-high'
     }, viewOptionsBox);
 
-    const viewOptionsText = createElementWithAttributes('span', {class: ``}, filterOptionsBox);
-    viewOptionsText.textContent = `Filter options:`;
+    const checkboxPriorityHigh = createElementWithAttributes('input', {
+        class: `priority-high`,
+        id: 'view-priority-high',
+        type: 'checkbox'
+    }, labelPriorityHigh);
 
-    const buttonHighPriority = createElementWithAttributes('button', {
-        class: `high-priority enabled`}, filterOptionsBox);
-    buttonHighPriority.textContent = `High`;
+    const textPriorityHigh = createElementWithAttributes('span', {
+        class: `priority-high`}, labelPriorityHigh);
+    textPriorityHigh.textContent = `High`;
 
-    const buttonMediumPriority = createElementWithAttributes('button', {
-        class: `medium-priority enabled`}, filterOptionsBox);
-    buttonMediumPriority.textContent = `Medium`;
+    const labelPriorityMedium = createElementWithAttributes('label', {
+        class: `priority-medium`,
+        for: 'view-priority-medium'
+    }, viewOptionsBox);
 
-    const buttonNormalPriority = createElementWithAttributes('button', {
-        class: `normal-priority enabled`}, filterOptionsBox);
-    buttonNormalPriority.textContent = `Normal`;
+    const checkboxPriorityMedium = createElementWithAttributes('input', {
+        class: `priority-medium`,
+        id: 'view-priority-medium',
+        type: 'checkbox'
+    }, labelPriorityMedium);
 
-    const buttonCompleted = createElementWithAttributes('button', {
-        class: `completed enabled`}, filterOptionsBox);
-    buttonCompleted.textContent = `Completed`;
+    const textPriorityMedium = createElementWithAttributes('span', {
+        class: `priority-medium`}, labelPriorityMedium);
+    textPriorityMedium.textContent = `Medium`;
 
-    const buttonOverdue = createElementWithAttributes('button', {
-        class: `overdue enabled`}, filterOptionsBox);
-    buttonOverdue.textContent = `Overdue`;
+    const labelPriorityNormal = createElementWithAttributes('label', {
+        class: `priority-normal`,
+        for: 'view-priority-normal'
+    }, viewOptionsBox);
+
+    const checkboxPriorityNormal = createElementWithAttributes('input', {
+        class: `priority-normal`,
+        id: 'view-priority-normal',
+        type: 'checkbox'
+    }, labelPriorityNormal);
+
+    const textPriorityNormal = createElementWithAttributes('span', {
+        class: `priority-normal`}, labelPriorityNormal);
+    textPriorityNormal.textContent = `Normal`;
+    
+
+    const textOptionsStatus = createElementWithAttributes('h2', {
+        class: `status-header`
+    }, viewOptionsBox);
+    textOptionsStatus.textContent = `Status:`;
+
+    const labelStatusOverdue = createElementWithAttributes('label', {
+        class: `status-overdue`,
+        for: 'view-status-overdue'
+    }, viewOptionsBox);
+
+    const checkboxStatusOverdue = createElementWithAttributes('input', {
+        class: `status-overdue`,
+        id: 'view-status-overdue',
+        type: 'checkbox'
+    }, labelStatusOverdue);
+
+    const textStatusOverdue = createElementWithAttributes('span', {
+        class: `status-overdue`}, labelStatusOverdue);
+    textStatusOverdue.textContent = `Overdue`;
+
+    const labelStatusOnGoing = createElementWithAttributes('label', {
+        class: `status-ongoing`,
+        for: 'view-status-ongoing'
+    }, viewOptionsBox);
+    
+    const checkboxStatusOnGoing = createElementWithAttributes('input', {
+        class: `status-ongoing`,
+        id: 'view-status-ongoing',
+        type: 'checkbox'
+    }, labelStatusOnGoing);
+    
+    const textStatusOnGoing = createElementWithAttributes('span', {
+        class: `status-ongoing`}, labelStatusOnGoing);
+    textStatusOnGoing.textContent = `Ongoing`;
+
+    const labelStatusCompleted = createElementWithAttributes('label', {
+        class: `status-completed`,
+        for: 'view-status-completed'
+    }, viewOptionsBox);
+    
+    const checkboxStatusCompleted = createElementWithAttributes('input', {
+        class: `status-completed`,
+        id: 'view-status-completed',
+        type: 'checkbox'
+    }, labelStatusCompleted);
+    
+    const textStatusCompleted = createElementWithAttributes('span', {
+        class: `status-completed`}, labelStatusCompleted);
+    textStatusCompleted.textContent = `Completed`;
+
 
     const sortOptionsBox = createElementWithAttributes('div', {
         class: 'sort-options-box'
     }, viewOptionsBox);
 
-    const sortOptionsText = createElementWithAttributes('span', {class: ``}, sortOptionsBox);
+    const sortOptionsText = createElementWithAttributes('h2', {class: ``}, sortOptionsBox);
     sortOptionsText.textContent = 'Sort by:';
 
-    const selectSortOption = createElementWithAttributes('select', {name: `sorting-option`}, sortOptionsBox);
+    const selectSortOption = createElementWithAttributes('select', {
+        name: `sort-by`
+    }, sortOptionsBox);
 
-    const sortByDate = createElementWithAttributes('option', {value: `date-from-oldest`},selectSortOption);
+    const sortByDate = createElementWithAttributes('option', {
+        value: `date`
+    },selectSortOption);
     sortByDate.textContent = `Date`;
 
-    const sortByPriority = createElementWithAttributes('option', {value: `priority-from-highest`},selectSortOption);
+    const sortByPriority = createElementWithAttributes('option', {
+        value: `priority`
+    },selectSortOption);
     sortByPriority.textContent = `Priority`;
 
-    const sortByStatus = createElementWithAttributes('option', {value: `priority-from-due`},selectSortOption);
+    const sortByStatus = createElementWithAttributes('option', {
+        value: `status`
+    },selectSortOption);
     sortByStatus.textContent = `Status`;
 
-    const sortOrderIcon = createElementWithAttributes('img', { 
-        src: '../src/originals/arrow-upward.svg',
-        alt: `Sort order icon`,
-        class: 'is-upward'
+    const labelSortOrder = createElementWithAttributes('label', { 
+        class: 'sort-order',
+        for: 'sort-order'
     }, sortOptionsBox);
+
+    const checkboxSortOrder = createElementWithAttributes('input', { 
+        type: 'checkbox',
+        id: 'sort-order',
+    }, labelSortOrder);
+
+    const sortOrderIcon = createElementWithAttributes('img', { 
+        src: '../src/originals/arrow-downward.svg',
+        alt: `Sort order icon`,
+        class: 'sort-arrow'
+    }, labelSortOrder);
 }
 
 function renderProjectMenuTemplate() {
@@ -460,7 +553,7 @@ function renderTaskMenuTemplate() {
         id: 'priority-high',
         type: 'radio',
         name: 'priority',
-        value: 'high'
+        value: '2'
     }, formPriorityFieldset);
 
     const labelPriorityHigh = createElementWithAttributes('label', {
@@ -472,7 +565,7 @@ function renderTaskMenuTemplate() {
         id: 'priority-medium',
         type: 'radio',
         name: 'priority',
-        value: 'medium'
+        value: '1'
     }, formPriorityFieldset);
 
     const labelPriorityMedium = createElementWithAttributes('label', {
@@ -484,7 +577,7 @@ function renderTaskMenuTemplate() {
         id: 'priority-normal',
         type: 'radio',
         name: 'priority',
-        value: 'normal'
+        value: '0'
     }, formPriorityFieldset);
 
     const labelPriorityNormal = createElementWithAttributes('label', {

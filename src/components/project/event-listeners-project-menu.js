@@ -60,8 +60,8 @@ export function addListenersManageProjects() {
         e.preventDefault();
         e.stopImmediatePropagation();
 
-        const selectNameInput = document.querySelector('.project-menu[data-project-action="add-new"] #project-name');
-        const selectIconInput = document.querySelector('.project-menu[data-project-action="add-new"] input[name="iconURL"]:checked');
+        const selectNameInput = document.querySelector('.project-menu #project-name');
+        const selectIconInput = document.querySelector('.project-menu input[name="iconURL"]:checked');
         
         if (selectedProjectMenu.getAttribute('data-project-action') === 'add-new') {
             if (!selectIconInput || !selectIconInput.value) {

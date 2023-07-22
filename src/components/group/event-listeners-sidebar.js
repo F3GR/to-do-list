@@ -18,19 +18,6 @@ export function addListenersSidebar() {
         }
     });
 
-    const viewOptions = document.querySelector('header > img.options');
-    const viewBox = document.querySelector('main > .view-options-bar');
-    viewOptions.addEventListener('click', function() {
-        if (!viewBox.classList.contains('shown')) {
-            viewBox.classList.add('shown');
-        } else {
-            viewBox.classList.remove('shown');
-        }
-    });
-
-
-
-
     let currentGroup;
     const mainGroupIcon = document.querySelector('main .header img');
     const mainGroupName = document.querySelector('main .header span');

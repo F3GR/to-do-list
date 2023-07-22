@@ -41,8 +41,7 @@ export function addListenersManageTasks() {
             }
 
         } else if (target.classList.contains('edit')) {
-            const currentProject = document.querySelector('.projects-list .project.current');
-            const projectId = currentProject.getAttribute('data-project-id');
+            const projectId = target.closest('.task').getAttribute('data-project-id');
             const taskId = target.closest('.task').getAttribute('data-task-id');
 
             selectedTaskMenu.setAttribute('data-project-id', `${projectId}`);
@@ -91,9 +90,6 @@ export function addListenersManageTasks() {
         const descriptionInput = document.querySelector('.task-menu #task-description');
         const notesInput = document.querySelector('.task-menu #task-notes');
 
-        const projectId = selectedTaskMenu.getAttribute('data-project-id');
-        const taskId = selectedTaskMenu.getAttribute('data-task-id');
-
         if (!titleInput.value) {
             alert('Please write title for the task');
             return;
@@ -104,6 +100,7 @@ export function addListenersManageTasks() {
         }
 
         if (selectedTaskMenu.getAttribute('data-task-action') === 'add-new') {
+            const projectId = selectedTaskMenu.getAttribute('data-project-id');
             
             const newTask = application.createNewTask(projectId, titleInput.value, dueDateInput.value, 
                 priorityInput.value, descriptionInput.value, notesInput.value);
@@ -116,6 +113,9 @@ export function addListenersManageTasks() {
             }
 
         } else if (selectedTaskMenu.getAttribute('data-task-action') === 'edit') {
+            const projectId = selectedTaskMenu.getAttribute('data-project-id');
+            const taskId = selectedTaskMenu.getAttribute('data-task-id');
+
             const editedTask = application.editTask(projectId, taskId, titleInput.value, dueDateInput.value, 
                 priorityInput.value, descriptionInput.value, notesInput.value);
 

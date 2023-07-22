@@ -1,11 +1,16 @@
 import { Task } from './task.js';
 import { noDuplicateTitle, findIndex } from '../utils.js';
+import { parseISO, differenceInCalendarDays } from 'date-fns';
 
 export const tasksController = {
     createNew: function(projectId, projectName, taskList, newTitle, newDueDate, newPriority, newDescription, newNotes) {
         if (noDuplicateTitle(taskList, newTitle)) {
             const newTaskId = Task.getNewTaskId();
-            const newTask = new Task(projectId, projectName, newTaskId, newTitle, newDueDate, 'on-going', newPriority, newDescription, newNotes);
+            let newTaskStatus = "0";
+            if (differenceInCalendarDays(parseISO(newDueDate), Date.now()) < 0) {
+                newTaskStatus = "2";
+            }
+            const newTask = new Task(projectId, projectName, newTaskId, newTitle, newDueDate, newTaskStatus, newPriority, newDescription, newNotes);
             Task.incrementNewTaskId();
             return newTask;
         } else {

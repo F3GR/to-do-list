@@ -1,10 +1,16 @@
-export function addEventListenersMainPage() {
-    addEventListenersViewOptions();
-}
+import { application } from "../main-app";
 
+export function addListenersViewOptions() {
+    const viewOptions = document.querySelector('header > img.options');
+    const viewBox = document.querySelector('main > .view-options-bar');
+    viewOptions.addEventListener('click', function() {
+        if (!viewBox.classList.contains('shown')) {
+            viewBox.classList.add('shown');
+        } else {
+            viewBox.classList.remove('shown');
+        }
+    });
 
-
-function addEventListenersViewOptions() {
     const selectedButtonsFilterOptions = document.querySelectorAll('.view-options-bar button');
     selectedButtonsFilterOptions.forEach((button) => {
         button.addEventListener('click', function() {
@@ -15,7 +21,9 @@ function addEventListenersViewOptions() {
             }
         });
     });
+}
 
+/* 
     const selectedSortOrderIcon = document.querySelector('.sort-options-box img');
     selectedSortOrderIcon.addEventListener('click', function() {
         if (!selectedSortOrderIcon.classList.contains('is-upward')) {
@@ -26,4 +34,4 @@ function addEventListenersViewOptions() {
             selectedSortOrderIcon.setAttribute('src', '../src/originals/arrow-downward.svg');
         }
     });
-}
+*/
