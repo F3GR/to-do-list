@@ -1,37 +1,57 @@
 import { application } from "../main-app";
+import { renderTask } from "../task/dom-task";
 
-export function addListenersViewOptions() {
-    const viewOptions = document.querySelector('header > img.options');
+export function addListenersViewOptions(savedState) {
+    const viewOptionsIcon = document.querySelector('header > img.options');
     const viewBox = document.querySelector('main > .view-options-bar');
-    viewOptions.addEventListener('click', function() {
-        if (!viewBox.classList.contains('shown')) {
-            viewBox.classList.add('shown');
-        } else {
-            viewBox.classList.remove('shown');
-        }
+    
+    viewOptionsIcon.addEventListener('click', function() {
+        viewBox.classList.toggle('shown');
     });
 
-    const selectedButtonsFilterOptions = document.querySelectorAll('.view-options-bar button');
-    selectedButtonsFilterOptions.forEach((button) => {
-        button.addEventListener('click', function() {
-            if (!button.classList.contains('enabled')) {
-                button.classList.add('enabled');
-            } else {
-                button.classList.remove('enabled');
+    const viewState = savedState;
+
+    const checkboxPriorityHigh = document.querySelector('#view-priority-high');
+    const checkboxPriorityMedium = document.querySelector('#view-priority-medium');
+    const checkboxPriorityNormal = document.querySelector('#view-priority-normal');
+    const checkboxStatusOnGoing = document.querySelector('#view-status-ongoing');
+    const checkboxStatusCompleted = document.querySelector('#view-status-completed');
+    const checkboxStatusOverdue = document.querySelector('#view-status-overdue');
+    const selectSortOptions = document.querySelector('.view-options-bar select');
+    const checkboxSortAscendingOrder = document.querySelector('#sort-order');
+
+    const selectedCheckboxesFilterOptions = document.querySelectorAll('.view-options-bar input');
+    selectedCheckboxesFilterOptions.forEach((checkbox) => {
+        checkbox.addEventListener('change', function() {
+
+            viewState.flagIncludeHigh = checkboxPriorityHigh.checked;
+            viewState.flagIncludeMedium = checkboxPriorityMedium.checked;
+            viewState.flagIncludeNormal = checkboxPriorityNormal.checked;
+            viewState.flagIncludeOverdue = checkboxStatusOverdue.checked;
+            viewState.flagIncludeOnGoing = checkboxStatusOnGoing.checked;
+            viewState.flagIncludeCompleted = checkboxStatusCompleted.checked;
+            viewState.sortBy = selectSortOptions.value;
+            viewState.ascendingOrder = checkboxSortAscendingOrder.checked;
+
+            const tasksWithUpdatedView = application.updateView(viewState);
+            if (tasksWithUpdatedView) {
+                const taskList = document.querySelector('.task-list');
+                taskList.innerHTML = '';
+
+                tasksWithUpdatedView.forEach((task) => {
+                    renderTask(
+                        task.projectId,
+                        task.projectName,
+                        task.id,
+                        task.title,
+                        task.dueDate,
+                        task.status,
+                        task.priority,
+                        task.description,
+                        task.notes
+                    );
+                });
             }
         });
     });
 }
-
-/* 
-    const selectedSortOrderIcon = document.querySelector('.sort-options-box img');
-    selectedSortOrderIcon.addEventListener('click', function() {
-        if (!selectedSortOrderIcon.classList.contains('is-upward')) {
-            selectedSortOrderIcon.classList.add('is-upward');
-            selectedSortOrderIcon.setAttribute('src', '../src/originals/arrow-upward.svg');
-        } else {
-            selectedSortOrderIcon.classList.remove('is-upward');
-            selectedSortOrderIcon.setAttribute('src', '../src/originals/arrow-downward.svg');
-        }
-    });
-*/

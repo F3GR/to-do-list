@@ -1,4 +1,4 @@
-import { createMainPage } from './dom-main-page.js';
+import { renderMainPage } from './dom-main-page.js';
 import { addListenersSidebar } from './group/event-listeners-sidebar.js';
 import { addListenersViewOptions } from './view-options/event-listeners-view-options.js';
 import { addListenersManageProjects } from './project/event-listeners-project-menu';
@@ -10,6 +10,7 @@ import { viewController } from './view-options/view-controller.js';
 
 import { renderProject } from './project/dom-project.js';
 import { renderTask } from './task/dom-task.js';
+import { renderFilterOptionsMenu } from './view-options/dom-view-options-menu.js';
 
 class Application {
     constructor() {
@@ -20,24 +21,25 @@ class Application {
     }
 
     start = () => {
-        createMainPage();
-        addListenersViewOptions();
+        const savedState = this.getViewState();
+        const taskGroup = this.updateView(savedState);
+        const projectList = this.getProjectsList();
+
+        renderMainPage();
+        renderFilterOptionsMenu(savedState);
+        addListenersViewOptions(savedState);
         addListenersSidebar();
         addListenersManageProjects();
         addListenersManageTasks();
+        
+        if (projectList) {
+            projectList.forEach((project) => {
+                renderProject(project.name, project.iconURL, project.id);
+            });
+        }
 
-        const projectList = this.getProjectsList();
-        projectList.forEach((project) => {
-            renderProject(project.name, project.iconURL, project.id);
-        });
-
-        const groupIdentifier = this.getCurrentGroupIdentifier();
-        const tasksGroup = this.getTasksGroup(groupIdentifier);
-        const viewState = this.getViewState();
-        const finalTaskGroup = this.updateView(viewState);
-
-        if (finalTaskGroup) {
-            finalTaskGroup.forEach((task) => {
+        if (taskGroup) {
+            taskGroup.forEach((task) => {
                 renderTask(
                     task.projectId,
                     task.projectName,
@@ -51,6 +53,8 @@ class Application {
                 );
             });
         }
+
+        
     }
 
     getProjectsList() {
@@ -102,12 +106,12 @@ class Application {
         const storedViewState = localStorage.getItem('TrackIt: view-state');
         if (!storedViewState) {
             const newViewState = {
-                priorityHigh: true,
-                priorityMedium: true,
-                priorityNormal: true,
-                includeOnGoing: true,
-                includeCompleted: true,
-                includeOverdue: true,
+                flagIncludeHigh: true,
+                flagIncludeMedium: true,
+                flagIncludeNormal: true,
+                flagIncludeOnGoing: true,
+                flagIncludeCompleted: true,
+                flagIncludeOverdue: true,
                 sortBy: 'date',
                 ascendingOrder: true,
             }
@@ -258,18 +262,18 @@ class Application {
         const filteredTasks = viewController
         .filter(
             currentTasksGroup, 
-            viewState.priorityHigh, 
-            viewState.priorityMedium,
-            viewState.priorityNormal, 
-            viewState.includeOnGoing, 
-            viewState.includeCompleted, 
-            viewState.includeOverdue
+            viewState.flagIncludeHigh, 
+            viewState.flagIncludeMedium,
+            viewState.flagIncludeNormal, 
+            viewState.flagIncludeOnGoing, 
+            viewState.flagIncludeCompleted, 
+            viewState.flagIncludeOverdue
         );
 
-        const sortedTasks = viewController.sort(filteredTasks, viewState.sortBy, viewState.ascendingOrder);
+        const filteredSortedTasks = viewController.sort(filteredTasks, viewState.sortBy, viewState.ascendingOrder);
 
-        if (sortedTasks) {
-            return sortedTasks;
+        if (filteredSortedTasks) {
+            return filteredSortedTasks;
         }
         return false;
     }

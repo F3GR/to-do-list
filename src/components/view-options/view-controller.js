@@ -4,20 +4,27 @@ export const viewController = {
     filter: function(taskList, flagIncludeHigh, flagIncludeMedium, flagIncludeNormal,
     flagIncludeOnGoing, flagIncludeCompleted, flagIncludeOverdue) {
         if (taskList) {
-
             return taskList
             .filter((task) => {
-                return (
-                    (task.priority === '2') === flagIncludeHigh || 
-                    (task.priority === '1') === flagIncludeMedium ||
-                    (task.priority === '0') === flagIncludeNormal);
-                })
+                switch (task.priority) {
+                    case '2':
+                        return flagIncludeHigh;
+                    case '1':
+                        return flagIncludeMedium;
+                    case '0':
+                        return flagIncludeNormal;
+                }   
+            })
             .filter((task) => {
-                return (
-                    (task.status === '1') === flagIncludeOnGoing ||
-                    (task.status === '0') === flagIncludeCompleted ||
-                    (task.status === '2') === flagIncludeOverdue);
-                });
+                switch (task.status) {
+                    case '1':
+                        return flagIncludeOnGoing;
+                    case '0':
+                        return flagIncludeCompleted;
+                    case '2':
+                        return flagIncludeOverdue;
+                }
+            });
         }
         return false;
     },
