@@ -3,10 +3,11 @@ import { addListenersSidebar } from './group/event-listeners-sidebar.js';
 import { addListenersViewOptions } from './view-options/event-listeners-view-options.js';
 import { addListenersManageProjects } from './project/event-listeners-project-menu';
 import { addListenersManageTasks } from './task/event-listeners-task-menu.js';
-import { projectsController } from './project/projects-controller.js';
-import { tasksController } from './task/tasks-controller.js';
-import { groupsController } from './group/groupsController.js';
-import { viewController } from './view-options/view-controller.js';
+import { projectsController } from './project/controller-projects.js';
+import { tasksController } from './task/controller-tasks.js';
+import { groupsController } from './group/controller-groups.js';
+import { viewController } from './view-options/controller-view-options.js';
+import { localStorageController } from '../../controller-local-storage.js';
 
 import { renderProject } from './project/dom-project.js';
 import { renderTask } from './task/dom-task.js';
@@ -21,9 +22,9 @@ class Application {
     }
 
     start = () => {
-        const savedState = this.getViewState();
+        const savedState = localStorageController.getViewState();
         const taskGroup = this.updateView(savedState);
-        const projectList = this.getProjectsList();
+        const projectList = localStorageController.getProjectsList();
 
         renderMainPage();
         renderFilterOptionsMenu(savedState);
@@ -52,85 +53,18 @@ class Application {
                     task.notes
                 );
             });
-        }
-
-        
+        }      
     }
-
-    getProjectsList() {
-        const storedProjectList = localStorage.getItem('TrackIt: project-list');
-        if (storedProjectList === null || 
-            storedProjectList === undefined || 
-            storedProjectList === "") {
-          const projectList = [];
-          this.setProjectsList(projectList);
-          return projectList;
-        }
-        return JSON.parse(storedProjectList);
-    }
-    setProjectsList = (projectList) => localStorage.setItem('TrackIt: project-list', JSON.stringify(projectList));
-
-    getTasksListByProjectId = (projectId) => {
-        const storedTaskList = localStorage.getItem(`TrackIt: ${projectId}`);
-        return JSON.parse(storedTaskList);
-    }
-    setTasksListByProjectId = (projectId, tasksList) => localStorage.setItem(`TrackIt: ${projectId}`, JSON.stringify(tasksList));
-
-    getAllTasks() {
-        const currentProjectList = this.getProjectsList();
-        const arrayOfProjectIds = currentProjectList.map(({ id, name, iconURL }) => ({ id }));
-        console.log(`Array of project Id's: ${arrayOfProjectIds}`);
-
-        const allTasksList = arrayOfProjectIds.flatMap(({ id }) => {
-            return Object.values(this.getTasksListByProjectId(id));
-        });
-        console.log(`Array of all tasks: ${allTasksList}`);
-        return allTasksList;
-    }
-
-    getStandardGroups() {
-        return ['all', 'today', 'week', 'completed', 'overdue'];
-    }
-
-    getCurrentGroupIdentifier() {
-        const storedCurrentGroup = localStorage.getItem('TrackIt: current-group');
-        if (!storedCurrentGroup) {
-            const newCurrentGroup = 'all';
-            return newCurrentGroup;
-        }
-        return storedCurrentGroup;
-    }
-    setCurrentGroupIdentifier = (newGroupIdentifier) => localStorage.setItem('TrackIt: current-group', newGroupIdentifier);
-
-    getViewState() {
-        const storedViewState = localStorage.getItem('TrackIt: view-state');
-        if (!storedViewState) {
-            const newViewState = {
-                flagIncludeHigh: true,
-                flagIncludeMedium: true,
-                flagIncludeNormal: true,
-                flagIncludeOnGoing: true,
-                flagIncludeCompleted: true,
-                flagIncludeOverdue: true,
-                sortBy: 'date',
-                ascendingOrder: true,
-            }
-            return newViewState;
-        }
-        return JSON.parse(storedViewState);
-    }
-    setViewState = (viewState) => localStorage.setItem(`TrackIt: view-state`, JSON.stringify(viewState));
-
 
     createNewProject = (newName, newIconURL) => {
-        const currentProjectList = this.getProjectsList();
+        const currentProjectList = localStorageController.getProjectsList();
         console.log(`Before creating a new project (project List): ${localStorage.getItem(`TrackIt: project-list`)}`);
         const newProject = projectsController.createNew(currentProjectList, newName, newIconURL);
         console.log(`New project: ${newProject}`);
 
         if (newProject) {
             currentProjectList.push(newProject);
-            this.setProjectsList(currentProjectList);
+            localStorageController.setProjectsList(currentProjectList);
 
             localStorage.setItem(`TrackIt: ${newProject.id}`, `[]`);
             console.log(`After (project List): ${localStorage.getItem(`TrackIt: project-list`)}`);
@@ -140,21 +74,21 @@ class Application {
     }
 
     editProject = (projectId, editedName, editedIconURL) => {
-        const currentProjectList = this.getProjectsList();
+        const currentProjectList = localStorageController.getProjectsList();
         console.log(`Before (editing): ${localStorage.getItem(`TrackIt: project-list`)}`);
         const editedProject = projectsController.edit(currentProjectList, projectId, editedName, editedIconURL);
         console.log(`Edited project: ${editedProject}`);
 
         if (editedProject) {
             currentProjectList[editedProject.editedProjectIndex] = editedProject.project;
-            this.setProjectsList(currentProjectList);
+            localStorageController.setProjectsList(currentProjectList);
             console.log(`After: ${localStorage.getItem(`TrackIt: project-list`)}`);
         }
         return editedProject.project;
     }
 
     removeProject = (projectId) => {
-        const currentProjectList = this.getProjectsList();
+        const currentProjectList = localStorageController.getProjectsList();
         console.log(`Before deleting a project (project List): ${localStorage.getItem(`TrackIt: project-list`)}`);
         const removedProjectIndex = projectsController.remove(currentProjectList, projectId);
         console.log(`Removed task List: ${localStorage.getItem(`TrackIt: ${currentProjectList[removedProjectIndex].id}`)}`);
@@ -165,7 +99,7 @@ class Application {
 
             localStorage.removeItem(`TrackIt: ${currentProjectList[removedProjectIndex].id}`);
             currentProjectList.splice(removedProjectIndex, 1);
-            this.setProjectsList(currentProjectList);
+            localStorageController.setProjectsList(currentProjectList);
 
             console.log(`After: ${localStorage.getItem(`TrackIt: project-list`)}`);
             return true;
@@ -173,19 +107,20 @@ class Application {
         return false;
     }
     
-
     createNewTask = (projectId, newTitle, newDueDate, newPriority, newDescription, newNotes) => {
-        const projectName = this.getProjectsList()
+        const projectName = localStorageController
+                                .getProjectsList()
                                 .find((project) => project.id === projectId)
                                 .name;
-        const currentTasksList = this.getTasksListByProjectId(projectId);
+
+        const currentTasksList = localStorageController.getTasksListByProjectId(projectId);
         console.log(`Before tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
         const newTask = tasksController.createNew(projectId, projectName, currentTasksList, newTitle, newDueDate, newPriority, newDescription, newNotes);
         console.log(`Created task: ${newTask}`);
 
         if (newTask) {
             currentTasksList.push(newTask);
-            this.setTasksListByProjectId(projectId, currentTasksList);
+            localStorageController.setTasksListByProjectId(projectId, currentTasksList);
             console.log(`After tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
             return newTask;
         }
@@ -193,14 +128,14 @@ class Application {
     }
 
     editTask = (projectId, taskId, editedTitle, editedDueDate, editedPriority, editedDescription, editedNotes) => {
-        const currentTasksList = this.getTasksListByProjectId(projectId);
+        const currentTasksList = localStorageController.getTasksListByProjectId(projectId);
         console.log(`Before tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
         const editedTask = tasksController.edit(currentTasksList, taskId, editedTitle, editedDueDate, editedPriority, editedDescription, editedNotes);
         console.log(`Edited task: ${editedTask}`);
 
         if (editedTask) {
             currentTasksList[editedTask.taskIndex] = editedTask.task;
-            this.setTasksListByProjectId(projectId, currentTasksList);
+            localStorageController.setTasksListByProjectId(projectId, currentTasksList);
             console.log(`After tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
             return editedTask.task;
         }
@@ -208,12 +143,12 @@ class Application {
     }
 
     toggleTaskStatus = (projectId, taskId) => {
-        const currentTasksList = this.getTasksListByProjectId(projectId);
+        const currentTasksList = localStorageController.getTasksListByProjectId(projectId);
         console.log(`Before tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
         const taskWithNewStatus = tasksController.toggleTaskStatus(currentTasksList, taskId);
         if (taskWithNewStatus) {
             currentTasksList[taskWithNewStatus.taskIndex] = taskWithNewStatus.task;
-            this.setTasksListByProjectId(projectId, currentTasksList);
+            localStorageController.setTasksListByProjectId(projectId, currentTasksList);
             console.log(`After tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
             return taskWithNewStatus.task.status;
         }
@@ -221,7 +156,7 @@ class Application {
     }
 
     removeTask = (projectId, taskId) => {
-        const currentTasksList = this.getTasksListByProjectId(projectId);
+        const currentTasksList = localStorageController.getTasksListByProjectId(projectId);
         console.log(`Before tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
         const removedTaskIndex = tasksController.remove(currentTasksList, taskId);
 
@@ -230,33 +165,33 @@ class Application {
             removedTaskIndex !== "undefined") {
 
             currentTasksList.splice(removedTaskIndex, 1);
-            this.setTasksListByProjectId(projectId, currentTasksList);
+            localStorageController.setTasksListByProjectId(projectId, currentTasksList);
             console.log(`After tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
             return true;
         }
     }
 
     getTasksGroup = (groupIdentifier) => {
-        const standardGroups = this.getStandardGroups();
+        const standardGroups = localStorageController.getStandardGroups();
         let newGroup;
         if (standardGroups.includes(groupIdentifier)) {
-            const allTasks = this.getAllTasks();
+            const allTasks = localStorageController.getAllTasks();
             newGroup = groupsController.getTaskListByGroup(allTasks, groupIdentifier);
         } else {
-            newGroup = this.getTasksListByProjectId(groupIdentifier);
+            newGroup = localStorageController.getTasksListByProjectId(groupIdentifier);
         }
         console.log(`Selected group: ${newGroup}`);
 
         if (newGroup) {
-            this.setCurrentGroupIdentifier(groupIdentifier);
+            localStorageController.setCurrentGroupIdentifier(groupIdentifier);
             return newGroup;
         }
         return false;
     }
 
     updateView = (viewState) => {
-        this.setViewState(viewState);
-        const currentGroupIdentifier = this.getCurrentGroupIdentifier();
+        localStorageController.setViewState(viewState);
+        const currentGroupIdentifier = localStorageController.getCurrentGroupIdentifier();
         const currentTasksGroup = this.getTasksGroup(currentGroupIdentifier);
 
         const filteredTasks = viewController
@@ -281,8 +216,3 @@ class Application {
 }
 
 export const application = new Application();
-
-/*     createExampleTaskPanels = () => createExampleTaskPanels();
-    createExampleProjectPanel = () => createExampleProjectPanel();
-
-    */

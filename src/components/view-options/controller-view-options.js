@@ -28,6 +28,7 @@ export const viewController = {
         }
         return false;
     },
+    
     sort: function(taskList, sortBy, ascendingOrder) {
         if (taskList) {
                 switch (sortBy) {
@@ -59,9 +60,9 @@ function sortTasksByDate(taskList, ascendingOrder) {
 function sortTasksByPriority(taskList, ascendingOrder) {
     return taskList.sort((task1, task2) => {
         if (ascendingOrder) {
-            return task1.priority - task2.priority;
-        } else {
             return task2.priority - task1.priority;
+        } else {
+            return task1.priority - task2.priority;
         }
     });
 }
@@ -70,9 +71,9 @@ function sortTasksByPriority(taskList, ascendingOrder) {
 function sortTasksByStatus(taskList, ascendingOrder) {
     return taskList.sort((task1, task2) => {
         if (ascendingOrder) {
-            return task1.status - task2.status;
-        } else {
             return task2.status - task1.status;
+        } else {
+            return task1.status - task2.status;
         }
     });
 }

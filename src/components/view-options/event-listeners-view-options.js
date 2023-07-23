@@ -20,7 +20,7 @@ export function addListenersViewOptions(savedState) {
     const selectSortOptions = document.querySelector('.view-options-bar select');
     const checkboxSortAscendingOrder = document.querySelector('#sort-order');
 
-    const selectedCheckboxesFilterOptions = document.querySelectorAll('.view-options-bar input');
+    const selectedCheckboxesFilterOptions = document.querySelectorAll('.view-options-bar input, .view-options-bar select');
     selectedCheckboxesFilterOptions.forEach((checkbox) => {
         checkbox.addEventListener('change', function() {
 
