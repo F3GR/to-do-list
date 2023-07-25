@@ -1,21 +1,21 @@
 import { createElementWithAttributes } from '../utils.js';
 
-export function renderTask(projectId, projectName, taskId, title, dueDate, status, priority, description, notes) {
+export function renderTask({ projectId, projectName, taskId, title, dueDate, status, priority, description, notes }) {
     const taskList = document.querySelector('.task-list');
-    const task = createElementWithAttributes('li', {class: `task`}, taskList);
+    const task = createElementWithAttributes('li', {class: 'task'}, taskList);
     task.setAttribute('data-project-id', `${projectId}`);
     task.setAttribute('data-task-id', `${taskId}`);
     task.setAttribute('data-task-status', `${status}`);
     task.setAttribute('data-task-priority', `${priority}`);
     
     const checkbox = createElementWithAttributes('input', {
-        type: `checkbox`, 
-        id: `task-status`,
+        type: 'checkbox', 
+        id: 'task-status',
         class: 'status'
     }, task);
 
     const label = createElementWithAttributes('label', {
-        for: `task-status`, 
+        for: 'task-status', 
         class: 'status-checkbox'
     }, task);
 
@@ -29,38 +29,38 @@ export function renderTask(projectId, projectName, taskId, title, dueDate, statu
     svg.appendChild(path);
     label.appendChild(svg);
 
-    const taskTitleBox = createElementWithAttributes('div', {class: `task-title-box`}, task);
-    const taskTitle = createElementWithAttributes('span', {class: `task-title`}, taskTitleBox);
+    const taskTitleBox = createElementWithAttributes('div', {class: 'task-title-box'}, task);
+    const taskTitle = createElementWithAttributes('span', {class: 'task-title'}, taskTitleBox);
     taskTitle.textContent = `${title}`;
 
     const taskOverDueBox = createElementWithAttributes('div', {
         class: 'overdue-box'
     }, task); 
     const taskOverDueIcon = createElementWithAttributes('img', {
-        src: `../src/originals/status-overdue.svg`, 
-        alt: `Task overdue status icon`,
-        class: `overdue`
+        src: '../src/originals/status-overdue.svg', 
+        alt: 'Task overdue status icon',
+        class: 'overdue'
     }, taskOverDueBox);
 
-    const taskDueDateBox = createElementWithAttributes('div', {class: `task-due-date`, }, task);
-    const taskDueDateText = createElementWithAttributes('span', {class: ``, }, taskDueDateBox);
+    const taskDueDateBox = createElementWithAttributes('div', {class: 'task-due-date', }, task);
+    const taskDueDateText = createElementWithAttributes('span', {class: '', }, taskDueDateBox);
     taskDueDateText.textContent = `${dueDate}`;
 
     const taskEditIcon = createElementWithAttributes('img', {
-        src: `../src/originals/edit.svg`, 
-        alt: `Task edit information icon`,
+        src: '../src/originals/edit.svg', 
+        alt: 'Task edit information icon',
         class: 'edit'
     }, task);
 
     const taskRemoveIcon = createElementWithAttributes('img', {
-        src: `../src/originals/delete.svg`, 
-        alt: `Task remove icon`,
+        src: '../src/originals/delete.svg', 
+        alt: 'Task remove icon',
         class: 'remove'
     }, task);
 
     const taskUnfoldIcon = createElementWithAttributes('img', {
-        src: `../src/originals/unfold.svg`, 
-        alt: `Task information unfold or fold icon`,
+        src: '../src/originals/unfold.svg', 
+        alt: 'Task information unfold or fold icon',
         class: 'unfold'
     }, task);
 

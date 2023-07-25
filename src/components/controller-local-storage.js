@@ -1,38 +1,37 @@
 export const localStorageController = {
-    getProjectsList: function() {
-        const storedProjectList = localStorage.getItem('TrackIt: project-list');
-        if (storedProjectList === null || 
-            storedProjectList === undefined || 
-            storedProjectList === "") {
+    getProjectsList: () => {
+        const storedProjectList = localStorage.getItem('TrackIt: projects-list');
+        if (!storedProjectList) {
           const projectList = [];
-          this.setProjectsList(projectList);
+          localStorageController.setProjectsList(projectList);
           return projectList;
         }
         return JSON.parse(storedProjectList);
     },
-    setProjectsList: (projectList) => localStorage.setItem('TrackIt: project-list', JSON.stringify(projectList)),  
+    setProjectsList: (projectsList) => localStorage.setItem('TrackIt: projects-list', JSON.stringify(projectsList)),
 
-    getTasksListByProjectId: function (projectId) {
+    addTaskList: (newProjectId) => localStorage.setItem(`TrackIt: ${newProjectId}`, JSON.stringify([])),
+    removeTaskList: (projectId) => localStorage.removeItem(`TrackIt: ${projectId}`),
+
+    getTasksListByProjectId: (projectId) => {
         const storedTaskList = localStorage.getItem(`TrackIt: ${projectId}`);
         return JSON.parse(storedTaskList);
     },
     setTasksListByProjectId: (projectId, tasksList) => localStorage.setItem(`TrackIt: ${projectId}`, JSON.stringify(tasksList)),
 
-    getAllTasks: function() {
-        const currentProjectList = this.getProjectsList();
+    getAllTasks: () => {
+        const currentProjectList = localStorageController.getProjectsList();
         const arrayOfProjectIds = currentProjectList.map(({ id, name, iconURL }) => ({ id }));
         console.log(`Array of project Id's: ${arrayOfProjectIds}`);
 
-        const allTasksList = arrayOfProjectIds.flatMap(({ id }) => {
-            return Object.values(this.getTasksListByProjectId(id));
-        });
+        const allTasksList = arrayOfProjectIds.flatMap(
+            ({ id }) => Object.values(localStorageController.getTasksListByProjectId(id))
+        );
         console.log(`Array of all tasks: ${allTasksList}`);
         return allTasksList;
     },
 
-    getStandardGroups: () => ['all', 'today', 'week', 'completed', 'overdue'],
-
-    getCurrentGroupIdentifier: function() {
+    getCurrentGroupIdentifier: () => {
         const storedCurrentGroup = localStorage.getItem('TrackIt: current-group');
         if (!storedCurrentGroup) {
             const newCurrentGroup = 'all';
@@ -42,7 +41,7 @@ export const localStorageController = {
     },
     setCurrentGroupIdentifier: (newGroupIdentifier) => localStorage.setItem('TrackIt: current-group', newGroupIdentifier),
 
-    getViewState: function() {
+    getViewState: () => {
         const storedViewState = localStorage.getItem('TrackIt: view-state');
         if (!storedViewState) {
             const newViewState = {
@@ -59,5 +58,5 @@ export const localStorageController = {
         }
         return JSON.parse(storedViewState);
     },
-    setViewState: (viewState) => localStorage.setItem(`TrackIt: view-state`, JSON.stringify(viewState)),
+    setViewState: (viewState) => localStorage.setItem('TrackIt: view-state', JSON.stringify(viewState)),
 };

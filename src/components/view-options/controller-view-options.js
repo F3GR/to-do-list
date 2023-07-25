@@ -1,4 +1,5 @@
-import { parseISO } from "date-fns";
+import { parseISO } from 'date-fns';
+import { PRIORITY, STATUS, SORTBY } from '../utils.js';
 
 export const viewController = {
     filter: function(taskList, flagIncludeHigh, flagIncludeMedium, flagIncludeNormal,
@@ -7,21 +8,21 @@ export const viewController = {
             return taskList
             .filter((task) => {
                 switch (task.priority) {
-                    case '2':
+                    case PRIORITY.HIGH:
                         return flagIncludeHigh;
-                    case '1':
+                    case PRIORITY.MEDIUM:
                         return flagIncludeMedium;
-                    case '0':
+                    case PRIORITY.NORMAL:
                         return flagIncludeNormal;
                 }   
             })
             .filter((task) => {
                 switch (task.status) {
-                    case '1':
+                    case STATUS.ONGOING:
                         return flagIncludeOnGoing;
-                    case '0':
+                    case STATUS.COMPLETED:
                         return flagIncludeCompleted;
-                    case '2':
+                    case STATUS.OVERDUE:
                         return flagIncludeOverdue;
                 }
             });
@@ -32,11 +33,11 @@ export const viewController = {
     sort: function(taskList, sortBy, ascendingOrder) {
         if (taskList) {
                 switch (sortBy) {
-                    case 'date':
+                    case SORTBY.DATE:
                         return sortTasksByDate(taskList, ascendingOrder);
-                    case 'priority':
+                    case SORTBY.PRIORITY:
                         return sortTasksByPriority(taskList, ascendingOrder);
-                    case 'status':
+                    case SORTBY.STATUS:
                         return sortTasksByStatus(taskList, ascendingOrder);
                 }
         }
@@ -56,7 +57,6 @@ function sortTasksByDate(taskList, ascendingOrder) {
     });
 }
 
-// Priority: "0" - "normal", "1" - "medium", "2" - "high"
 function sortTasksByPriority(taskList, ascendingOrder) {
     return taskList.sort((task1, task2) => {
         if (ascendingOrder) {
@@ -67,7 +67,6 @@ function sortTasksByPriority(taskList, ascendingOrder) {
     });
 }
 
-// Status: "0" - "completed", "1" - "on-going", "2" - "overdue"
 function sortTasksByStatus(taskList, ascendingOrder) {
     return taskList.sort((task1, task2) => {
         if (ascendingOrder) {

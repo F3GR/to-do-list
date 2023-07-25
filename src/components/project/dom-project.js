@@ -1,27 +1,27 @@
 import { createElementWithAttributes } from '../utils.js';
 
-export function renderProject(name, iconURL, id) {
+export function renderProject({ id, name, iconURL, altText }) {
     const projectsList = document.querySelector('.projects-list');
-    const newProject = createElementWithAttributes('li', { class: `project`}, projectsList);
-    newProject.setAttribute('data-group-id', `${id}`);
+    const nodeNewProject = createElementWithAttributes('li', { class: 'project'}, projectsList);
+    nodeNewProject.setAttribute('data-group-id', `${id}`);
 
     const newProjectImage = createElementWithAttributes('img', {
         src: `${iconURL}`,
-        alt: `Project icon`,
+        alt: `${altText}`,
         class: 'icon'
-    }, newProject);
+    }, nodeNewProject);
 
-    const newProjectText = createElementWithAttributes('span', {}, newProject);
+    const newProjectText = createElementWithAttributes('span', {}, nodeNewProject);
     newProjectText.textContent = name;
 
     const newProjectEditImage = createElementWithAttributes('img', {
         src: '../src/originals/edit.svg',
-        alt: `Edit project icon`,
+        alt: 'Edit project icon',
         class: 'edit'
-    }, newProject);
+    }, nodeNewProject);
     const newProjectDeleteImage = createElementWithAttributes('img', {
         src: '../src/originals/delete.svg',
-        alt: `Remove project icon`,
+        alt: 'Remove project icon',
         class: 'remove'
-    }, newProject);
+    }, nodeNewProject);
 }

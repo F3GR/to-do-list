@@ -1,32 +1,37 @@
 import { isToday, parseISO, differenceInWeeks } from 'date-fns';
+import { STATUS, STANDARD_GROUPS } from '../utils';
 
 export const groupsController = {
-    getTaskListByGroup: function(taskList, groupIdentifier) {
-        if (taskList) {
-            switch (groupIdentifier) {
-                case 'all':
-                    return taskList;
-                case 'today':
-                    return taskList.filter((task) => { 
-                        const dueDate = parseISO(task.dueDate);
-                        return isToday(dueDate)});
-                case 'week':
-                    const today = new Date();
-                    return taskList.filter((task) => {
-                        const dueDate = parseISO(task.dueDate);
-                        return differenceInWeeks(dueDate, today) === 0;
-                    });
-                case 'completed':
-                    return taskList.filter((task) => task.status === '0');
-                case 'overdue':
-                    return taskList.filter((task) => task.status === '2');
-                default:
-                    return taskList.filter((task) => {
-                        return task.projectId === groupIdentifier;
-                    });
-            }
-        } else {
-            return false;
+    getTaskListByGroup: (taskList, groupIdentifier) => {
+        if (!taskList || !groupIdentifier) {
+            console.error('Error: task list and/or group id weren\'t found');
+            return [];
         }
-    }
+        switch (groupIdentifier) {
+            case STANDARD_GROUPS.ALL:
+                return taskList;
+            case STANDARD_GROUPS.TODAY:
+                return filterTasksByToday(taskList);
+            case STANDARD_GROUPS.WEEK:
+                return filterTasksByWeek(taskList);
+            case STANDARD_GROUPS.COMPLETED:
+                return filterTasksByStatus(taskList, STATUS.COMPLETED);
+            case STANDARD_GROUPS.OVERDUE:
+                return filterTasksByStatus(taskList, STATUS.OVERDUE);
+        }
+    },
+}
+
+function filterTasksByToday(taskList) {
+    const today = new Date();
+    return taskList.filter(({ dueDate }) => isToday(parseISO(dueDate)));
+}
+
+function filterTasksByWeek(taskList) {
+    const today = new Date();
+    return taskList.filter(({ dueDate }) => differenceInWeeks(parseISO(dueDate), today) === 0);
+}
+
+function filterTasksByStatus(taskList, status) {
+    return taskList.filter(({ status: taskStatus }) => taskStatus === status);
 }

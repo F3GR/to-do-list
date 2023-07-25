@@ -13,7 +13,7 @@ export class Task {
     static taskId = 0;
 
     static getNewTaskId = () => { 
-        return String(this.taskId);
+        return this.taskId;
     }
     static incrementNewTaskId = () => {
         this.taskId++;

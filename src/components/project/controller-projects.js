@@ -2,35 +2,60 @@ import { Project } from './project.js';
 import { noDuplicateName, findIndex } from '../utils.js';
 
 export const projectsController = {
-    createNew: function(projectsList, newName, newIconURL) {
-        if (noDuplicateName(projectsList, newName, "")) {
-            const newId = Project.getNewId();
-            const newProject = new Project(newId, newName, newIconURL);
-            Project.incrementNewProjectId();
-            return newProject;
-        } else {
+    createNew: (projectsList, { name, iconURL, altText }) => {
+        if (!projectsList || !name || !iconURL || !altText) {
             return false;
         }
-    },
 
-    edit: function(projectsList, projectId, editedName, editedIcon) {
-        const editedProjectIndex = findIndex(projectsList, projectId);
-        const project = projectsList[editedProjectIndex];
-
-        if (noDuplicateName(projectsList, editedName, projectId)) {
-            if (project.name !== editedName) {
-                project.name = editedName;
-            }
-            if (project.iconURL !== editedIcon) {
-                project.iconURL = editedIcon;
-            }
-            return { project, editedProjectIndex };
-        } else {
+        if (!noDuplicateName(projectsList, name, "")) {
             return false;
         }
+
+        const newId = Project.getNewId();
+        const newProject = new Project(newId, name, iconURL, altText);
+        Project.incrementNewProjectId();
+
+        const newProjectsList = [...projectsList, newProject];
+        return newProjectsList;
     },
 
-    remove: function(projectsList, projectId) {
-        return findIndex(projectsList, projectId);
+    edit: (projectsList, { id, name, iconURL, altText }) => {
+        if (!projectsList || !name || !iconURL || !altText) {
+            return false;
+        }
+
+        if (!noDuplicateName(projectsList, name, id)) {
+            return false;
+        }
+
+        const editedProjectsList = [...projectsList];
+
+        const storedProjectIndex = findIndex(editedProjectsList, id);
+        const editedProject = editedProjectsList[storedProjectIndex];
+
+        if (editedProject.name !== name) {
+            editedProject.name = name;
+        }
+        if (editedProject.iconURL !== iconURL) {
+            editedProject.iconURL = iconURL;
+        }
+        if (editedProject.altText !== altText) {
+            editedProject.altText = altText;
+        }
+
+        return { editedProjectsList, editedProject };
+    },
+
+    remove: (projectsList, projectId) => {
+        if (!projectsList || !projectId) {
+            return false;
+        }
+
+        const editedProjectsList = [...projectsList];
+        const removedProjectIndex = findIndex(editedProjectsList, projectId);
+
+        editedProjectsList.splice(removedProjectIndex, 1);
+
+        return { editedProjectsList, removedProjectIndex };
     }
 };

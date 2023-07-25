@@ -1,131 +1,178 @@
 import { application } from '../main-app.js';
 import { renderProject } from './dom-project.js';
+import { renderGroup } from '../group/dom-group.js';
+import { STANDARD_GROUPS } from '../utils.js';
 
 export function addListenersManageProjects() {
-    const selectedMenuCover = document.querySelector('.menu-cover');
-    const selectedProjectMenu = document.querySelector('.project-menu');
-    const selectedProjectMenuTitle = document.querySelector('.project-menu .title-box span');
-    const selectedSubmitProjectButton = document.querySelector('.project-menu button.submit');
-    const selectedProjectBar = document.querySelector('aside .bar-projects');
-    const selectedForm = document.querySelector('.project-menu form');
-    const mainGroupIcon = document.querySelector('main .header img');
-    const mainGroupName = document.querySelector('main .header span');
+    const menuCover = document.querySelector('.menu-cover');
+    const menu = document.querySelector('.project-menu');
+    const menuTitle = document.querySelector('.project-menu .title-box span');
+    const submitButton = document.querySelector('.project-menu button.submit');
+    const projectBar = document.querySelector('aside .bar-projects');
+    const form = document.querySelector('.project-menu form');
 
-    selectedProjectBar.addEventListener('click', function(e) {
+    projectBar.addEventListener('click', (e) => handleMenuPopUp(e));
+
+    form.addEventListener('submit', (e) => handleSubmit(e));
+
+    const exitButton = document.querySelector('.project-menu .exit');
+    exitButton.addEventListener('click', (e) => {
         e.preventDefault();
-        e.stopImmediatePropagation();
-        const target = e.target;
-    
-        if (target.classList.contains('add-new')) {
-            selectedProjectMenu.setAttribute('data-project-action', 'add-new');
-            const selectedSubmitProjectButton = document.querySelector('.project-menu[data-project-action="add-new"] button.submit');
-            const selectedForm = document.querySelector('.project-menu[data-project-action="add-new"] form');
+        menuTitle.textContent = '';
+        submitButton.textContent = '';
         
-            selectedMenuCover.classList.add('shown');
-            selectedProjectMenu.classList.add('shown');
-            selectedProjectMenuTitle.textContent = 'Add a new project';
-            selectedSubmitProjectButton.textContent = 'Add'; 
-
-        } else if (target.classList.contains('edit')) {
-            selectedProjectMenu.setAttribute('data-project-action', 'edit');
-            const selectedProject = target.closest('.project');
-            const id = selectedProject.getAttribute('data-group-id');
-            selectedProjectMenu.setAttribute('data-group-id', id);
-
-            selectedMenuCover.classList.add('shown');
-            selectedProjectMenu.classList.add('shown');
-            selectedProjectMenuTitle.textContent = 'Edit the project';
-            selectedSubmitProjectButton.textContent = 'Save';
-
-        } else if (target.classList.contains('remove')) {
-            const selectedProject = target.closest('.project');
-            const id = selectedProject.getAttribute('data-group-id');
-            const removedProject = application.removeProject(id);
-        
-            if (removedProject) {
-                /**** TODO ****/
-                if (selectedProject.classList.contains('current')) {
-                    mainGroupIcon.src = ``;
-                    mainGroupName.textContent = ``;
-                }
-                
-                selectedProject.remove();
-            } else {
-                alert('Error: project wasn\'t found');
-            }
-        }
+        menuCover.classList.remove('shown');
+        menu.classList.remove('shown');
+        menu.removeAttribute('data-project-action');
+        menu.removeAttribute('data-group-id');
     });
 
-    selectedForm.addEventListener('submit', function(e) {
+    const cancelButton = document.querySelector('.project-menu .cancel');
+    cancelButton.addEventListener('click', (e) => {
         e.preventDefault();
-        e.stopImmediatePropagation();
+        menuTitle.textContent = '';
+        submitButton.textContent = '';
 
-        const selectNameInput = document.querySelector('.project-menu #project-name');
-        const selectIconInput = document.querySelector('.project-menu input[name="iconURL"]:checked');
-        
-        if (selectedProjectMenu.getAttribute('data-project-action') === 'add-new') {
-            if (!selectIconInput || !selectIconInput.value) {
-                alert('Please select an icon');
-                return;
-            }
-    
-            const newProject = application.createNewProject(selectNameInput.value, selectIconInput.value);
-            if (newProject) {
-                renderProject(newProject.name, newProject.iconURL, newProject.id);
-            } else {
-                alert('The project with this title already exists!');
-            }
-            
-        } else if (selectedProjectMenu.getAttribute('data-project-action') === 'edit') {
-            if (!selectIconInput || !selectIconInput.value) {
-                alert('Please select an icon');
-                return;
-            }
-            const id = selectedProjectMenu.getAttribute('data-group-id');
-    
-            const editProject = application.editProject(id, selectNameInput.value, selectIconInput.value);
-            if (editProject) {
-                const oldIcon = document.querySelector(`.project[data-group-id="${id}"] .icon`);
-                const oldName = document.querySelector(`.project[data-group-id="${id}"] span`);
-                oldIcon.src = selectIconInput.value;
-                oldName.textContent = selectNameInput.value;
-
-                const editedProject = document.querySelector(`.project[data-group-id="${id}"]`);
-                if (editedProject.classList.contains('current')) {
-                    mainGroupIcon.src = selectIconInput.value;
-                    mainGroupName.textContent = selectNameInput.value;
-                }
-            } else {
-                alert('The project with this title already exists!');
-            }
-        }
-    });
-
-    const selectedExitButton = document.querySelector('.project-menu .exit');
-    selectedExitButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        selectedProjectMenuTitle.textContent = '';
-        selectedSubmitProjectButton.textContent = '';
-        
-        selectedMenuCover.classList.remove('shown');
-        selectedProjectMenu.classList.remove('shown');
-        selectedProjectMenu.removeAttribute(`data-project-action`);
-        selectedProjectMenu.removeAttribute(`data-group-id`);
-    });
-
-    const selectedCancelButton = document.querySelector('.project-menu .cancel');
-    selectedCancelButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        selectedProjectMenuTitle.textContent = '';
-        selectedSubmitProjectButton.textContent = '';
-
-        selectedMenuCover.classList.remove('shown');
-        selectedProjectMenu.classList.remove('shown');
-        selectedProjectMenu.removeAttribute(`data-project-action`);
-        selectedProjectMenu.removeAttribute(`data-group-id`);
+        menuCover.classList.remove('shown');
+        menu.classList.remove('shown');
+        menu.removeAttribute('data-project-action');
+        menu.removeAttribute('data-group-id');
     });
 }
 
+function handleMenuPopUp(e) {
+    const menuCover = document.querySelector('.menu-cover');
+    const menu = document.querySelector('.project-menu');
+    const menuTitle = document.querySelector('.project-menu .title-box span');
+    const submitButton = document.querySelector('.project-menu button.submit');
+    const currentGroupIcon = document.querySelector('main .header img');
+    const currentGroupName = document.querySelector('main .header span');
 
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    const target = e.target;
+
+    if (target.classList.contains('add-new')) {
+        menu.setAttribute('data-project-action', 'add-new');
+    
+        menuCover.classList.add('shown');
+        menu.classList.add('shown');
+        menuTitle.textContent = 'Add a new project';
+        submitButton.textContent = 'Add'; 
+
+    } else if (target.classList.contains('edit')) {
+        menu.setAttribute('data-project-action', 'edit');
+        const project = target.closest('.project');
+        const id = project.getAttribute('data-group-id');
+        menu.setAttribute('data-group-id', id);
+
+        menuCover.classList.add('shown');
+        menu.classList.add('shown');
+        menuTitle.textContent = 'Edit the project';
+        submitButton.textContent = 'Save';
+
+    } else if (target.classList.contains('remove')) {
+        const project = target.closest('.project');
+        const id = project.getAttribute('data-group-id');
+        const removedProject = application.removeProject(id);
+    
+        if (!removedProject) {
+            alert('Error: project wasn\'t found');
+        }
+
+        if (project.classList.contains('current')) {
+            currentGroupName.textContent = '';
+            currentGroupIcon.src = '';
+            currentGroupIcon.alt = '';
+
+            const projectListNodes = document.querySelectorAll('.aside .projects-list .project');
+            if (projectListNodes.length > 0) {
+                const lastProjectNode = projectListNodes[projectListNodes.length - 1];
+                const lastProjectId = lastProjectNode.getAttribute('data-group-id');
+                renderGroup(lastProjectId);
+            } else {
+                renderGroup(STANDARD_GROUPS.ALL);
+            }
+        }
+        project.remove();
+    }
+}
+
+function handleSubmit(e) {
+    const menu = document.querySelector('.project-menu');
+    const currentGroupIcon = document.querySelector('main .header img');
+    const currentGroupName = document.querySelector('main .header span');
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    const inputName = document.querySelector('.project-menu #project-name');
+    const inputIcon = document.querySelector('.project-menu input[name="iconURL"]:checked');
+    
+    if (menu.getAttribute('data-project-action') === 'add-new') {
+        if (!inputName || !inputName.value) {
+            alert('Please select an icon');
+            return;
+        }
+
+        if (!inputIcon || !inputIcon.value || !inputIcon.dataset.altText) {
+            alert('Please select an icon');
+            return;
+        }
+
+        const inputNewProject = {
+            name: inputName.value,
+            iconURL: inputIcon.value,
+            altText: inputIcon.dataset.altText,
+        }
+
+        const newProject = application.createNewProject(inputNewProject);
+        if (newProject) {
+            renderProject(newProject);
+        } else {
+            alert('The project with this title already exists!');
+        }
+        
+    } else if (menu.getAttribute('data-project-action') === 'edit') {
+        if (!inputName) {
+            alert('Please write a project name');
+            return;
+        }
+        if (!inputIcon || !inputIcon.value) {
+            alert('Please select an icon');
+            return;
+        }
+
+        const id = menu.getAttribute('data-group-id');
+
+        const inputEditProject = {
+            id: id,
+            name: inputName.value,
+            iconURL: inputIcon.value,
+            altText: inputIcon.dataset.altText,
+        }
+
+        const editedProject = application.editProject(inputEditProject);
+
+        if (!editedProject) {
+            alert('The project with this title already exists!');
+            return;
+        }
+
+        const editedProjectNodeName = document.querySelector(`.project[data-group-id="${id}"] span`);
+        const editedProjectNodeIcon = document.querySelector(`.project[data-group-id="${id}"] .icon`);
+        
+        editedProjectNodeName.textContent = editedProject.name;
+        editedProjectNodeIcon.src = editedProject.iconURL;
+        editedProjectNodeIcon.altText = editedProject.altText;
+
+        const editedProjectNode = document.querySelector(`.project[data-group-id="${id}"]`);
+        if (editedProjectNode.classList.contains('current')) {
+            currentGroupName.textContent = editedProject.name;
+            currentGroupIcon.src = editedProject.iconURL;
+            currentGroupIcon.alt = editedProject.altText;
+        }
+    }   
+}
 
 

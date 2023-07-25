@@ -1,62 +1,29 @@
-import { application } from "../main-app";
-import { renderTask } from "../task/dom-task";
+import { renderGroup } from './dom-group.js';
 
 export function addListenersSidebar() {
     const sidebarIcon = document.querySelector('header > img.sidebar-icon');
-    const sidebar = document.querySelector('.content aside');
-    const selectedMain = document.querySelector('.content main');
+    const sidebar = document.querySelector('aside');
     const sidebarCover = document.querySelector('main .sidebar-cover');
-    const selectedTaskList = document.querySelector('main .task-list');
 
-    sidebarIcon.addEventListener('click', function() {
+    sidebarIcon.addEventListener('click', () => {
         sidebar.classList.toggle('shown');
         sidebarCover.classList.toggle('shown');
     });
 
-    let currentGroup;
-    const mainGroupIcon = document.querySelector('main .header img');
-    const mainGroupName = document.querySelector('main .header span');
-    const barTypes = document.querySelector('.bar-types');
-    const projectsList = document.querySelector('.projects-list');
-    
-    barTypes.addEventListener('click', handleGroupSelection);
-    projectsList.addEventListener('click', handleGroupSelection);
-    
-    function handleGroupSelection(e) {
-        const target = e.target.closest('.bar-types > *, .projects-list > li.project');
-    
-        if (target && target !== currentGroup) {
-            const groupIdentifier = target.getAttribute('data-group-id');
-            const selectedGroupIcon = target.querySelector('img');
-            const selectedGroupName = target.querySelector('span');
+    const standardGroups = document.querySelector('.bar-types');
+    const projectGroups = document.querySelector('.projects-list');
 
-            if (currentGroup) {
-                currentGroup.classList.remove('current');
-            }
+    standardGroups.addEventListener('click', handleGroupSelection);
+    projectGroups.addEventListener('click', handleGroupSelection);
+}
 
-            target.classList.add('current');
-            mainGroupIcon.src = selectedGroupIcon.src;
-            mainGroupName.textContent = selectedGroupName.textContent;
-            currentGroup = target;
-            selectedTaskList.innerHTML = '';
+function handleGroupSelection(e) {
+    const target = e.target.closest('.bar-types > *, .projects-list > li.project');
 
-            const groupTasks = application.getTasksGroup(groupIdentifier);
-
-            if (groupTasks) {
-                groupTasks.forEach((task) => {
-                    renderTask(
-                        task.projectId, 
-                        task.projectName, 
-                        task.id, 
-                        task.title, 
-                        task.dueDate, 
-                        task.status, 
-                        task.priority, 
-                        task.description, 
-                        task.notes
-                    );
-                });
-            }
-        }
+    if (target && !target.classList.contains('current')) {
+        const groupIdentifier = target.getAttribute('data-group-id');
+        renderGroup(groupIdentifier);
     }
 }
+
+

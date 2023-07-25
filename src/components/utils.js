@@ -19,15 +19,13 @@ export function checkIfCurrent(element) {
   return false;
 }
 
-export function removeCurrentStatus(element) {
-  element.removeAttribute('data-value');
-}
+export const removeCurrentStatus = (element) => element.removeAttribute('data-value');
 
 export function noDuplicateName(list, name, id) {
   const n = list.length;
   let i = 0;
   for (; i < n; i++) {
-      if (list[i].id === id) {
+      if (Number(list[i].id) === Number(id)) {
           continue;
       }
       if (list[i].name === name) {
@@ -63,3 +61,42 @@ export function findIndex(list, id) {
   }
   return index;
 }
+
+export const ACTIONS = {
+  ADDNEW: 'add-new',
+  EDIT: 'edit',
+  REMOVE: 'remove',
+}
+
+export const STANDARD_GROUPS = {
+  ALL: 'all',
+  TODAY: 'today',
+  WEEK: 'week',
+  COMPLETED: 'completed',
+  OVERDUE: 'overdue',
+}
+
+export const PRIORITY = {
+  NORMAL: '0',
+  MEDIUM: '1',
+  HIGH: '2',
+}
+
+export const SORTBY = {
+  DATE: 'date',
+  STATUS: 'status',
+  PRIORITY: 'priority',
+}
+
+export const STATUS = {
+  COMPLETED: '0',
+  ONGOING: '1',
+  OVERDUE: '2',
+}
+
+
+
+
+
+
+
