@@ -62,10 +62,13 @@ export function findIndex(list, id) {
   return index;
 }
 
+
 export const ACTIONS = {
   ADDNEW: 'add-new',
   EDIT: 'edit',
+  UPDATE_STATUS: 'update-status',
   REMOVE: 'remove',
+  UNFOLD: 'unfold',
 }
 
 export const STANDARD_GROUPS = {

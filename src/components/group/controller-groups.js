@@ -23,7 +23,6 @@ export const groupsController = {
 }
 
 function filterTasksByToday(taskList) {
-    const today = new Date();
     return taskList.filter(({ dueDate }) => isToday(parseISO(dueDate)));
 }
 

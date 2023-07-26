@@ -4,44 +4,45 @@ import { PRIORITY, STATUS, SORTBY } from '../utils.js';
 export const viewController = {
     filter: function(taskList, flagIncludeHigh, flagIncludeMedium, flagIncludeNormal,
     flagIncludeOnGoing, flagIncludeCompleted, flagIncludeOverdue) {
-        if (taskList) {
-            return taskList
-            .filter((task) => {
-                switch (task.priority) {
-                    case PRIORITY.HIGH:
-                        return flagIncludeHigh;
-                    case PRIORITY.MEDIUM:
-                        return flagIncludeMedium;
-                    case PRIORITY.NORMAL:
-                        return flagIncludeNormal;
-                }   
-            })
-            .filter((task) => {
-                switch (task.status) {
-                    case STATUS.ONGOING:
-                        return flagIncludeOnGoing;
-                    case STATUS.COMPLETED:
-                        return flagIncludeCompleted;
-                    case STATUS.OVERDUE:
-                        return flagIncludeOverdue;
-                }
-            });
+        if (!taskList) {
+            return false;
         }
-        return false;
+        
+        return taskList
+        .filter((task) => {
+            switch (task.priority) {
+                case PRIORITY.HIGH:
+                    return flagIncludeHigh;
+                case PRIORITY.MEDIUM:
+                    return flagIncludeMedium;
+                case PRIORITY.NORMAL:
+                    return flagIncludeNormal;
+            }   
+        }).filter((task) => {
+            switch (task.status) {
+                case STATUS.ONGOING:
+                    return flagIncludeOnGoing;
+                case STATUS.COMPLETED:
+                    return flagIncludeCompleted;
+                case STATUS.OVERDUE:
+                    return flagIncludeOverdue;
+            }
+        })
     },
     
     sort: function(taskList, sortBy, ascendingOrder) {
-        if (taskList) {
-                switch (sortBy) {
-                    case SORTBY.DATE:
-                        return sortTasksByDate(taskList, ascendingOrder);
-                    case SORTBY.PRIORITY:
-                        return sortTasksByPriority(taskList, ascendingOrder);
-                    case SORTBY.STATUS:
-                        return sortTasksByStatus(taskList, ascendingOrder);
-                }
+        if (!taskList || !sortBy || !ascendingOrder) {
+            return false;
         }
-        return false;
+        
+        switch (sortBy) {
+            case SORTBY.DATE:
+                return sortTasksByDate(taskList, ascendingOrder);
+            case SORTBY.PRIORITY:
+                return sortTasksByPriority(taskList, ascendingOrder);
+            case SORTBY.STATUS:
+                return sortTasksByStatus(taskList, ascendingOrder);
+        }
     }   
 }
 
@@ -49,6 +50,7 @@ function sortTasksByDate(taskList, ascendingOrder) {
     return taskList.sort((task1, task2) => {
         const date1 = parseISO(task1.dueDate);
         const date2 = parseISO(task2.dueDate);
+
         if (ascendingOrder) {
             return date1 - date2;
         } else {

@@ -1,4 +1,4 @@
-import { createElementWithAttributes } from '../utils.js';
+import { ACTIONS, createElementWithAttributes } from '../utils.js';
 
 export function renderTask({ projectId, projectName, taskId, title, dueDate, status, priority, description, notes }) {
     const taskList = document.querySelector('.task-list');
@@ -13,11 +13,13 @@ export function renderTask({ projectId, projectName, taskId, title, dueDate, sta
         id: 'task-status',
         class: 'status'
     }, task);
+    
 
     const label = createElementWithAttributes('label', {
         for: 'task-status', 
         class: 'status-checkbox'
     }, task);
+    label.setAttribute('data-task-action', ACTIONS.UPDATE_STATUS);
 
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', 'M2,10 L8,16 L18,5');
@@ -51,18 +53,21 @@ export function renderTask({ projectId, projectName, taskId, title, dueDate, sta
         alt: 'Task edit information icon',
         class: 'edit'
     }, task);
+    taskEditIcon.setAttribute('data-task-action', ACTIONS.EDIT);
 
     const taskRemoveIcon = createElementWithAttributes('img', {
         src: '../src/originals/delete.svg', 
         alt: 'Task remove icon',
         class: 'remove'
     }, task);
+    taskRemoveIcon.setAttribute('data-task-action', ACTIONS.REMOVE);
 
     const taskUnfoldIcon = createElementWithAttributes('img', {
         src: '../src/originals/unfold.svg', 
         alt: 'Task information unfold or fold icon',
         class: 'unfold'
     }, task);
+    taskUnfoldIcon.setAttribute('data-task-action', ACTIONS.UNFOLD);
 
     const taskUnfoldedPanel = createElementWithAttributes('div', {
         class: 'task-unfold-box',

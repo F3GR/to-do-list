@@ -1,4 +1,4 @@
-import { createElementWithAttributes } from './utils.js';
+import { ACTIONS, createElementWithAttributes } from './utils.js';
 
 export function renderMainPage() {
     renderMainPageTemplate();
@@ -22,10 +22,10 @@ function renderMainPageTemplate() {
     const logoIcon = createElementWithAttributes('img', { 
         src: '../src/originals/fav-icon.svg',
         class: 'logo',
-        alt: 'ToDo List logo'}, heading);
+        alt: 'TrackIt logo'}, heading);
 
     const headingText = createElementWithAttributes('h1', {}, heading);
-    headingText.textContent = 'ToDo List';
+    headingText.textContent = 'TrackIt';
 
     const emptyDiv = createElementWithAttributes('div', {class: 'empty'}, header);
 
@@ -93,11 +93,13 @@ function renderMainPageTemplate() {
     }, projectsBarHeader);
     const projectsBarHeaderText = createElementWithAttributes('span', {}, projectsBarHeader);
     projectsBarHeaderText.textContent = 'Projects (0)';
+
     const projectsBarHeaderAddImage = createElementWithAttributes('img', {
         src: '../src/originals/add-new.svg',
         alt: 'Add new project icon',
         class: 'add-new',
     }, projectsBarHeader);
+    projectsBarHeaderAddImage.setAttribute('data-project-action', ACTIONS.ADDNEW);
 
     const projectsList = createElementWithAttributes('ul', {class: 'projects-list'}, barProjects);
 
@@ -134,6 +136,7 @@ function renderMainPageTemplate() {
         alt: 'Add new Task icon',
         class: 'add-new'
     }, mainTaskBar);
+    addNewTaskIcon.setAttribute('data-task-action', ACTIONS.ADDNEW);
 
     const taskList = createElementWithAttributes('ul', {class: 'task-list'}, main);
 

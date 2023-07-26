@@ -1,20 +1,14 @@
 import { renderGroup } from './dom-group.js';
+import { viewOptionsNodes as STATIC_SELECTORS }  from './static-selectors-group.js';
 
 export function addListenersSidebar() {
-    const sidebarIcon = document.querySelector('header > img.sidebar-icon');
-    const sidebar = document.querySelector('aside');
-    const sidebarCover = document.querySelector('main .sidebar-cover');
-
-    sidebarIcon.addEventListener('click', () => {
-        sidebar.classList.toggle('shown');
-        sidebarCover.classList.toggle('shown');
+    STATIC_SELECTORS.sidebarIcon.addEventListener('click', () => {
+        STATIC_SELECTORS.sidebar.classList.toggle('shown');
+        STATIC_SELECTORS.sidebarCover.classList.toggle('shown');
     });
-
-    const standardGroups = document.querySelector('.bar-types');
-    const projectGroups = document.querySelector('.projects-list');
-
-    standardGroups.addEventListener('click', handleGroupSelection);
-    projectGroups.addEventListener('click', handleGroupSelection);
+    
+    STATIC_SELECTORS.standardGroups.addEventListener('click', handleGroupSelection);
+    STATIC_SELECTORS.projectGroups.addEventListener('click', handleGroupSelection);
 }
 
 function handleGroupSelection(e) {

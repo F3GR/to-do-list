@@ -1,6 +1,6 @@
 import { createElementWithAttributes } from "../utils";
 
-export function renderFilterOptionsMenu(savedState) {
+export function renderFilterOptionsMenu() {
 
     const main = document.querySelector('.content main');
 
@@ -139,13 +139,35 @@ export function renderFilterOptionsMenu(savedState) {
         alt: `Sort order icon`,
         class: 'sort-arrow'
     }, labelSortOrder);
+}
 
-    checkboxPriorityHigh.checked = savedState.flagIncludeHigh;
-    checkboxPriorityMedium.checked = savedState.flagIncludeMedium;
-    checkboxPriorityNormal.checked = savedState.flagIncludeNormal;
-    checkboxStatusOverdue.checked = savedState.flagIncludeOverdue;
-    checkboxStatusOnGoing.checked = savedState.flagIncludeOnGoing;
-    checkboxStatusCompleted.checked = savedState.flagIncludeCompleted;
-    selectSortOptions.value = savedState.sortBy;
-    checkboxSortAscendingOrder.checked = savedState.ascendingOrder;
+export function applySavedViewState(viewState) {
+    const {
+        flagIncludeHigh, 
+        flagIncludeMedium, 
+        flagIncludeNormal, 
+        flagIncludeOverdue,
+        flagIncludeOnGoing,
+        flagIncludeCompleted,
+        sortBy,
+        ascendingOrder,
+    } = viewState;
+
+    const checkboxPriorityHigh = document.querySelector('#view-priority-high');
+    const checkboxPriorityMedium = document.querySelector('#view-priority-medium');
+    const checkboxPriorityNormal = document.querySelector('#view-priority-normal');
+    const checkboxStatusOnGoing = document.querySelector('#view-status-ongoing');
+    const checkboxStatusCompleted = document.querySelector('#view-status-completed');
+    const checkboxStatusOverdue = document.querySelector('#view-status-overdue');
+    const selectSortOptions = document.querySelector('.view-options-bar select');
+    const checkboxSortAscendingOrder = document.querySelector('#sort-order');
+
+    checkboxPriorityHigh.checked = flagIncludeHigh;
+    checkboxPriorityMedium.checked = flagIncludeMedium;
+    checkboxPriorityNormal.checked = flagIncludeNormal;
+    checkboxStatusOverdue.checked = flagIncludeOverdue;
+    checkboxStatusOnGoing.checked = flagIncludeOnGoing;
+    checkboxStatusCompleted.checked = flagIncludeCompleted;
+    selectSortOptions.value = sortBy;
+    checkboxSortAscendingOrder.checked = ascendingOrder;
 }

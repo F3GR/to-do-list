@@ -2,7 +2,9 @@ import { Project } from './project.js';
 import { noDuplicateName, findIndex } from '../utils.js';
 
 export const projectsController = {
-    createNew: (projectsList, { name, iconURL, altText }) => {
+    createNew: (projectsList, inputNewProject) => {
+        const { name, iconURL, altText } = inputNewProject;
+
         if (!projectsList || !name || !iconURL || !altText) {
             return false;
         }
@@ -19,7 +21,9 @@ export const projectsController = {
         return newProjectsList;
     },
 
-    edit: (projectsList, { id, name, iconURL, altText }) => {
+    edit: (projectsList, inputEditedProject) => {
+        const { id, name, iconURL, altText } = inputEditedProject;
+        
         if (!projectsList || !name || !iconURL || !altText) {
             return false;
         }
