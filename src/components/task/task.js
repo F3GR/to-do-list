@@ -1,8 +1,15 @@
 export class Task {
-    constructor(projectId, projectName, id, title, dueDate, status, priority, description, notes) {
+    constructor(    projectId, 
+                    projectName,  
+                    title, 
+                    dueDate,
+                    status, 
+                    priority, 
+                    description, 
+                    notes    ) {
         this.projectId = projectId;
         this.projectName = projectName;
-        this.id = id;
+        this.id = getNewTaskId();
         this.title = title;
         this.dueDate = dueDate;
         this.status = status;

@@ -1,10 +1,18 @@
 import { ACTIONS, createElementWithAttributes } from '../utils.js';
-import { projectBarNodes as STATIC_SELECTORS } from './static-selectors-project.js';
+import { getProjectNodes } from './static-selectors.js';
 
 export function renderProject(project) {
-    const { id, name, iconURL, altText } = project;
+    const { projectsList } = getProjectNodes();
+    if (!projectsList) {
+        alert('Error: project list panel wasn\'t found');
+    }
 
-    const nodeNewProject = createElementWithAttributes('li', { class: 'project'}, STATIC_SELECTORS.projectsList);
+    const { id, name, iconURL, altText } = project;
+    if (!id || !name || !iconURL || !altText) {
+        alert('Error: project cannot be rendered');
+    }
+
+    const nodeNewProject = createElementWithAttributes('li', { class: 'project'}, projectsList);
     nodeNewProject.setAttribute('data-group-id', `${id}`);
 
     const newProjectImage = createElementWithAttributes('img', {
@@ -29,4 +37,4 @@ export function renderProject(project) {
         class: 'remove'
     }, nodeNewProject);
     newProjectDeleteImage.setAttribute('data-project-action', ACTIONS.REMOVE);
-}
+};

@@ -21,13 +21,12 @@ export const tasksController = {
             return false;
         }
 
-        const newTaskId = Task.getNewTaskId();
         Task.incrementNewTaskId();
 
         let newTaskStatus = "1";
         newTaskStatus = updateOverdueStatus(newTaskStatus, parseISO(dueDate));
-
-        const newTask = new Task(projectId, projectName, newTaskId, title, dueDate, newTaskStatus, priority, description, notes);
+        
+        const newTask = new Task(projectId, projectName, title, dueDate, newTaskStatus, priority, description, notes);
 
         const newTasksList = [...tasksList, newTask];
         return { newTasksList, newTask };
@@ -44,7 +43,7 @@ export const tasksController = {
             dueDate: editedDueDate, 
             priority: editedPriority, 
             description: editedDescription, 
-            notes: editedNotes,
+            notes: editedNotes
         } = inputEditedTask;
 
         if (!taskId || !editedTitle || !editedDueDate || !editedPriority) {
@@ -137,7 +136,7 @@ export const tasksController = {
     },
 };
 
-function updateOverdueStatus(status, dueDate) {
+const updateOverdueStatus = (status, dueDate) => {
     if (differenceInCalendarDays(dueDate, Date.now()) < 0) {
         status = STATUS.OVERDUE;
         return status;

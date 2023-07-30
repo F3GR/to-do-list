@@ -3,9 +3,9 @@ import { STATUS, STANDARD_GROUPS } from '../utils';
 
 export const groupsController = {
     getTaskListByGroup: (taskList, groupIdentifier) => {
-        if (!taskList || !groupIdentifier) {
+        if (!Array.isArray(taskList) || !groupIdentifier) {
             console.error('Error: task list and/or group id weren\'t found');
-            return [];
+            return false;
         }
         switch (groupIdentifier) {
             case STANDARD_GROUPS.ALL:
@@ -22,15 +22,11 @@ export const groupsController = {
     },
 }
 
-function filterTasksByToday(taskList) {
-    return taskList.filter(({ dueDate }) => isToday(parseISO(dueDate)));
-}
+const filterTasksByToday = (taskList) => taskList.filter( ({ dueDate }) => isToday(parseISO(dueDate)) );
 
-function filterTasksByWeek(taskList) {
+const filterTasksByWeek = (taskList) => {
     const today = new Date();
     return taskList.filter(({ dueDate }) => differenceInWeeks(parseISO(dueDate), today) === 0);
 }
 
-function filterTasksByStatus(taskList, status) {
-    return taskList.filter(({ status: taskStatus }) => taskStatus === status);
-}
+const filterTasksByStatus = (taskList, status) => taskList.filter(({ status: taskStatus }) => taskStatus === status);

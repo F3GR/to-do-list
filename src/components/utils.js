@@ -62,6 +62,9 @@ export function findIndex(list, id) {
   return index;
 }
 
+export function isBoolean(value) {
+  return value === false || value === true;
+}
 
 export const ACTIONS = {
   ADDNEW: 'add-new',

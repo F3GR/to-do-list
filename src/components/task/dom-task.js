@@ -1,10 +1,24 @@
 import { ACTIONS, createElementWithAttributes } from '../utils.js';
+import { getTaskNodes } from './static-selectors.js';
 
-export function renderTask({ projectId, projectName, taskId, title, dueDate, status, priority, description, notes }) {
-    const taskList = document.querySelector('.task-list');
+export function renderTask(taskObj) {
+    const { 
+        projectId, 
+        projectName, 
+        id, 
+        title, 
+        dueDate, 
+        status, 
+        priority, 
+        description, 
+        notes 
+    } = taskObj;
+
+    const { taskList } = getTaskNodes();
+    
     const task = createElementWithAttributes('li', {class: 'task'}, taskList);
     task.setAttribute('data-project-id', `${projectId}`);
-    task.setAttribute('data-task-id', `${taskId}`);
+    task.setAttribute('data-task-id', `${id}`);
     task.setAttribute('data-task-status', `${status}`);
     task.setAttribute('data-task-priority', `${priority}`);
     
@@ -14,7 +28,6 @@ export function renderTask({ projectId, projectName, taskId, title, dueDate, sta
         class: 'status'
     }, task);
     
-
     const label = createElementWithAttributes('label', {
         for: 'task-status', 
         class: 'status-checkbox'

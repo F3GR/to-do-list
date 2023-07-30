@@ -5,7 +5,7 @@ export const projectsController = {
     createNew: (projectsList, inputNewProject) => {
         const { name, iconURL, altText } = inputNewProject;
 
-        if (!projectsList || !name || !iconURL || !altText) {
+        if (!Array.isArray(projectsList) || !name || !iconURL || !altText) {
             return false;
         }
 
@@ -13,8 +13,7 @@ export const projectsController = {
             return false;
         }
 
-        const newId = Project.getNewId();
-        const newProject = new Project(newId, name, iconURL, altText);
+        const newProject = new Project(inputNewProject);
         Project.incrementNewProjectId();
 
         const newProjectsList = [...projectsList, newProject];
@@ -24,7 +23,7 @@ export const projectsController = {
     edit: (projectsList, inputEditedProject) => {
         const { id, name, iconURL, altText } = inputEditedProject;
         
-        if (!projectsList || !name || !iconURL || !altText) {
+        if (!Array.isArray(projectsList) || !name || !iconURL || !altText) {
             return false;
         }
 
@@ -51,7 +50,7 @@ export const projectsController = {
     },
 
     remove: (projectsList, projectId) => {
-        if (!projectsList || !projectId) {
+        if (!Array.isArray(projectsList) || !projectId) {
             return false;
         }
 

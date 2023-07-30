@@ -1,7 +1,13 @@
-export const projectBarNodes = (() => {
+let projectNodes;
+
+export function getProjectNodes() {
+    if (projectNodes) {
+        return projectNodes;
+    }
+    
     const projectsList = document.querySelector('.projects-list');
 
-    const projectBar = document.querySelector('aside .bar-projects');
+    const projectsBar = document.querySelector('aside .bar-projects');
     const form = document.querySelector('.project-menu form');
     const exitButton = document.querySelector('.project-menu .exit');
     const cancelButton = document.querySelector('.project-menu .cancel');
@@ -14,20 +20,17 @@ export const projectBarNodes = (() => {
     const currentGroupIcon = document.querySelector('main .header img');
     const currentGroupName = document.querySelector('main .header span');
 
-    return {
+    return projectNodes = { 
         projectsList,
-
-        projectBar,
+        projectsBar,
         form,
         exitButton,
         cancelButton,
-
         menuCover,
         menu,
         menuTitle,
         submitButton,
-
         currentGroupIcon,
-        currentGroupName,
-    }
-})();
+        currentGroupName 
+    };
+};

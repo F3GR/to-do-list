@@ -1,6 +1,12 @@
 export class Project {
-    constructor(id, name, iconURL, altText) {
-        this.id = id;
+    constructor(inputNewProject) {
+        const { 
+            name, 
+            iconURL, 
+            altText 
+        } = inputNewProject;
+
+        this._id = getNewId();
         this.name = name;
         this.iconURL = iconURL;
         this.altText = altText;
@@ -15,4 +21,4 @@ export class Project {
     static incrementNewProjectId = () => {
         this.projectId++;
     };
-}
+};

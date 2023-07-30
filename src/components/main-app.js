@@ -1,15 +1,15 @@
 import { renderMainPage } from './dom-main-page.js';
 import { addListenersSidebar } from './group/event-listeners-sidebar.js';
-import { addListenersViewOptions } from './view-options/event-listeners-view-options.js';
-import { addListenersManageProjects } from './project/event-listeners-project-menu';
+import { addListenersViewOptions } from './view-options/event-listeners.js';
+import { addListenersManageProjects } from './project/event-listeners.js';
 import { addListenersManageTasks } from './task/event-listeners-task-menu.js';
-import { projectsController } from './project/controller-projects.js';
+import { projectsController } from './project/controller.js';
 import { tasksController } from './task/controller-tasks.js';
-import { groupsController } from './group/controller-groups.js';
+import { groupsController } from './group/controller.js';
 import { viewController } from './view-options/controller-view-options.js';
 import { localStorageController } from './controller-local-storage.js';
 
-import { renderProject } from './project/dom-project.js';
+import { renderProject } from './project/dom.js';
 import { renderTask } from './task/dom-task.js';
 import { renderFilterOptionsMenu } from './view-options/dom-view-options-menu.js';
 import { applySavedViewState } from './view-options/dom-view-options-menu.js';
@@ -28,12 +28,12 @@ class Application {
         const savedState = application.getViewState();
         renderMainPage();
         renderFilterOptionsMenu();
+
         applySavedViewState(savedState);
         addListenersViewOptions(savedState);
-
         addListenersSidebar();
         addListenersManageProjects();
-        addListenersManageTasks();
+
         
         const projectList = localStorageController.getProjectsList();
         if (!projectList) {
@@ -42,7 +42,7 @@ class Application {
         }
         projectList.forEach((project) => renderProject(project));
 
-        const taskGroup = this.updateView(savedState);
+        const taskGroup = this.applyViewOptions(savedState);
         if (!taskGroup) {
             alert('Error: saved tasks can\'t be rendered (no saved tasks / view options)');
             return;
@@ -58,10 +58,6 @@ class Application {
         const newProject = newProjectsList[newProjectsList.length - 1];
         console.log(`New project: ${newProject}`);
 
-        if (!newProjectsList || !newProject) {
-            return false;
-        }
-
         localStorageController.setProjectsList(newProjectsList);
         localStorageController.addTaskList(newProject.id);
         console.log(`After (project List): ${localStorage.getItem(`TrackIt: projects-list`)}`);
@@ -75,9 +71,6 @@ class Application {
         const { editedProjectsList, editedProject } = projectsController.edit(currentProjectList, inputEditedProject);
         console.log(`Edited project: ${editedProject}`);
 
-        if (!editedProjectsList || !editedProject) {
-            return false;
-        }
         localStorageController.setProjectsList(editedProjectsList);
 
         const currentTasksList = localStorageController.getTasksListByProjectId(editedProject.id);
@@ -93,10 +86,6 @@ class Application {
         console.log(`Before deleting a project (project List): ${localStorage.getItem(`TrackIt: projects-list`)}`);
         const { editedProjectsList, removedProjectIndex } = projectsController.remove(currentProjectList, projectId);
         console.log(`Removed task List: ${localStorage.getItem(`TrackIt: ${currentProjectList[removedProjectIndex].id}`)}`);
-        
-        if (!editedProjectsList || !removedProjectIndex === null || removedProjectIndex === undefined) {
-            return false;
-        }
 
         localStorageController.removeTaskList(currentProjectList[removedProjectIndex].id);
         localStorageController.setProjectsList(currentProjectList);
@@ -116,10 +105,6 @@ class Application {
         const { newTasksList, newTask } = tasksController.createNew(currentTasksList, projectName, inputNewTask);
         console.log(`Created task: ${newTask}`);
 
-        if (!newTask || !newTasksList) {
-            return false;
-        }
-
         localStorageController.setTasksListByProjectId(projectId, newTasksList);
         console.log(`After tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
         return newTask;
@@ -133,10 +118,6 @@ class Application {
         const { editedTasksList, editedTask } = tasksController.edit(currentTasksList, inputEditedTask);
         console.log(`Edited task: ${editedTask}`);
 
-        if (!editedTasksList || !editedTask) {
-            return false;
-        }
-        
         localStorageController.setTasksListByProjectId(projectId, editedTasksList);
         console.log(`After tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
         return editedTask;
@@ -147,10 +128,6 @@ class Application {
         console.log(`Before tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
         const { editedTaskList, editedStatus } = tasksController.toggleTaskStatus(currentTasksList, taskId);
 
-        if (!editedTaskList || !editedStatus) {
-            return false;
-        }
-
         localStorageController.setTasksListByProjectId(projectId, editedTaskList);
         console.log(`After tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
         return editedStatus;
@@ -160,10 +137,6 @@ class Application {
         const currentTasksList = localStorageController.getTasksListByProjectId(projectId);
         console.log(`Before tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
         const editedTaskList = tasksController.remove(currentTasksList, taskId);
-
-        if (!editedTaskList) {
-            return false;
-        }
         
         localStorageController.setTasksListByProjectId(projectId, editedTaskList);
         console.log(`After tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
@@ -181,9 +154,6 @@ class Application {
         }
         console.log(`Selected group: ${newGroup}`);
 
-        if (!newGroup) {
-            return false;
-        }
         localStorageController.setCurrentGroupIdentifier(newGroupIdentifier);
         return { newGroup, newGroupIdentifier };
     }
@@ -210,10 +180,6 @@ class Application {
         );
 
         const filteredSortedTasks = viewController.sort(filteredTasks, viewState.sortBy, viewState.ascendingOrder);
-
-        if (!filteredSortedTasks) {
-            return false;
-        }
         return filteredSortedTasks;
     }
 

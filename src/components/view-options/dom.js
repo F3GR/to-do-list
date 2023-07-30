@@ -1,8 +1,12 @@
-import { createElementWithAttributes } from "../utils";
+import { createElementWithAttributes } from '../utils.js';
+import { getViewOptionsNodes } from './static-selectors.js';
+import { SORTBY } from '../utils.js';
 
 export function renderFilterOptionsMenu() {
-
-    const main = document.querySelector('.content main');
+    const { main } = getViewOptionsNodes();
+    if (!main) {
+        alert('Error: main content panel wasn\'t found');
+    }
 
     const viewOptionsBox = createElementWithAttributes('div', {
         class: 'view-options-bar'
@@ -142,7 +146,7 @@ export function renderFilterOptionsMenu() {
 }
 
 export function applySavedViewState(viewState) {
-    const {
+    const { 
         flagIncludeHigh, 
         flagIncludeMedium, 
         flagIncludeNormal, 
@@ -150,17 +154,47 @@ export function applySavedViewState(viewState) {
         flagIncludeOnGoing,
         flagIncludeCompleted,
         sortBy,
-        ascendingOrder,
+        ascendingOrder 
     } = viewState;
 
-    const checkboxPriorityHigh = document.querySelector('#view-priority-high');
-    const checkboxPriorityMedium = document.querySelector('#view-priority-medium');
-    const checkboxPriorityNormal = document.querySelector('#view-priority-normal');
-    const checkboxStatusOnGoing = document.querySelector('#view-status-ongoing');
-    const checkboxStatusCompleted = document.querySelector('#view-status-completed');
-    const checkboxStatusOverdue = document.querySelector('#view-status-overdue');
+    if (!isBoolean(flagIncludeHigh) || 
+        !isBoolean(flagIncludeMedium) || 
+        !isBoolean(flagIncludeNormal) ||
+        !isBoolean(flagIncludeOnGoing) || 
+        !isBoolean(flagIncludeCompleted) || 
+        !isBoolean(flagIncludeOverdue) ||
+        !Object.values(SORTBY).includes(sortBy) ||
+        !isBoolean(ascendingOrder) 
+    ) {
+        alert('Error: one or more the filter option values weren\'t found');
+    }
+
+    const { 
+        checkboxPriorityHigh,
+        checkboxPriorityMedium,
+        checkboxPriorityNormal,
+        checkboxStatusOnGoing,
+        checkboxStatusCompleted,
+        checkboxStatusOverdue,
+        checkboxSortAscendingOrder 
+    } = getViewOptionsNodes();
+
+    if (!checkboxPriorityHigh ||
+        !checkboxPriorityMedium ||
+        !checkboxPriorityNormal ||
+        !checkboxStatusOnGoing ||
+        !checkboxStatusCompleted ||
+        !checkboxStatusOverdue ||
+        !checkboxSortAscendingOrder 
+    ) {
+        alert('Error: one or more the filter option values weren\'t found');
+    }
+
     const selectSortOptions = document.querySelector('.view-options-bar select');
-    const checkboxSortAscendingOrder = document.querySelector('#sort-order');
+
+    if (!selectSortOptions) {
+        alert('Error: select options menu wasn\'t found');
+    }
 
     checkboxPriorityHigh.checked = flagIncludeHigh;
     checkboxPriorityMedium.checked = flagIncludeMedium;

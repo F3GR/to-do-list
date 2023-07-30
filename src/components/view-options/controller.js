@@ -1,10 +1,29 @@
 import { parseISO } from 'date-fns';
 import { PRIORITY, STATUS, SORTBY } from '../utils.js';
+import { isBoolean } from '../utils.js';
 
 export const viewController = {
-    filter: function(taskList, flagIncludeHigh, flagIncludeMedium, flagIncludeNormal,
-    flagIncludeOnGoing, flagIncludeCompleted, flagIncludeOverdue) {
-        if (!taskList) {
+    filter: (taskList, viewState) => {
+        const {
+            flagIncludeHigh, 
+            flagIncludeMedium, 
+            flagIncludeNormal,
+            flagIncludeOnGoing, 
+            flagIncludeCompleted, 
+            flagIncludeOverdue
+        } = viewState;
+
+        if (!Array.isArray(taskList)) {
+            return false;
+        }
+
+        if (!isBoolean(flagIncludeHigh) || 
+            !isBoolean(flagIncludeMedium) || 
+            !isBoolean(flagIncludeNormal) ||
+            !isBoolean(flagIncludeOnGoing) || 
+            !isBoolean(flagIncludeCompleted) || 
+            !isBoolean(flagIncludeOverdue)
+        ) {
             return false;
         }
         
@@ -30,11 +49,14 @@ export const viewController = {
         })
     },
     
-    sort: function(taskList, sortBy, ascendingOrder) {
-        if (!taskList || !sortBy || !ascendingOrder) {
+    sort: (taskList, sortBy, ascendingOrder) => {
+        if (!Array.isArray(taskList) ||
+            !isBoolean(ascendingOrder) ||
+            !Object.values(SORTBY).includes(sortBy)
+        ) {
             return false;
         }
-        
+
         switch (sortBy) {
             case SORTBY.DATE:
                 return sortTasksByDate(taskList, ascendingOrder);
@@ -46,7 +68,7 @@ export const viewController = {
     }   
 }
 
-function sortTasksByDate(taskList, ascendingOrder) {
+const sortTasksByDate = (taskList, ascendingOrder) => {
     return taskList.sort((task1, task2) => {
         const date1 = parseISO(task1.dueDate);
         const date2 = parseISO(task2.dueDate);
@@ -59,7 +81,7 @@ function sortTasksByDate(taskList, ascendingOrder) {
     });
 }
 
-function sortTasksByPriority(taskList, ascendingOrder) {
+const sortTasksByPriority = (taskList, ascendingOrder) => {
     return taskList.sort((task1, task2) => {
         if (ascendingOrder) {
             return task2.priority - task1.priority;
@@ -69,7 +91,7 @@ function sortTasksByPriority(taskList, ascendingOrder) {
     });
 }
 
-function sortTasksByStatus(taskList, ascendingOrder) {
+const sortTasksByStatus = (taskList, ascendingOrder) => {
     return taskList.sort((task1, task2) => {
         if (ascendingOrder) {
             return task2.status - task1.status;

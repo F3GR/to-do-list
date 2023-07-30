@@ -1,8 +1,13 @@
 import { application } from '../main-app.js';
 import { renderTask } from '../task/dom-task.js';
-import { viewOptionsNodes as STATIC_SELECTORS }  from './static-selectors-group.js';
+import { getGroupNodes } from './static-selectors.js';
 
-export const renderGroup = (groupIdentifier) => {
+export function renderGroup(groupIdentifier) {
+    const { mainGroupName, mainGroupIcon, taskList } = getGroupNodes();
+    if (!mainGroupName || !mainGroupIcon || !taskList) {
+        alert ('Error: the elements weren\'t found to render the task group');
+    }
+    
     const { newGroup, newGroupIdentifier } = application.getTasksGroup(groupIdentifier);
     if (!newGroup || !newGroupIdentifier) {
         alert('Error: group wasn\'t found');
@@ -20,19 +25,30 @@ export const renderGroup = (groupIdentifier) => {
         filteredSortedNewGroup = newGroup;
     }
 
-    STATIC_SELECTORS.taskList.innerHTML = '';
+    taskList.innerHTML = '';
     filteredSortedNewGroup.forEach((task) => renderTask(task));
 
     const allGroups = document.querySelectorAll('.bar-types > *, .projects-list > li.project');
+    if (!allGroups) {
+        alert ('Error: the group panels weren\'t found');
+    }
+
     const selectedGroup = document.querySelector(`.bar-types > *[data-group-id="${groupIdentifier}"], 
                                                 .projects-list > li.project[data-group-id="${groupIdentifier}"]`);
+    if (!selectedGroup || !selectedGroupName || !selectedGroupIcon) {
+        alert ('Error: the group panel with the selected id wasn\'t found');
+    }
+
     const selectedGroupName = selectedGroup.querySelector('span');
     const selectedGroupIcon = selectedGroup.querySelector('img');
+    if (!selectedGroupName || !selectedGroupIcon) {
+        alert ('Error: the name and/or icon of the selected group panel weren\'t found');
+    }
 
     allGroups.forEach((group) => group.classList.remove('current'));
     selectedGroup.classList.add('current');
     
-    STATIC_SELECTORS.mainGroupName.textContent = selectedGroupName.textContent;
-    STATIC_SELECTORS.mainGroupIcon.src = selectedGroupIcon.src;
-    STATIC_SELECTORS.mainGroupIcon.alt = selectedGroupIcon.alt;
+    mainGroupName.textContent = selectedGroupName.textContent;
+    mainGroupIcon.src = selectedGroupIcon.src;
+    mainGroupIcon.alt = selectedGroupIcon.alt;
 }

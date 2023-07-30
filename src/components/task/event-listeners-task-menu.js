@@ -1,28 +1,27 @@
 import { application } from '../main-app.js';
 import { renderTask } from './dom-task.js';
 import { ACTIONS } from '../utils.js';
-import { handleExitMenu } from '../utils.js';
+import { getTaskNodes } from './static-selectors.js';
 
 export function addListenersManageTasks() {
-    const main = document.querySelector('.content main');
+    const { main, form, exitButton, cancelButton } = getTaskNodes();
+
     main.addEventListener('click', (e) => handleMenuPopUp(e));
 
-    const form = document.querySelector('.task-menu form');
     form.addEventListener('submit', (e) => handleSubmit(e));
-
-    const exitButton = document.querySelector('.task-menu .exit');
-    const cancelButton = document.querySelector('.task-menu .cancel');
 
     exitButton.addEventListener('click', (e) => handleExitMenu(e));
     cancelButton.addEventListener('click', (e) => handleExitMenu(e));
 }
 
-function handleMenuPopUp(e) {
-    const menu = document.querySelector('.content .task-menu');
-    const menuCover = document.querySelector('.menu-cover');
-
-    const menuTitle = document.querySelector('.task-menu .title');
-    const submitButton = document.querySelector('.task-menu button.submit');
+const handleMenuPopUp = (e) => {
+    const { 
+        menu,
+        menuCover,
+        menuTitle,
+        submitButton,
+        cancelButton 
+    } = getTaskNodes();
 
     const target = e.target;
     const taskAction = target.getAttribute('data-task-action');
@@ -99,15 +98,18 @@ function handleMenuPopUp(e) {
     }
 }
 
-function handleSubmit(e) {
+const handleSubmit = (e) => {
     e.preventDefault();
-    const menu = document.querySelector('.content .task-menu');
 
-    const titleInput = document.querySelector('.task-menu #task-title');
-    const dueDateInput = document.querySelector('.task-menu #task-dueDate');
+    const { 
+        menu,
+        titleInput,
+        dueDateInput,
+        descriptionInput,
+        notesInput 
+    } = getTaskNodes();
+
     const priorityInput = document.querySelector('.task-menu input[name="priority"]:checked');
-    const descriptionInput = document.querySelector('.task-menu #task-description');
-    const notesInput = document.querySelector('.task-menu #task-notes');
 
     const menuAction = menu.getAttribute('data-task-action');
 
@@ -123,14 +125,14 @@ function handleSubmit(e) {
     if (menuAction === ACTIONS.ADDNEW) {
         const projectId = menu.getAttribute('data-project-id');
 
-        const inputNewTask = {
+        const inputNewTask = {  
             projectId: projectId, 
             title: titleInput.value, 
             dueDate: dueDateInput.value, 
             priority: priorityInput.value, 
             description: descriptionInput.value, 
-            notes: notesInput.value
-        }
+            notes: notesInput.value  
+        };
         
         const newTask = application.createNewTask(inputNewTask);
 
@@ -144,18 +146,17 @@ function handleSubmit(e) {
         const projectId = menu.getAttribute('data-project-id');
         const taskId = menu.getAttribute('data-task-id');
 
-        const inputEditedTask = {
+        const inputEditedTask = {   
             projectId: projectId,
             id: taskId,
             title: titleInput.value, 
             dueDate: dueDateInput.value, 
             priority: priorityInput.value, 
             description: descriptionInput.value, 
-            notes: notesInput.value
-        }
+            notes: notesInput.value   
+        };
 
         const editedTask = application.editTask(inputEditedTask);
-
         if (!editedTask) {
             alert('The project with this title already exists!');
             return;
@@ -176,16 +177,23 @@ function handleSubmit(e) {
     }
 }
 
-function handleExitMenu(e) {
+const handleExitMenu = (e) => {
     e.preventDefault();
+
+    const { 
+        menu,
+        menuCover,
+        menuTitle,
+        submitButton 
+    } = getTaskNodes();
   
-    STATIC_SELECTORS.menuTitle.textContent = '';
-    STATIC_SELECTORS.submitButton.textContent = '';
+    menuTitle.textContent = '';
+    submitButton.textContent = '';
   
-    STATIC_SELECTORS.menuCover.classList.remove('shown');
-    STATIC_SELECTORS.menu.classList.remove('shown');
-    STATIC_SELECTORS.menu.removeAttribute('data-project-action');
-    STATIC_SELECTORS.menu.removeAttribute('data-group-id');
-    STATIC_SELECTORS.menu.removeAttribute('data-task-action');
-    STATIC_SELECTORS.menu.removeAttribute('data-task-id')
+    menuCover.classList.remove('shown');
+    menu.classList.remove('shown');
+    menu.removeAttribute('data-project-action');
+    menu.removeAttribute('data-group-id');
+    menu.removeAttribute('data-task-action');
+    menu.removeAttribute('data-task-id')
 }
