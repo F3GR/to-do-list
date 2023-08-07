@@ -1,4 +1,5 @@
-import { ACTIONS, createElementWithAttributes } from '../utils.js';
+import { createElementWithAttributes } from '../utils.js';
+import { ACTIONS } from './utils.js';
 import { getTaskNodes } from './static-selectors.js';
 
 export function renderTask(taskObj) {

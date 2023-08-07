@@ -1,18 +1,13 @@
 export class Task {
-    constructor(    projectId, 
-                    projectName,  
-                    title, 
-                    dueDate,
-                    status, 
-                    priority, 
-                    description, 
-                    notes    ) {
+    constructor(inputNewTask, projectName, newTaskStatus) {
+        const { projectId, title, dueDate, priority, description, notes } = inputNewTask;   
+
         this.projectId = projectId;
         this.projectName = projectName;
         this.id = getNewTaskId();
         this.title = title;
         this.dueDate = dueDate;
-        this.status = status;
+        this.status = newTaskStatus;
         this.priority = priority;
         this.description = description;
         this.notes = notes;

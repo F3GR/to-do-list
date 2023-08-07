@@ -1,15 +1,13 @@
 import { application } from '../main-app.js';
-import { renderTask } from './dom-task.js';
-import { ACTIONS } from '../utils.js';
+import { renderTask } from './dom.js';
+import { ACTIONS } from './utils.js';
 import { getTaskNodes } from './static-selectors.js';
 
 export function addListenersManageTasks() {
     const { main, form, exitButton, cancelButton } = getTaskNodes();
 
     main.addEventListener('click', (e) => handleMenuPopUp(e));
-
     form.addEventListener('submit', (e) => handleSubmit(e));
-
     exitButton.addEventListener('click', (e) => handleExitMenu(e));
     cancelButton.addEventListener('click', (e) => handleExitMenu(e));
 }

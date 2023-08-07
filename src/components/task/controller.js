@@ -26,7 +26,7 @@ export const tasksController = {
         let newTaskStatus = "1";
         newTaskStatus = updateOverdueStatus(newTaskStatus, parseISO(dueDate));
         
-        const newTask = new Task(projectId, projectName, title, dueDate, newTaskStatus, priority, description, notes);
+        const newTask = new Task(inputNewTask, projectName, newTaskStatus);
 
         const newTasksList = [...tasksList, newTask];
         return { newTasksList, newTask };

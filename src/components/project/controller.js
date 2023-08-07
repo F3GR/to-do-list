@@ -8,7 +8,6 @@ export const projectsController = {
         if (!Array.isArray(projectsList) || !name || !iconURL || !altText) {
             return false;
         }
-
         if (!noDuplicateName(projectsList, name, "")) {
             return false;
         }
@@ -26,7 +25,6 @@ export const projectsController = {
         if (!Array.isArray(projectsList) || !name || !iconURL || !altText) {
             return false;
         }
-
         if (!noDuplicateName(projectsList, name, id)) {
             return false;
         }

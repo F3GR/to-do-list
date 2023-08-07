@@ -2,15 +2,15 @@ import { renderMainPage } from './dom-main-page.js';
 import { addListenersSidebar } from './group/event-listeners-sidebar.js';
 import { addListenersViewOptions } from './view-options/event-listeners.js';
 import { addListenersManageProjects } from './project/event-listeners.js';
-import { addListenersManageTasks } from './task/event-listeners-task-menu.js';
+import { addListenersManageTasks } from './task/event-listeners.js';
 import { projectsController } from './project/controller.js';
-import { tasksController } from './task/controller-tasks.js';
+import { tasksController } from './task/controller.js';
 import { groupsController } from './group/controller.js';
 import { viewController } from './view-options/controller-view-options.js';
 import { localStorageController } from './controller-local-storage.js';
 
 import { renderProject } from './project/dom.js';
-import { renderTask } from './task/dom-task.js';
+import { renderTask } from './task/dom.js';
 import { renderFilterOptionsMenu } from './view-options/dom-view-options-menu.js';
 import { applySavedViewState } from './view-options/dom-view-options-menu.js';
 

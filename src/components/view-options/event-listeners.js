@@ -1,5 +1,5 @@
 import { application } from '../main-app.js';
-import { renderTask } from '../task/dom-task.js';
+import { renderTask } from '../task/dom.js';
 import { getViewOptionsNodes } from './static-selectors.js';
 import { SORTBY } from '../utils.js';
 

@@ -66,12 +66,18 @@ export function isBoolean(value) {
   return value === false || value === true;
 }
 
-export const ACTIONS = {
-  ADDNEW: 'add-new',
-  EDIT: 'edit',
-  UPDATE_STATUS: 'update-status',
-  REMOVE: 'remove',
-  UNFOLD: 'unfold',
+export function Enum(baseEnum) {  
+  return new Proxy(baseEnum, {
+    get(target, name) {
+      if (!baseEnum.hasOwnProperty(name)) {
+        throw new Error(`"${name}" value does not exist in the enum`)
+      }
+      return baseEnum[name]
+    },
+    set(target, name, value) {
+      throw new Error('Cannot add a new value to the enum')
+    }
+  })
 }
 
 export const STANDARD_GROUPS = {

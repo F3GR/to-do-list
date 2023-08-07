@@ -6,7 +6,7 @@ export function renderProject(project) {
     if (!projectsList) {
         alert('Error: project list panel wasn\'t found');
     }
-
+    
     const { id, name, iconURL, altText } = project;
     if (!id || !name || !iconURL || !altText) {
         alert('Error: project cannot be rendered');
