@@ -20,4 +20,8 @@ export class Task {
     static incrementNewTaskId = () => {
         this.taskId++;
     };
+
+    static resetId = () => {
+        this.taskId = 0;
+    }
 }

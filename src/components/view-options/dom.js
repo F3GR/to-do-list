@@ -164,8 +164,7 @@ export function applySavedViewState(viewState) {
         !isBoolean(flagIncludeCompleted) || 
         !isBoolean(flagIncludeOverdue) ||
         !Object.values(SORTBY).includes(sortBy) ||
-        !isBoolean(ascendingOrder) 
-    ) {
+        !isBoolean(ascendingOrder)) {
         alert('Error: one or more the filter option values weren\'t found');
     }
 
@@ -185,13 +184,11 @@ export function applySavedViewState(viewState) {
         !checkboxStatusOnGoing ||
         !checkboxStatusCompleted ||
         !checkboxStatusOverdue ||
-        !checkboxSortAscendingOrder 
-    ) {
+        !checkboxSortAscendingOrder) {
         alert('Error: one or more the filter option values weren\'t found');
     }
 
     const selectSortOptions = document.querySelector('.view-options-bar select');
-
     if (!selectSortOptions) {
         alert('Error: select options menu wasn\'t found');
     }

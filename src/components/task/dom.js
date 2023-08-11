@@ -1,5 +1,5 @@
 import { createElementWithAttributes } from '../utils.js';
-import { ACTIONS } from './utils.js';
+import { ACTIONS_TASKS } from '../utils.js';
 import { getTaskNodes } from './static-selectors.js';
 
 export function renderTask(taskObj) {
@@ -14,8 +14,25 @@ export function renderTask(taskObj) {
         description, 
         notes 
     } = taskObj;
+    if (!projectId || 
+        !projectName || 
+        !id || 
+        !title || 
+        !dueDate || 
+        !status || 
+        !priority || 
+        !description || 
+        !notes) {
+            alert('Error: one or more task data values weren\'t found');
+            return;
+        }
+
 
     const { taskList } = getTaskNodes();
+    if (!taskList) {
+        alert('Error: task list wasn\'t found');
+        return;
+    }
     
     const task = createElementWithAttributes('li', {class: 'task'}, taskList);
     task.setAttribute('data-project-id', `${projectId}`);
@@ -33,7 +50,7 @@ export function renderTask(taskObj) {
         for: 'task-status', 
         class: 'status-checkbox'
     }, task);
-    label.setAttribute('data-task-action', ACTIONS.UPDATE_STATUS);
+    label.setAttribute('data-task-action', ACTIONS_TASKS.UPDATE_STATUS);
 
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', 'M2,10 L8,16 L18,5');
@@ -67,21 +84,21 @@ export function renderTask(taskObj) {
         alt: 'Task edit information icon',
         class: 'edit'
     }, task);
-    taskEditIcon.setAttribute('data-task-action', ACTIONS.EDIT);
+    taskEditIcon.setAttribute('data-task-action', ACTIONS_TASKS.EDIT);
 
     const taskRemoveIcon = createElementWithAttributes('img', {
         src: '../src/originals/delete.svg', 
         alt: 'Task remove icon',
         class: 'remove'
     }, task);
-    taskRemoveIcon.setAttribute('data-task-action', ACTIONS.REMOVE);
+    taskRemoveIcon.setAttribute('data-task-action', ACTIONS_TASKS.REMOVE);
 
     const taskUnfoldIcon = createElementWithAttributes('img', {
         src: '../src/originals/unfold.svg', 
         alt: 'Task information unfold or fold icon',
         class: 'unfold'
     }, task);
-    taskUnfoldIcon.setAttribute('data-task-action', ACTIONS.UNFOLD);
+    taskUnfoldIcon.setAttribute('data-task-action', ACTIONS_TASKS.UNFOLD);
 
     const taskUnfoldedPanel = createElementWithAttributes('div', {
         class: 'task-unfold-box',

@@ -6,7 +6,7 @@ import { STATUS } from '../utils.js';
 
 export const tasksController = {
     createNew: (tasksList, projectName, inputNewTask) => {
-        const { projectId, title, dueDate, priority, description, notes } = inputNewTask;
+        const { projectId, title, dueDate, priority } = inputNewTask;
 
         if (!tasksList) {
             return false;
@@ -120,20 +120,23 @@ export const tasksController = {
     },
 
     remove: (tasksList, taskId) => {
+        let removed = false;
         if (!tasksList || !taskId) {
-            return false;
+            return removed;
         }
 
         const removedTaskIndex = findIndex(tasksList, taskId);
         if (!removedTaskIndex) {
-            return false;
+            return removed;
         }
 
         const editedTaskList = [...tasksList];
         editedTaskList.splice(removedTaskIndex, 1);
 
-        return editedTaskList;
+        return { editedTaskList, removed };
     },
+
+    resetId: () => Task.resetId
 };
 
 const updateOverdueStatus = (status, dueDate) => {

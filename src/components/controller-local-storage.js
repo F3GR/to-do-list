@@ -1,11 +1,6 @@
 export const localStorageController = {
     getProjectsList: () => {
         const storedProjectList = localStorage.getItem('TrackIt: projects-list');
-        if (!storedProjectList) {
-          const projectList = [];
-          localStorageController.setProjectsList(projectList);
-          return projectList;
-        }
         return JSON.parse(storedProjectList);
     },
     setProjectsList: (projectsList) => localStorage.setItem('TrackIt: projects-list', JSON.stringify(projectsList)),

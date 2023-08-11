@@ -58,5 +58,7 @@ export const projectsController = {
         editedProjectsList.splice(removedProjectIndex, 1);
 
         return { editedProjectsList, removedProjectIndex };
-    }
+    },
+    
+    resetId: () => Project.resetId
 };

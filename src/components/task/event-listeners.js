@@ -1,98 +1,134 @@
 import { application } from '../main-app.js';
 import { renderTask } from './dom.js';
-import { ACTIONS } from './utils.js';
+import { ACTIONS_TASKS } from '../utils.js';
 import { getTaskNodes } from './static-selectors.js';
 
 export function addListenersManageTasks() {
     const { main, form, exitButton, cancelButton } = getTaskNodes();
 
-    main.addEventListener('click', (e) => handleMenuPopUp(e));
+    main.addEventListener('click', (e) => handleTaskActions(e));
     form.addEventListener('submit', (e) => handleSubmit(e));
     exitButton.addEventListener('click', (e) => handleExitMenu(e));
     cancelButton.addEventListener('click', (e) => handleExitMenu(e));
 }
 
-const handleMenuPopUp = (e) => {
+const handleTaskActions = (e) => {
+    
+    const target = e.target;
+    const action = target.getAttribute('data-task-action');
+    if (!action) {
+        alert ('Error: task action wasn\'t found');
+        return;
+    }
+
+    taskAction(action, target);
+}
+
+const taskAction = (action, target) => {
     const { 
         menu,
         menuCover,
         menuTitle,
-        submitButton,
-        cancelButton 
+        submitButton
     } = getTaskNodes();
+    if (!menu || !menuCover || !menuTitle || !submitButton) {
+        alert('Error: one or more menu components weren\'t found');
+        return;
+    }
 
-    const target = e.target;
-    const taskAction = target.getAttribute('data-task-action');
+    const task = target.closest('.task');
+    const projectId = task.getAttribute('data-project-id');
+    const taskId = task.getAttribute('data-task-id');
 
-    if (taskAction === ACTIONS.ADDNEW) {
-        const currentProject = document.querySelector('.projects-list .project.current');
-        const id = currentProject.getAttribute('data-group-id');
+    switch (action) {
+        case ACTIONS_TASKS.ADD_NEW:
+            const currentProject = document.querySelector('.projects-list .project.current');
+            const id = currentProject.getAttribute('data-group-id');
+            if (!currentProject || !id) {
+                alert('Error: current project and/or its id weren\'t found');
+                return;
+            }
+    
+            menu.setAttribute('data-project-id', `${id}`);
+            menu.setAttribute('data-task-action', 'add-new');
+    
+            menuTitle.textContent = 'Add a new task';
+            submitButton.textContent = 'Add';
+            menuCover.classList.add('shown');
+            menu.classList.add('shown');
+            break;
 
-        menu.setAttribute('data-project-id', `${id}`);
-        menu.setAttribute('data-task-action', 'add-new');
+        case ACTIONS_TASKS.UPDATE_STATUS:
+            if (!task || !projectId || !taskId) {
+                alert('Error: task panel and/or task and/or projectId weren\'found');
+                return;
+            }
 
-        menuTitle.textContent = 'Add a new task';
-        submitButton.textContent = 'Add';
-        cancelButton.textContent = 'Cancel';
-        menuCover.classList.add('shown');
-        menu.classList.add('shown');
+            const svg = target.closest('.task').querySelector('label svg');
+            const path = target.closest('.task').querySelector('label svg path');
 
-    } else if (taskAction === ACTIONS.UPDATE_STATUS) {
-        const svg = target.closest('.task').querySelector('label svg');
-        const path = target.closest('.task').querySelector('label svg path');
-        const task = target.closest('.task');
+            const currentTaskStatus = task.getAttribute('data-task-status');
+            const updatedTaskStatus = application.toggleTaskStatus(projectId, taskId);
+    
+            if (!updatedTaskStatus || currentTaskStatus === updatedTaskStatus) {
+                alert('Error: task status wasn\'t updated');
+                return;
+            }
+            task.setAttribute('data-task-status', updatedTaskStatus);
+            break;
 
-        const projectId = task.getAttribute('data-project-id');
-        const taskId = task.getAttribute('data-task-id');
+        case ACTIONS_TASKS.EDIT:
+            if (!task || !projectId || !taskId) {
+                alert('Error: task panel and/or task and/or projectId weren\'found');
+                return;
+            }
+    
+            menu.setAttribute('data-project-id', `${projectId}`);
+            menu.setAttribute('data-task-action', 'edit');
+            menu.setAttribute('data-task-id', `${taskId}`);
+    
+            menuTitle.textContent = 'Edit the task';
+            submitButton.textContent = 'Save';
+            menuCover.classList.add('shown');
+            menu.classList.add('shown');
+            break;
 
-        const currentTaskStatus = task.getAttribute('data-task-status');
-        const updatedTaskStatus = application.toggleTaskStatus(projectId, taskId);
+        case ACTIONS_TASKS.REMOVE:
+            if (!task || !projectId || !taskId) {
+                alert('Error: task panel and/or task and/or projectId weren\'found');
+                return;
+            }
 
-        if (!updatedTaskStatus || currentTaskStatus === updatedTaskStatus) {
-            alert('Error: task status wasn\'t updated');
-            return;
-        }
-        task.setAttribute('data-task-status', updatedTaskStatus);
+            const removedTask = application.removeTask(projectId, taskId);
+            if (!removedTask) {
+                alert('Error: task wasn\'t found.')
+                return;
+            }
+    
+            task.remove();
+            break;
+
+        case ACTIONS_TASKS.UNFOLD:
+            const unfoldedTaskPanel = target.closest('.task');
+            const taskInfoPanel = unfoldedTaskPanel.querySelector('.task-unfold-box');
+            if (!unfoldedTaskPanel || !taskInfoPanel) {
+                alert('Error: task panel and/or its unfolded box weren\'t found');
+                return;
+            }
+    
+            if (!unfoldedTaskPanel.classList.contains('unfolded')) {
+                unfoldedTaskPanel.classList.add('unfolded');
+                taskInfoPanel.classList.add('shown');
+                target.setAttribute('src', '../src/originals/unfold.svg');
+            } else {
+                unfoldedTaskPanel.classList.remove('unfolded');
+                taskInfoPanel.classList.remove('shown');
+                target.setAttribute('src', '../src/originals/fold.svg');
+            }
+            break;
         
-    } else if (taskAction === ACTIONS.EDIT) {
-        const projectId = target.closest('.task').getAttribute('data-project-id');
-        const taskId = target.closest('.task').getAttribute('data-task-id');
-
-        menu.setAttribute('data-project-id', `${projectId}`);
-        menu.setAttribute('data-task-action', 'edit');
-        menu.setAttribute('data-task-id', `${taskId}`);
-
-        menuTitle.textContent = 'Edit the task';
-        submitButton.textContent = 'Save';
-        menuCover.classList.add('shown');
-        menu.classList.add('shown');
-
-    } else if (taskAction === ACTIONS.REMOVE) {
-        const task = target.closest('.task');
-        const projectId = task.getAttribute('data-project-id');
-        const taskId = task.getAttribute('data-task-id');
-        const removedTask = application.removeTask(projectId, taskId);
-
-        if (!removedTask) {
-            alert('Error: task wasn\'t found.')
-            return;
-        }
-
-        task.remove();
-        
-    } else if (taskAction === ACTIONS.UNFOLD) {
-        const unfoldedTaskPanel = target.closest('.task');
-        const taskInfoPanel = unfoldedTaskPanel.querySelector('.task-unfold-box');
-
-        if (!unfoldedTaskPanel.classList.contains('unfolded')) {
-            unfoldedTaskPanel.classList.add('unfolded');
-            taskInfoPanel.classList.add('shown');
-            target.setAttribute('src', '../src/originals/unfold.svg');
-        } else {
-            unfoldedTaskPanel.classList.remove('unfolded');
-            taskInfoPanel.classList.remove('shown');
-            target.setAttribute('src', '../src/originals/fold.svg');
-        }
+        default:
+            alert ('Error: task action is not valid');
     }
 }
 
@@ -106,10 +142,23 @@ const handleSubmit = (e) => {
         descriptionInput,
         notesInput 
     } = getTaskNodes();
-
+    if (!menu) {
+        alert('Error: task menu wasn\'t found')
+    }
+    if (!titleInput || !dueDateInput || !descriptionInput || !notesInput) {
+        alert('Error: one or more input fields weren\'t found')
+    }
+    
     const priorityInput = document.querySelector('.task-menu input[name="priority"]:checked');
-
     const menuAction = menu.getAttribute('data-task-action');
+    if (!priorityInput) {
+        alert('Error: one or more input fields weren\'t found');
+        return;
+    }
+    if (!menuAction) {
+        alert('Error: action for a task menu wasn\'t found');
+        return;
+    }
 
     if (!titleInput.value) {
         alert('Please write title for the task');
@@ -120,58 +169,95 @@ const handleSubmit = (e) => {
         return;
     }
 
-    if (menuAction === ACTIONS.ADDNEW) {
-        const projectId = menu.getAttribute('data-project-id');
+    const target = e.target;
+    const action = target.getAttribute('data-task-action');
+    const projectId = menu.getAttribute('data-project-id');
 
-        const inputNewTask = {  
-            projectId: projectId, 
-            title: titleInput.value, 
-            dueDate: dueDateInput.value, 
-            priority: priorityInput.value, 
-            description: descriptionInput.value, 
-            notes: notesInput.value  
-        };
-        
-        const newTask = application.createNewTask(inputNewTask);
+    switch(action) {
+        case ACTIONS_TASKS.ADD_NEW:
+            if (!action || !projectId) {
+                alert('Error: action and/or projectId weren\'found');
+                return;
+            }
 
-        if (!newTask) {
-            alert('The task with this title already exists!');
-            return;
-        }
-        renderTask(newTask);
+            const inputNewTask = {  
+                projectId: projectId, 
+                title: titleInput.value, 
+                dueDate: dueDateInput.value, 
+                priority: priorityInput.value, 
+                description: descriptionInput.value, 
+                notes: notesInput.value  
+            };
+            if (!titleInput.value || !dueDateInput.value || !priorityInput.value) {
+                alert('One or more of the required fields\' values are empty');
+                return;
+            }
+            
+            const newTask = application.createNewTask(inputNewTask);
+            if (!newTask) {
+                alert('The task with this title already exists!');
+                return;
+            }
 
-    } else if (menuAction === ACTIONS.EDIT) {
-        const projectId = menu.getAttribute('data-project-id');
-        const taskId = menu.getAttribute('data-task-id');
+            renderTask(newTask);
+            break;
 
-        const inputEditedTask = {   
-            projectId: projectId,
-            id: taskId,
-            title: titleInput.value, 
-            dueDate: dueDateInput.value, 
-            priority: priorityInput.value, 
-            description: descriptionInput.value, 
-            notes: notesInput.value   
-        };
+        case ACTIONS_TASKS.EDIT:
+            if (!action || !projectId) {
+                alert('Error: taskId and/or projectId weren\'found');
+                return;
+            }
+            const taskId = menu.getAttribute('data-task-id');
+            if (!taskId) {
+                alert('Error: taskId and/or projectId weren\'found');
+                return;
+            }
+    
+            const inputEditedTask = {   
+                projectId: projectId,
+                id: taskId,
+                title: titleInput.value, 
+                dueDate: dueDateInput.value, 
+                priority: priorityInput.value, 
+                description: descriptionInput.value, 
+                notes: notesInput.value   
+            };
+            if (!titleInput.value || !dueDateInput.value || !priorityInput.value) {
+                alert('One or more of the required fields\' values are empty');
+                return;
+            }
+    
+            const editedTask = application.editTask(inputEditedTask);
+            if (!editedTask) {
+                alert('The task with this title already exists!');
+                return;
+            }
+    
+            const taskSelector = `.task[data-project-id="${projectId}"][data-task-id="${taskId}"]`;
+            if (!taskSelector) {
+                alert('The edited task panel isn\'t found');
+                return;
+            }
+    
+            const oldTitle = document.querySelector(taskSelector + ' .task-title');
+            const oldDueDate = document.querySelector(taskSelector + ' .task-due-date span');
+            const oldDescription = document.querySelector(taskSelector + ' .task-description');
+            const oldNotes = document.querySelector(taskSelector + ' .task-notes');
+            if (!oldTitle || !oldDueDate || !oldDescription || !oldNotes) {
+                alert('One or more edited task panel components weren\'t found');
+                return;
+            }
 
-        const editedTask = application.editTask(inputEditedTask);
-        if (!editedTask) {
-            alert('The project with this title already exists!');
-            return;
-        }
+            document.querySelector(taskSelector).setAttribute('data-task-priority', `${priorityInput.value}`);
+    
+            oldTitle.textContent = titleInput.value;
+            oldDueDate.textContent = dueDateInput.value;
+            oldDescription.textContent = descriptionInput.value;
+            oldNotes.textContent = notesInput.value;
+            break;
 
-        const taskSelector = `.task[data-project-id="${projectId}"][data-task-id="${taskId}"]`;
-
-        const oldTitle = document.querySelector(taskSelector + ' .task-title');
-        const oldDueDate = document.querySelector(taskSelector + ' .task-due-date span');
-        const oldDescription = document.querySelector(taskSelector + ' .task-description');
-        const oldNotes = document.querySelector(taskSelector + ' .task-notes');
-
-        oldTitle.textContent = titleInput.value;
-        oldDueDate.textContent = dueDateInput.value;
-        document.querySelector(taskSelector).setAttribute('data-task-priority', `${priorityInput.value}`);
-        oldDescription.textContent = descriptionInput.value;
-        oldNotes.textContent = notesInput.value;
+        default:
+            alert('Error: action value is not valid');
     }
 }
 
@@ -184,6 +270,10 @@ const handleExitMenu = (e) => {
         menuTitle,
         submitButton 
     } = getTaskNodes();
+    if (!menu || !menuCover || !menuTitle || !submitButton) {
+        alert('Error: one or more menu components weren\'t found');
+        return;
+    }
   
     menuTitle.textContent = '';
     submitButton.textContent = '';

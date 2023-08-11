@@ -1,4 +1,5 @@
-import { ACTIONS, createElementWithAttributes } from '../utils.js';
+import { createElementWithAttributes } from '../utils.js';
+import { ACTIONS_PROJECTS } from '../utils.js';
 import { getProjectNodes } from './static-selectors.js';
 
 export function renderProject(project) {
@@ -29,12 +30,12 @@ export function renderProject(project) {
         alt: 'Edit project icon',
         class: 'edit'
     }, nodeNewProject);
-    newProjectEditImage.setAttribute('data-project-action', ACTIONS.EDIT);
+    newProjectEditImage.setAttribute('data-project-action', ACTIONS_PROJECTS.EDIT);
     
     const newProjectDeleteImage = createElementWithAttributes('img', {
         src: '../src/originals/delete.svg',
         alt: 'Remove project icon',
         class: 'remove'
     }, nodeNewProject);
-    newProjectDeleteImage.setAttribute('data-project-action', ACTIONS.REMOVE);
+    newProjectDeleteImage.setAttribute('data-project-action', ACTIONS_PROJECTS.REMOVE);
 };

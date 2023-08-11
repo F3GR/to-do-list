@@ -1,4 +1,6 @@
-import { ACTIONS, createElementWithAttributes } from './utils.js';
+import { createElementWithAttributes } from './utils.js';
+import { ACTIONS_PROJECTS } from './utils.js';
+import { ACTIONS_TASKS } from './utils.js';
 
 export function renderMainPage() {
     renderMainPageTemplate();
@@ -99,7 +101,7 @@ function renderMainPageTemplate() {
         alt: 'Add new project icon',
         class: 'add-new',
     }, projectsBarHeader);
-    projectsBarHeaderAddImage.setAttribute('data-project-action', ACTIONS.ADDNEW);
+    projectsBarHeaderAddImage.setAttribute('data-project-action', ACTIONS.ADD_NEW);
 
     const projectsList = createElementWithAttributes('ul', {class: 'projects-list'}, barProjects);
 
@@ -136,7 +138,7 @@ function renderMainPageTemplate() {
         alt: 'Add new Task icon',
         class: 'add-new'
     }, mainTaskBar);
-    addNewTaskIcon.setAttribute('data-task-action', ACTIONS.ADDNEW);
+    addNewTaskIcon.setAttribute('data-task-action', ACTIONS_TASKS.ADD_NEW);
 
     const taskList = createElementWithAttributes('ul', {class: 'task-list'}, main);
 

@@ -66,6 +66,20 @@ export function isBoolean(value) {
   return value === false || value === true;
 }
 
+export const ACTIONS_PROJECTS = new Enum ({
+  ADD_NEW: 'add-new',
+  EDIT: 'edit',
+  REMOVE: 'remove'
+});
+
+export const ACTIONS_TASKS = new Enum ({
+  ADD_NEW: 'add-new',
+  EDIT: 'edit',
+  UPDATE_STATUS: 'update-status',
+  REMOVE: 'remove',
+  UNFOLD: 'unfold',
+});
+
 export function Enum(baseEnum) {  
   return new Proxy(baseEnum, {
     get(target, name) {

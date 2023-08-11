@@ -23,8 +23,7 @@ export function addListenersViewOptions(savedState) {
         !isBoolean(flagIncludeCompleted) || 
         !isBoolean(flagIncludeOverdue) ||
         !Object.values(SORTBY).includes(sortBy) ||
-        !isBoolean(ascendingOrder) 
-    ) {
+        !isBoolean(ascendingOrder)) {
         alert('Error: one or more the filter option values weren\'t found');
     }
 
@@ -46,8 +45,7 @@ export function addListenersViewOptions(savedState) {
         !checkboxStatusOnGoing ||
         !checkboxStatusCompleted ||
         !checkboxStatusOverdue ||
-        !checkboxSortAscendingOrder 
-    ) {
+        !checkboxSortAscendingOrder) {
         alert('Error: one or more the filter option checkboxes weren\'t found');
     }
 
@@ -75,7 +73,6 @@ export function addListenersViewOptions(savedState) {
 
 const handleViewOptionsChange = (e, state, queries) => {
     const target = e.target.closest('input[type="checkbox"], select');
-
     if (!target) {
         alert('Error: the element wasn\'t found');
         return;

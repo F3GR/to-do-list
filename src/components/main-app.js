@@ -1,20 +1,21 @@
 import { renderMainPage } from './dom-main-page.js';
-import { addListenersSidebar } from './group/event-listeners-sidebar.js';
+import { addListenersSidebar } from './group/event-listeners.js';
 import { addListenersViewOptions } from './view-options/event-listeners.js';
 import { addListenersManageProjects } from './project/event-listeners.js';
 import { addListenersManageTasks } from './task/event-listeners.js';
 import { projectsController } from './project/controller.js';
 import { tasksController } from './task/controller.js';
 import { groupsController } from './group/controller.js';
-import { viewController } from './view-options/controller-view-options.js';
+import { viewController } from './view-options/controller.js';
 import { localStorageController } from './controller-local-storage.js';
 
 import { renderProject } from './project/dom.js';
 import { renderTask } from './task/dom.js';
-import { renderFilterOptionsMenu } from './view-options/dom-view-options-menu.js';
-import { applySavedViewState } from './view-options/dom-view-options-menu.js';
+import { renderFilterOptionsMenu } from './view-options/dom.js';
+import { applySavedViewState } from './view-options/dom.js';
 
 import { STANDARD_GROUPS } from './utils.js';
+import { projectExample, taskExample1, taskExample2 } from './examples.js';
 
 class Application {
     constructor() {
@@ -29,17 +30,21 @@ class Application {
         renderMainPage();
         renderFilterOptionsMenu();
 
-        applySavedViewState(savedState);
-        addListenersViewOptions(savedState);
         addListenersSidebar();
         addListenersManageProjects();
+        applySavedViewState(savedState);
 
+        addListenersViewOptions(savedState);
+        addListenersManageTasks();
         
-        const projectList = localStorageController.getProjectsList();
+        let projectList = localStorageController.getProjectsList();
         if (!projectList) {
-            alert('Error:project list wasn\'t found');
-            return;
+            projectsController.resetId;
+            tasksController.resetId;
+            localStorageController.setProjectsList([]);
+            projectList = this.createNewProject(projectExample);
         }
+
         projectList.forEach((project) => renderProject(project));
 
         const taskGroup = this.applyViewOptions(savedState);
@@ -136,11 +141,11 @@ class Application {
     removeTask = (projectId, taskId) => {
         const currentTasksList = localStorageController.getTasksListByProjectId(projectId);
         console.log(`Before tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
-        const editedTaskList = tasksController.remove(currentTasksList, taskId);
-        
+        const { editedTaskList, removed } = tasksController.remove(currentTasksList, taskId);
+
         localStorageController.setTasksListByProjectId(projectId, editedTaskList);
         console.log(`After tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
-        return true;
+        return removed;
     }
 
     getTasksGroup = (newGroupIdentifier) => {
@@ -171,15 +176,10 @@ class Application {
         const filteredTasks = viewController
         .filter(
             updatedGroup, 
-            viewState.flagIncludeHigh, 
-            viewState.flagIncludeMedium,
-            viewState.flagIncludeNormal, 
-            viewState.flagIncludeOnGoing, 
-            viewState.flagIncludeCompleted, 
-            viewState.flagIncludeOverdue
+            viewState
         );
 
-        const filteredSortedTasks = viewController.sort(filteredTasks, viewState.sortBy, viewState.ascendingOrder);
+        const filteredSortedTasks = viewController.sort(filteredTasks, viewState);
         return filteredSortedTasks;
     }
 

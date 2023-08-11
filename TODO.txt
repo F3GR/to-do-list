@@ -1,0 +1,5 @@
+1. add page navigation feature;
+2. finish the layout;
+3. finish the styling;
+
+4. add the backend capability with login and authentication;

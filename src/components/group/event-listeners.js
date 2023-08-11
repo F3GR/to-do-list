@@ -6,12 +6,11 @@ export function addListenersSidebar() {
     const sidebarCover = document.querySelector('main .sidebar-cover');
     const standardGroups = document.querySelector('.bar-types');
     const projectGroups = document.querySelector('.projects-list');
-    if ( !sidebarIcon ||
-         !sidebar ||
-         !sidebarCover ||
-         !standardGroups ||
-         !projectGroups 
-        ) {
+    if (!sidebarIcon ||
+        !sidebar ||
+        !sidebarCover ||
+        !standardGroups ||
+        !projectGroups) {
         alert ('Error: the elements weren\'t found to render the task group');
     }
 

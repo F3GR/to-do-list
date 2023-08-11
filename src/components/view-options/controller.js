@@ -16,14 +16,12 @@ export const viewController = {
         if (!Array.isArray(taskList)) {
             return false;
         }
-
         if (!isBoolean(flagIncludeHigh) || 
             !isBoolean(flagIncludeMedium) || 
             !isBoolean(flagIncludeNormal) ||
             !isBoolean(flagIncludeOnGoing) || 
             !isBoolean(flagIncludeCompleted) || 
-            !isBoolean(flagIncludeOverdue)
-        ) {
+            !isBoolean(flagIncludeOverdue)) {
             return false;
         }
         
@@ -52,8 +50,7 @@ export const viewController = {
     sort: (taskList, sortBy, ascendingOrder) => {
         if (!Array.isArray(taskList) ||
             !isBoolean(ascendingOrder) ||
-            !Object.values(SORTBY).includes(sortBy)
-        ) {
+            !Object.values(SORTBY).includes(sortBy)) {
             return false;
         }
 
