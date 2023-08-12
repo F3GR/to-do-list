@@ -179,6 +179,11 @@ const submitForm = (action) => {
             }
 
             const id = menu.getAttribute('data-group-id');
+            if (!id.constructor === Number) {
+                alert('Error: group id wasn\'t found');
+                return;
+            }
+            
             const inputEditProject = {  
                 id: id,
                 name: inputName.value,
@@ -205,7 +210,7 @@ const updateEditedProjectNode = (project) => {
     }
 
     const { id, name, iconURL, altText } = project;
-    if (!id || !name || !iconURL || !altText) {
+    if (id.constructor !== Number || !name || !iconURL || !altText) {
         alert('Error: one or more edited project data values weren\'t found');
         return;
     }

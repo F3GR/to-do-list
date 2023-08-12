@@ -13,8 +13,6 @@ export const projectsController = {
         }
 
         const newProject = new Project(inputNewProject);
-        Project.incrementNewProjectId();
-
         const newProjectsList = [...projectsList, newProject];
         return newProjectsList;
     },
@@ -22,7 +20,11 @@ export const projectsController = {
     edit: (projectsList, inputEditedProject) => {
         const { id, name, iconURL, altText } = inputEditedProject;
         
-        if (!Array.isArray(projectsList) || !name || !iconURL || !altText) {
+        if (!Array.isArray(projectsList) || 
+            id.constructor !== Number || 
+            !name || 
+            !iconURL || 
+            !altText) {
             return false;
         }
         if (!noDuplicateName(projectsList, name, id)) {
@@ -48,7 +50,7 @@ export const projectsController = {
     },
 
     remove: (projectsList, projectId) => {
-        if (!Array.isArray(projectsList) || !projectId) {
+        if (!Array.isArray(projectsList) || projectId.constructor !== Number) {
             return false;
         }
 

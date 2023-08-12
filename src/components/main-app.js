@@ -27,25 +27,28 @@ class Application {
 
     start = () => {
         const savedState = application.getViewState();
+
         renderMainPage();
         renderFilterOptionsMenu();
 
         addListenersSidebar();
         addListenersManageProjects();
-        applySavedViewState(savedState);
-
         addListenersViewOptions(savedState);
         addListenersManageTasks();
         
-        let projectList = localStorageController.getProjectsList();
-        if (!projectList) {
-            projectsController.resetId;
-            tasksController.resetId;
-            localStorageController.setProjectsList([]);
-            projectList = this.createNewProject(projectExample);
-        }
+        let { projectsList, listStored } = localStorageController.getProjectsList();
+        if (!listStored) {
+            projectsController.resetId();
+            tasksController.resetId();
+            this.createNewProject(projectExample);
+            this.createNewTask(taskExample1);
+            this.createNewTask(taskExample2);
 
-        projectList.forEach((project) => renderProject(project));
+            const { projectsList: newProjectsList, listStored } = localStorageController.getProjectsList();
+            projectsList = newProjectsList;
+        }
+        console.log('Before forEach:', projectsList);
+        projectsList.forEach((project) => renderProject(project));
 
         const taskGroup = this.applyViewOptions(savedState);
         if (!taskGroup) {
@@ -56,10 +59,10 @@ class Application {
     }
 
     createNewProject = (inputNewProject) => {
-        const currentProjectList = localStorageController.getProjectsList();
+        const { projectsList } = localStorageController.getProjectsList();
         console.log(`Before creating a new project (project List): ${localStorage.getItem(`TrackIt: projects-list`)}`);
 
-        const newProjectsList = projectsController.createNew(currentProjectList, inputNewProject);
+        const newProjectsList = projectsController.createNew(projectsList, inputNewProject);
         const newProject = newProjectsList[newProjectsList.length - 1];
         console.log(`New project: ${newProject}`);
 
@@ -71,9 +74,9 @@ class Application {
     }
 
     editProject = (inputEditedProject) => {
-        const currentProjectList = localStorageController.getProjectsList();
+        const { projectsList } = localStorageController.getProjectsList();
         console.log(`Before (editing): ${localStorage.getItem(`TrackIt: projects-list`)}`);
-        const { editedProjectsList, editedProject } = projectsController.edit(currentProjectList, inputEditedProject);
+        const { editedProjectsList, editedProject } = projectsController.edit(projectsList, inputEditedProject);
         console.log(`Edited project: ${editedProject}`);
 
         localStorageController.setProjectsList(editedProjectsList);
@@ -87,23 +90,20 @@ class Application {
     }
 
     removeProject = (projectId) => {
-        const currentProjectList = localStorageController.getProjectsList();
+        const { projectsList } = localStorageController.getProjectsList();
         console.log(`Before deleting a project (project List): ${localStorage.getItem(`TrackIt: projects-list`)}`);
-        const { editedProjectsList, removedProjectIndex } = projectsController.remove(currentProjectList, projectId);
-        console.log(`Removed task List: ${localStorage.getItem(`TrackIt: ${currentProjectList[removedProjectIndex].id}`)}`);
+        const { editedProjectsList, removedProjectIndex } = projectsController.remove(projectsList, projectId);
+        console.log(`Removed task List: ${localStorage.getItem(`TrackIt: ${projectsList[removedProjectIndex].id}`)}`);
 
-        localStorageController.removeTaskList(currentProjectList[removedProjectIndex].id);
-        localStorageController.setProjectsList(currentProjectList);
+        localStorageController.removeTaskList(editedProjectsList[removedProjectIndex].id);
+        localStorageController.setProjectsList(editedProjectsList);
         console.log(`After: ${localStorage.getItem(`TrackIt: projects-list`)}`);
         return true;
     }
     
     createNewTask = (inputNewTask) => {
-        const projectId = inputNewTask.projectId;
-        const projectName = localStorageController
-                                .getProjectsList()
-                                .find((project) => project.id === Number(projectId))
-                                .name;
+        const { projectId } = inputNewTask;
+        const projectName = localStorageController.getProjectName(projectId);
 
         const currentTasksList = localStorageController.getTasksListByProjectId(projectId);
         console.log(`Before tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);

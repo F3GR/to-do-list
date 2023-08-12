@@ -1,7 +1,7 @@
 import { application } from '../main-app.js';
 import { renderTask } from '../task/dom.js';
-import { getViewOptionsNodes } from './static-selectors.js';
-import { SORTBY } from '../utils.js';
+import { getMainNodes, getViewOptionsNodes } from './static-selectors.js';
+import { SORTBY, isBoolean } from '../utils.js';
 
 export function addListenersViewOptions(savedState) {
 
@@ -15,7 +15,6 @@ export function addListenersViewOptions(savedState) {
         sortBy, 
         ascendingOrder
     } = savedState;
-
     if (!isBoolean(flagIncludeHigh) || 
         !isBoolean(flagIncludeMedium) || 
         !isBoolean(flagIncludeNormal) ||
@@ -38,7 +37,6 @@ export function addListenersViewOptions(savedState) {
         viewOptionsIcon,
         viewBox
     } = getViewOptionsNodes();
-
     if (!checkboxPriorityHigh ||
         !checkboxPriorityMedium ||
         !checkboxPriorityNormal ||
@@ -49,8 +47,11 @@ export function addListenersViewOptions(savedState) {
         alert('Error: one or more the filter option checkboxes weren\'t found');
     }
 
-    const sortOptions = document.querySelector('.view-options-bar select');
+    const {
+        taskList
+    } = getMainNodes();
 
+    const sortOptions = document.querySelector('.view-options-bar select');
     if (!sortOptions) {
         alert('Error: select options menu wasn\'t found');
     }
@@ -79,7 +80,7 @@ const handleViewOptionsChange = (e, state, queries) => {
     }
 
     const stateCopy = { ...state };
-    const { 
+    let { 
         flagIncludeHigh, 
         flagIncludeMedium,
         flagIncludeNormal, 

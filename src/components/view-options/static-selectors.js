@@ -4,9 +4,7 @@ export function getViewOptionsNodes() {
     if (viewOptionsNodes) {
         return viewOptionsNodes;
     }
-
-    const main = document.querySelector('.content main');
-
+    
     const checkboxPriorityHigh = document.querySelector('#view-priority-high');
     const checkboxPriorityMedium = document.querySelector('#view-priority-medium');
     const checkboxPriorityNormal = document.querySelector('#view-priority-normal');
@@ -19,7 +17,6 @@ export function getViewOptionsNodes() {
     const viewBox = document.querySelector('main > .view-options-bar');
 
     return viewOptionsNodes = { 
-        main,
         checkboxPriorityHigh,
         checkboxPriorityMedium,
         checkboxPriorityNormal,
@@ -29,5 +26,21 @@ export function getViewOptionsNodes() {
         checkboxSortAscendingOrder,
         viewOptionsIcon,
         viewBox 
+    };
+};
+
+
+let mainNodes;
+
+export function getMainNodes() {
+    if (mainNodes) {
+        return mainNodes;
+    }
+
+    const main = document.querySelector('.content main');
+    const taskList = document.querySelector('.content main ul.task-list');
+    return mainNodes = { 
+        main,
+        taskList
     };
 };

@@ -101,7 +101,7 @@ function renderMainPageTemplate() {
         alt: 'Add new project icon',
         class: 'add-new',
     }, projectsBarHeader);
-    projectsBarHeaderAddImage.setAttribute('data-project-action', ACTIONS.ADD_NEW);
+    projectsBarHeaderAddImage.setAttribute('data-project-action', ACTIONS_PROJECTS.ADD_NEW);
 
     const projectsList = createElementWithAttributes('ul', {class: 'projects-list'}, barProjects);
 

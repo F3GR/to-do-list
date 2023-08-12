@@ -44,7 +44,7 @@ const taskAction = (action, target) => {
         case ACTIONS_TASKS.ADD_NEW:
             const currentProject = document.querySelector('.projects-list .project.current');
             const id = currentProject.getAttribute('data-group-id');
-            if (!currentProject || !id) {
+            if (!currentProject || id.constructor !== Number) {
                 alert('Error: current project and/or its id weren\'t found');
                 return;
             }
@@ -59,7 +59,7 @@ const taskAction = (action, target) => {
             break;
 
         case ACTIONS_TASKS.UPDATE_STATUS:
-            if (!task || !projectId || !taskId) {
+            if (!task || projectId.constructor !== Number || taskId.constructor !== Number) {
                 alert('Error: task panel and/or task and/or projectId weren\'found');
                 return;
             }
@@ -78,7 +78,7 @@ const taskAction = (action, target) => {
             break;
 
         case ACTIONS_TASKS.EDIT:
-            if (!task || !projectId || !taskId) {
+            if (!task || projectId.constructor !== Number || taskId.constructor !== Number) {
                 alert('Error: task panel and/or task and/or projectId weren\'found');
                 return;
             }
@@ -94,7 +94,7 @@ const taskAction = (action, target) => {
             break;
 
         case ACTIONS_TASKS.REMOVE:
-            if (!task || !projectId || !taskId) {
+            if (!task || projectId.constructor !== Number || taskId.constructor !== Number) {
                 alert('Error: task panel and/or task and/or projectId weren\'found');
                 return;
             }
@@ -175,7 +175,7 @@ const handleSubmit = (e) => {
 
     switch(action) {
         case ACTIONS_TASKS.ADD_NEW:
-            if (!action || !projectId) {
+            if (!action || projectId.constructor !== Number) {
                 alert('Error: action and/or projectId weren\'found');
                 return;
             }
@@ -203,7 +203,7 @@ const handleSubmit = (e) => {
             break;
 
         case ACTIONS_TASKS.EDIT:
-            if (!action || !projectId) {
+            if (!action || projectId.constructor !== Number) {
                 alert('Error: taskId and/or projectId weren\'found');
                 return;
             }

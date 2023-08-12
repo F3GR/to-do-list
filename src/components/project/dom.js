@@ -9,7 +9,7 @@ export function renderProject(project) {
     }
     
     const { id, name, iconURL, altText } = project;
-    if (!id || !name || !iconURL || !altText) {
+    if (id.constructor !== Number || !name || !iconURL || !altText) {
         alert('Error: project cannot be rendered');
     }
 

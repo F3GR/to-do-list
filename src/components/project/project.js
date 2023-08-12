@@ -6,23 +6,17 @@ export class Project {
             altText 
         } = inputNewProject;
 
-        this.id = getNewId();
+        this.id = Project.getNewId();
         this.name = name;
         this.iconURL = iconURL;
         this.altText = altText;
+
+        Project.incrementNewProjectId();
     }
 
     static projectId = 0;
 
-    static getNewId = () => {
-        return this.projectId;
-    }
-
-    static incrementNewProjectId = () => {
-        this.projectId++;
-    };
-
-    static resetId = () => {
-        this.projectId = 0;
-    }
+    static getNewId = () => this.projectId;
+    static incrementNewProjectId = () => this.projectId++;
+    static resetId = () => this.projectId = 0;
 };

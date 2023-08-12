@@ -14,18 +14,16 @@ export function renderTask(taskObj) {
         description, 
         notes 
     } = taskObj;
-    if (!projectId || 
+    if (projectId.constructor !== Number || 
         !projectName || 
-        !id || 
+        id.constructor !== Number || 
         !title || 
         !dueDate || 
         !status || 
-        !priority || 
-        !description || 
-        !notes) {
+        !priority) {
             alert('Error: one or more task data values weren\'t found');
             return;
-        }
+    }
 
 
     const { taskList } = getTaskNodes();

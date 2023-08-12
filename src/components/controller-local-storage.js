@@ -1,7 +1,16 @@
 export const localStorageController = {
     getProjectsList: () => {
-        const storedProjectList = localStorage.getItem('TrackIt: projects-list');
-        return JSON.parse(storedProjectList);
+        let projectsList = localStorage.getItem('TrackIt: projects-list');
+        let listStored = true;
+        
+        if (!projectsList) {
+            projectsList = [];
+            localStorageController.setProjectsList(projectsList);
+            listStored = false;
+            return { projectsList, listStored };
+        }
+        projectsList = JSON.parse(projectsList);
+        return { projectsList, listStored };
     },
     setProjectsList: (projectsList) => localStorage.setItem('TrackIt: projects-list', JSON.stringify(projectsList)),
 
@@ -15,8 +24,8 @@ export const localStorageController = {
     setTasksListByProjectId: (projectId, tasksList) => localStorage.setItem(`TrackIt: ${projectId}`, JSON.stringify(tasksList)),
 
     getAllTasks: () => {
-        const currentProjectList = localStorageController.getProjectsList();
-        const arrayOfProjectIds = currentProjectList.map(({ id, name, iconURL }) => ({ id }));
+        const { projectsList } = localStorageController.getProjectsList();
+        const arrayOfProjectIds = projectsList.map(({ id, name, iconURL }) => ({ id }));
         console.log(`Array of project Id's: ${arrayOfProjectIds}`);
 
         const allTasksList = arrayOfProjectIds.flatMap(
@@ -24,6 +33,12 @@ export const localStorageController = {
         );
         console.log(`Array of all tasks: ${allTasksList}`);
         return allTasksList;
+    },
+
+    getProjectName: (projectId) => {
+        const { projectsList } = localStorageController.getProjectsList();
+        const project = projectsList.find((project) => Number(project.id) === Number(projectId));
+        return project.name;
     },
 
     getCurrentGroupIdentifier: () => {

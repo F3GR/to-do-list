@@ -1,9 +1,10 @@
 import { createElementWithAttributes } from '../utils.js';
-import { getViewOptionsNodes } from './static-selectors.js';
-import { SORTBY } from '../utils.js';
+import { getMainNodes, getViewOptionsNodes } from './static-selectors.js';
+import { SORTBY, isBoolean } from '../utils.js';
+import { application } from '../main-app.js';
 
 export function renderFilterOptionsMenu() {
-    const { main } = getViewOptionsNodes();
+    const { main } = getMainNodes();
     if (!main) {
         alert('Error: main content panel wasn\'t found');
     }
@@ -143,9 +144,13 @@ export function renderFilterOptionsMenu() {
         alt: `Sort order icon`,
         class: 'sort-arrow'
     }, labelSortOrder);
+
+    applySavedViewState();
 }
 
-export function applySavedViewState(viewState) {
+function applySavedViewState() {
+    const viewState = application.getViewState();
+
     const { 
         flagIncludeHigh, 
         flagIncludeMedium, 

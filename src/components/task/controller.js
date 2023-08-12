@@ -7,27 +7,23 @@ import { STATUS } from '../utils.js';
 export const tasksController = {
     createNew: (tasksList, projectName, inputNewTask) => {
         const { projectId, title, dueDate, priority } = inputNewTask;
-
         if (!tasksList) {
             return false;
         }
         if (!projectName) {
             return false;
         }
-        if (!projectId || !title || !dueDate || !priority) {
+        if (projectId.constructor !== Number || !title || !dueDate || !priority) {
             return false;
         }
         if (!noDuplicateTitle(tasksList, title)) {
             return false;
         }
 
-        Task.incrementNewTaskId();
-
-        let newTaskStatus = "1";
+        let newTaskStatus = '1';
         newTaskStatus = updateOverdueStatus(newTaskStatus, parseISO(dueDate));
         
         const newTask = new Task(inputNewTask, projectName, newTaskStatus);
-
         const newTasksList = [...tasksList, newTask];
         return { newTasksList, newTask };
     },
@@ -46,10 +42,9 @@ export const tasksController = {
             notes: editedNotes
         } = inputEditedTask;
 
-        if (!taskId || !editedTitle || !editedDueDate || !editedPriority) {
+        if (taskId.constructor !== Number || !editedTitle || !editedDueDate || !editedPriority) {
             return false;
         }
-
         if (!noDuplicateTitle(tasksList, editedTitle, taskId)) {
             return false;
         }
@@ -85,7 +80,7 @@ export const tasksController = {
     },
 
     toggleTaskStatus: (tasksList, taskId) => {
-        if (!tasksList || !taskId) {
+        if (!tasksList || taskId.constructor !== Number) {
             return false;
         }
 
@@ -121,7 +116,7 @@ export const tasksController = {
 
     remove: (tasksList, taskId) => {
         let removed = false;
-        if (!tasksList || !taskId) {
+        if (!tasksList || taskId.constructor !== Number) {
             return removed;
         }
 
