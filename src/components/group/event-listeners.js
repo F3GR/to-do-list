@@ -1,4 +1,6 @@
 import { renderGroup } from './dom.js';
+import { STANDARD_GROUPS } from '../utils.js';
+import { getGroupNodes } from './static-selectors.js';
 
 export function addListenersSidebar() {
     const sidebarIcon = document.querySelector('header > img.sidebar-icon');
@@ -25,13 +27,16 @@ export function addListenersSidebar() {
 
 const handleGroupSelection = (e) => {
     const target = e.target.closest('.bar-types > *, .projects-list > li.project');
-    if (!target) {
-        alert('Error: the selected group wasn\'t found');
-    }
+    const { addTaskIcon } = getGroupNodes();
 
     if (target && !target.classList.contains('current')) {
         const groupIdentifier = target.getAttribute('data-group-id');
         renderGroup(groupIdentifier);
+        if (Object.values(STANDARD_GROUPS).includes(groupIdentifier)) {
+            addTaskIcon.classList.add('hidden');
+        } else {
+            addTaskIcon.classList.remove('hidden');
+        }
     }
 }
 

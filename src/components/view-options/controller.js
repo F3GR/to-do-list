@@ -47,7 +47,8 @@ export const viewController = {
         })
     },
     
-    sort: (taskList, sortBy, ascendingOrder) => {
+    sort: (taskList, viewState) => {
+        const { sortBy, ascendingOrder } = viewState;
         if (!Array.isArray(taskList) ||
             !isBoolean(ascendingOrder) ||
             !Object.values(SORTBY).includes(sortBy)) {

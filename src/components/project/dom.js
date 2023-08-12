@@ -6,11 +6,13 @@ export function renderProject(project) {
     const { projectsList } = getProjectNodes();
     if (!projectsList) {
         alert('Error: project list panel wasn\'t found');
+        return;
     }
     
     const { id, name, iconURL, altText } = project;
-    if (id.constructor !== Number || !name || !iconURL || !altText) {
+    if (!id || !name || !iconURL || !altText) {
         alert('Error: project cannot be rendered');
+        return;
     }
 
     const nodeNewProject = createElementWithAttributes('li', { class: 'project'}, projectsList);

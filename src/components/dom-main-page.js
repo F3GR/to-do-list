@@ -94,7 +94,7 @@ function renderMainPageTemplate() {
         alt: 'Projects icon'
     }, projectsBarHeader);
     const projectsBarHeaderText = createElementWithAttributes('span', {}, projectsBarHeader);
-    projectsBarHeaderText.textContent = 'Projects (0)';
+    projectsBarHeaderText.textContent = 'Projects';
 
     const projectsBarHeaderAddImage = createElementWithAttributes('img', {
         src: '../src/originals/add-new.svg',
@@ -131,7 +131,7 @@ function renderMainPageTemplate() {
 
     const mainTaskNumber = createElementWithAttributes('div', {class: 'task-number'}, mainTaskBar);
     const taskBarText = createElementWithAttributes('span', {}, mainTaskNumber);
-    taskBarText.textContent = 'Tasks (0)';
+    taskBarText.textContent = 'Tasks';
 
     const addNewTaskIcon = createElementWithAttributes('img', { 
         src: '../src/originals/add-new.svg',

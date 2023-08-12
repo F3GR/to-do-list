@@ -688,6 +688,10 @@ main .task-bar {
   transform: scale(1);
 }
 
+.task-bar .add-new.hidden {
+  display: none;
+}
+
 .task * {
   font-size: 1.2rem;
 }
@@ -1008,8 +1012,4 @@ main .sidebar-cover {
   main .sidebar-cover.shown {
     display: block;
   }
-}
-
-@media (max-width: 400px) {
-
 }

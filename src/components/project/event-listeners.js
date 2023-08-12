@@ -31,17 +31,7 @@ const openMenuHandler = (e) => {
     e.stopImmediatePropagation();
 
     const target = e.target;
-    if (!target) {
-        alert('Error: the add project icon wasn\'t found');
-        return;
-    } 
-
     const action = target.getAttribute('data-project-action');
-    if (!action) {
-        alert('Error: the project menu has no action');
-        return;
-    } 
-
     openMenu(action, target);
 };
 
@@ -93,7 +83,7 @@ const openMenu = (action, target) => {
 
             const removedProject = target.closest('.project');
             const removedProjectId = removedProject.getAttribute('data-group-id');
-            if (!editedProject || !editedProjectId) {
+            if (!removedProject || !removedProjectId) {
                 alert('Error: removed project and/or its id weren\'t found');
                 return;
             }   
@@ -113,14 +103,7 @@ const openMenu = (action, target) => {
             currentGroupIcon.src = '';
             currentGroupIcon.alt = '';
     
-            const projectListNodes = document.querySelectorAll('aside .projects-list .project');
-            if (projectListNodes.length > 0) {
-                const lastProjectNode = projectListNodes[projectListNodes.length - 1];
-                const lastProjectId = lastProjectNode.getAttribute('data-group-id');
-                renderGroup(lastProjectId);
-            } else {
-                renderGroup(STANDARD_GROUPS.ALL);
-            }
+            renderGroup(STANDARD_GROUPS.ALL);
             removedProject.remove();
             break;
     }
@@ -179,7 +162,7 @@ const submitForm = (action) => {
             }
 
             const id = menu.getAttribute('data-group-id');
-            if (!id.constructor === Number) {
+            if (!id) {
                 alert('Error: group id wasn\'t found');
                 return;
             }
@@ -210,7 +193,7 @@ const updateEditedProjectNode = (project) => {
     }
 
     const { id, name, iconURL, altText } = project;
-    if (id.constructor !== Number || !name || !iconURL || !altText) {
+    if (!id || !name || !iconURL || !altText) {
         alert('Error: one or more edited project data values weren\'t found');
         return;
     }

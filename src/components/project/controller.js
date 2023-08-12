@@ -21,7 +21,7 @@ export const projectsController = {
         const { id, name, iconURL, altText } = inputEditedProject;
         
         if (!Array.isArray(projectsList) || 
-            id.constructor !== Number || 
+            !id || 
             !name || 
             !iconURL || 
             !altText) {
@@ -50,7 +50,7 @@ export const projectsController = {
     },
 
     remove: (projectsList, projectId) => {
-        if (!Array.isArray(projectsList) || projectId.constructor !== Number) {
+        if (!Array.isArray(projectsList) || !projectId) {
             return false;
         }
 
@@ -58,8 +58,9 @@ export const projectsController = {
         const removedProjectIndex = findIndex(editedProjectsList, projectId);
 
         editedProjectsList.splice(removedProjectIndex, 1);
+        const removedId = projectId;
 
-        return { editedProjectsList, removedProjectIndex };
+        return { editedProjectsList, removedId };
     },
     
     resetId: () => Project.resetId

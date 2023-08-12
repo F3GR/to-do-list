@@ -6,7 +6,7 @@ export class Project {
             altText 
         } = inputNewProject;
 
-        this.id = Project.getNewId();
+        this.id = String(Project.getNewId());
         this.name = name;
         this.iconURL = iconURL;
         this.altText = altText;
@@ -14,9 +14,9 @@ export class Project {
         Project.incrementNewProjectId();
     }
 
-    static projectId = 0;
+    static projectId = 1;
 
-    static getNewId = () => this.projectId;
-    static incrementNewProjectId = () => this.projectId++;
-    static resetId = () => this.projectId = 0;
+    static getNewId = () => Project.projectId;
+    static incrementNewProjectId = () => Project.projectId++;
+    static resetId = () => Project.projectId = 1;
 };

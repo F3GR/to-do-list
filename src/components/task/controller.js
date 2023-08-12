@@ -13,7 +13,7 @@ export const tasksController = {
         if (!projectName) {
             return false;
         }
-        if (projectId.constructor !== Number || !title || !dueDate || !priority) {
+        if (!projectId || !title || !dueDate || !priority) {
             return false;
         }
         if (!noDuplicateTitle(tasksList, title)) {
@@ -41,8 +41,7 @@ export const tasksController = {
             description: editedDescription, 
             notes: editedNotes
         } = inputEditedTask;
-
-        if (taskId.constructor !== Number || !editedTitle || !editedDueDate || !editedPriority) {
+        if (!taskId || !editedTitle || !editedDueDate || !editedPriority) {
             return false;
         }
         if (!noDuplicateTitle(tasksList, editedTitle, taskId)) {
@@ -80,7 +79,7 @@ export const tasksController = {
     },
 
     toggleTaskStatus: (tasksList, taskId) => {
-        if (!tasksList || taskId.constructor !== Number) {
+        if (!tasksList || !taskId) {
             return false;
         }
 
@@ -116,7 +115,7 @@ export const tasksController = {
 
     remove: (tasksList, taskId) => {
         let removed = false;
-        if (!tasksList || taskId.constructor !== Number) {
+        if (!tasksList || !taskId) {
             return removed;
         }
 

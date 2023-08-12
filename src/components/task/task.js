@@ -4,7 +4,7 @@ export class Task {
 
         this.projectId = projectId;
         this.projectName = projectName;
-        this.id = Task.getNewTaskId();
+        this.id = String(Task.getNewTaskId());
         this.title = title;
         this.dueDate = dueDate;
         this.status = newTaskStatus;
@@ -14,9 +14,9 @@ export class Task {
 
         Task.incrementNewTaskId();
     }
-    static taskId = 0;
+    static taskId = 1;
 
-    static getNewTaskId = () =>  this.taskId;
-    static incrementNewTaskId = () => this.taskId++;
-    static resetId = () => this.taskId = 0;
+    static getNewTaskId = () =>  Task.taskId;
+    static incrementNewTaskId = () => Task.taskId++;
+    static resetId = () => Task.taskId = 1;
 }

@@ -24,7 +24,7 @@ export const projectExample = {
 
 
 export const taskExample1 = {
-    projectId: "0",
+    projectId: "1",
     title: 'Task example 1', 
     dueDate: result1, 
     priority: '2', 
@@ -33,7 +33,7 @@ export const taskExample1 = {
 };
 
 export const taskExample2 = {
-    projectId: "0",
+    projectId: "1",
     title: 'Task example 2', 
     dueDate: result2, 
     priority: '1', 

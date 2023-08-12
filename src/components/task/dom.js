@@ -14,9 +14,9 @@ export function renderTask(taskObj) {
         description, 
         notes 
     } = taskObj;
-    if (projectId.constructor !== Number || 
+    if (!projectId || 
         !projectName || 
-        id.constructor !== Number || 
+        !id || 
         !title || 
         !dueDate || 
         !status || 

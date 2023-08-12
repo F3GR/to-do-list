@@ -7,6 +7,7 @@ export function renderFilterOptionsMenu() {
     const { main } = getMainNodes();
     if (!main) {
         alert('Error: main content panel wasn\'t found');
+        return;
     }
 
     const viewOptionsBox = createElementWithAttributes('div', {
@@ -171,6 +172,7 @@ function applySavedViewState() {
         !Object.values(SORTBY).includes(sortBy) ||
         !isBoolean(ascendingOrder)) {
         alert('Error: one or more the filter option values weren\'t found');
+        return;
     }
 
     const { 
@@ -191,11 +193,13 @@ function applySavedViewState() {
         !checkboxStatusOverdue ||
         !checkboxSortAscendingOrder) {
         alert('Error: one or more the filter option values weren\'t found');
+        return;
     }
 
     const selectSortOptions = document.querySelector('.view-options-bar select');
     if (!selectSortOptions) {
         alert('Error: select options menu wasn\'t found');
+        return;
     }
 
     checkboxPriorityHigh.checked = flagIncludeHigh;

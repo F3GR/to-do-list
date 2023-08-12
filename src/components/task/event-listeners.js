@@ -6,21 +6,21 @@ import { getTaskNodes } from './static-selectors.js';
 export function addListenersManageTasks() {
     const { main, form, exitButton, cancelButton } = getTaskNodes();
 
-    main.addEventListener('click', (e) => handleTaskActions(e));
+    main.addEventListener('click', (e) => {
+        const target = e.target;
+        const task = target.closest('.task');
+        if (task) {
+            handleTaskActions(e);
+        }
+    });
     form.addEventListener('submit', (e) => handleSubmit(e));
     exitButton.addEventListener('click', (e) => handleExitMenu(e));
     cancelButton.addEventListener('click', (e) => handleExitMenu(e));
 }
 
 const handleTaskActions = (e) => {
-    
     const target = e.target;
     const action = target.getAttribute('data-task-action');
-    if (!action) {
-        alert ('Error: task action wasn\'t found');
-        return;
-    }
-
     taskAction(action, target);
 }
 
@@ -44,7 +44,7 @@ const taskAction = (action, target) => {
         case ACTIONS_TASKS.ADD_NEW:
             const currentProject = document.querySelector('.projects-list .project.current');
             const id = currentProject.getAttribute('data-group-id');
-            if (!currentProject || id.constructor !== Number) {
+            if (!currentProject || !id) {
                 alert('Error: current project and/or its id weren\'t found');
                 return;
             }
@@ -59,7 +59,7 @@ const taskAction = (action, target) => {
             break;
 
         case ACTIONS_TASKS.UPDATE_STATUS:
-            if (!task || projectId.constructor !== Number || taskId.constructor !== Number) {
+            if (!task || !projectId || !taskId) {
                 alert('Error: task panel and/or task and/or projectId weren\'found');
                 return;
             }
@@ -78,7 +78,7 @@ const taskAction = (action, target) => {
             break;
 
         case ACTIONS_TASKS.EDIT:
-            if (!task || projectId.constructor !== Number || taskId.constructor !== Number) {
+            if (!task || !projectId || !taskId) {
                 alert('Error: task panel and/or task and/or projectId weren\'found');
                 return;
             }
@@ -94,7 +94,7 @@ const taskAction = (action, target) => {
             break;
 
         case ACTIONS_TASKS.REMOVE:
-            if (!task || projectId.constructor !== Number || taskId.constructor !== Number) {
+            if (!task || !projectId || !taskId) {
                 alert('Error: task panel and/or task and/or projectId weren\'found');
                 return;
             }
@@ -175,7 +175,7 @@ const handleSubmit = (e) => {
 
     switch(action) {
         case ACTIONS_TASKS.ADD_NEW:
-            if (!action || projectId.constructor !== Number) {
+            if (!action || !projectId) {
                 alert('Error: action and/or projectId weren\'found');
                 return;
             }
@@ -203,7 +203,7 @@ const handleSubmit = (e) => {
             break;
 
         case ACTIONS_TASKS.EDIT:
-            if (!action || projectId.constructor !== Number) {
+            if (!action || !projectId) {
                 alert('Error: taskId and/or projectId weren\'found');
                 return;
             }

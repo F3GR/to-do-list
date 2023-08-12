@@ -69,16 +69,16 @@ export function addListenersViewOptions(savedState) {
     };
 
     viewOptionsIcon.addEventListener('click', () => viewBox.classList.toggle('shown'));
-    viewBox.addEventListener('change', (e) => handleViewOptionsChange(e, savedState, queries));
+    viewBox.addEventListener('change', (e) => {
+        const target = e.target.closest('input[type="checkbox"], select');
+        if (target) {
+            handleViewOptionsChange(e, savedState, queries);
+        }
+    });
 }
 
-const handleViewOptionsChange = (e, state, queries) => {
-    const target = e.target.closest('input[type="checkbox"], select');
-    if (!target) {
-        alert('Error: the element wasn\'t found');
-        return;
-    }
-
+const handleViewOptionsChange = (state, queries) => {
+    
     const stateCopy = { ...state };
     let { 
         flagIncludeHigh, 
