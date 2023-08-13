@@ -1,4 +1,4 @@
 import './input.css';
-import { application } from './src/main-app.js';
+import { application } from './main-app.js';
 
 application.start();
