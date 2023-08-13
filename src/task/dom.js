@@ -67,7 +67,7 @@ export function renderTask(taskObj) {
         class: 'overdue-box'
     }, task); 
     const taskOverDueIcon = createElementWithAttributes('img', {
-        src: '../src/originals/status-overdue.svg', 
+        src: '/src/originals/status-overdue.svg', 
         alt: 'Task overdue status icon',
         class: 'overdue'
     }, taskOverDueBox);
@@ -77,21 +77,21 @@ export function renderTask(taskObj) {
     taskDueDateText.textContent = `${dueDate}`;
 
     const taskEditIcon = createElementWithAttributes('img', {
-        src: '../src/originals/edit.svg', 
+        src: '/src/originals/edit.svg', 
         alt: 'Task edit information icon',
         class: 'edit'
     }, task);
     taskEditIcon.setAttribute('data-task-action', ACTIONS_TASKS.EDIT);
 
     const taskRemoveIcon = createElementWithAttributes('img', {
-        src: '../src/originals/delete.svg', 
+        src: '/src/originals/delete.svg', 
         alt: 'Task remove icon',
         class: 'remove'
     }, task);
     taskRemoveIcon.setAttribute('data-task-action', ACTIONS_TASKS.REMOVE);
 
     const taskUnfoldIcon = createElementWithAttributes('img', {
-        src: '../src/originals/unfold.svg', 
+        src: '/src/originals/unfold.svg', 
         alt: 'Task information unfold or fold icon',
         class: 'unfold'
     }, task);

@@ -1,5 +1,5 @@
 import { isToday, parseISO, differenceInWeeks } from 'date-fns';
-import { STATUS, STANDARD_GROUPS } from '../utils';
+import { STATUS, STANDARD_GROUPS } from './utils.js';
 
 export const groupsController = {
     getTaskListByGroup: (taskList, groupIdentifier) => {

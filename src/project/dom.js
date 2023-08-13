@@ -28,14 +28,14 @@ export function renderProject(project) {
     newProjectText.textContent = name;
 
     const newProjectEditImage = createElementWithAttributes('img', {
-        src: '../src/originals/edit.svg',
+        src: '/src/originals/edit.svg',
         alt: 'Edit project icon',
         class: 'edit'
     }, nodeNewProject);
     newProjectEditImage.setAttribute('data-project-action', ACTIONS_PROJECTS.EDIT);
     
     const newProjectDeleteImage = createElementWithAttributes('img', {
-        src: '../src/originals/delete.svg',
+        src: '/src/originals/delete.svg',
         alt: 'Remove project icon',
         class: 'remove'
     }, nodeNewProject);

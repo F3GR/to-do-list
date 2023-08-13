@@ -15,7 +15,7 @@ function renderMainPageTemplate() {
     const header = createElementWithAttributes('header', {}, content);
 
     const sideBarIcon = createElementWithAttributes('img', {
-        src: '../src/originals/menu.svg',
+        src: '/src/originals/menu.svg',
         alt: 'Sidebar menu icon',
         class: 'sidebar-icon hidden'
     }, header);
@@ -23,7 +23,7 @@ function renderMainPageTemplate() {
     const heading = createElementWithAttributes('div', {class: 'heading'}, header);
 
     const logoIcon = createElementWithAttributes('img', { 
-        src: '../src/originals/fav-icon.svg',
+        src: '/src/originals/fav-icon.svg',
         class: 'logo',
         alt: 'TrackIt logo'}, heading);
 
@@ -33,7 +33,7 @@ function renderMainPageTemplate() {
     const emptyDiv = createElementWithAttributes('div', {class: 'empty'}, header);
 
     const viewOptionsIcon = createElementWithAttributes('img', { 
-        src: '../src/originals/view-options.svg',
+        src: '/src/originals/view-options.svg',
         alt: 'View Options logo',
         class: 'options'
     }, header);
@@ -45,7 +45,7 @@ function renderMainPageTemplate() {
     const tasksAll = createElementWithAttributes('div', {class: 'tasks-all'}, barTypes);
     tasksAll.setAttribute('data-group-id', 'all');
     const tasksAllImage = createElementWithAttributes('img', { 
-        src: '../src/originals/calendar-all.svg',
+        src: '/src/originals/calendar-all.svg',
         alt: 'All tasks icon'
     }, tasksAll);
     const tasksAllText = createElementWithAttributes('span', {}, tasksAll);
@@ -54,7 +54,7 @@ function renderMainPageTemplate() {
     const tasksToday = createElementWithAttributes('div', {class: 'tasks-today'}, barTypes);
     tasksToday.setAttribute('data-group-id', 'today');
     const tasksTodayImage = createElementWithAttributes('img', {
-        src: '../src/originals/calendar-today.svg',
+        src: '/src/originals/calendar-today.svg',
         alt: 'Today tasks icon'
     }, tasksToday);
     const tasksTodayText = createElementWithAttributes('span', {}, tasksToday);
@@ -63,7 +63,7 @@ function renderMainPageTemplate() {
     const tasksWeek = createElementWithAttributes('div', {class: 'tasks-week'}, barTypes);
     tasksWeek.setAttribute('data-group-id', 'week');
     const tasksWeekImage = createElementWithAttributes('img', {
-        src: '../src/originals/calendar-week.svg',
+        src: '/src/originals/calendar-week.svg',
         alt: 'Week tasks icon'
     }, tasksWeek);
     const tasksWeekText = createElementWithAttributes('span', {}, tasksWeek);
@@ -72,7 +72,7 @@ function renderMainPageTemplate() {
     const tasksCompleted = createElementWithAttributes('div', {class: 'tasks-completed'}, barTypes);
     tasksCompleted.setAttribute('data-group-id', 'completed');
     const tasksCompletedImage = createElementWithAttributes('img', {
-        src: '../src/originals/calendar-finished.svg',
+        src: '/src/originals/calendar-finished.svg',
         alt: 'Completed tasks icon'
     }, tasksCompleted);
     const tasksCompletedText = createElementWithAttributes('span', {}, tasksCompleted);
@@ -81,7 +81,7 @@ function renderMainPageTemplate() {
     const tasksOverdue = createElementWithAttributes('div', {class: 'tasks-overdue'}, barTypes);
     tasksOverdue.setAttribute('data-group-id', 'overdue');
     const tasksOverdueImage = createElementWithAttributes('img', {
-        src: '../src/originals/calendar-overdue.svg',
+        src: '/src/originals/calendar-overdue.svg',
         alt: 'Overdue tasks icon'
     }, tasksOverdue);
     const tasksOverdueText = createElementWithAttributes('span', {}, tasksOverdue);
@@ -91,14 +91,14 @@ function renderMainPageTemplate() {
 
     const projectsBarHeader = createElementWithAttributes('div', {class: 'header'}, barProjects);
     const projectsBarHeaderImage = createElementWithAttributes('img', {
-        src: '../src/originals/projects.svg',
+        src: '/src/originals/projects.svg',
         alt: 'Projects icon'
     }, projectsBarHeader);
     const projectsBarHeaderText = createElementWithAttributes('span', {}, projectsBarHeader);
     projectsBarHeaderText.textContent = 'Projects';
 
     const projectsBarHeaderAddImage = createElementWithAttributes('img', {
-        src: '../src/originals/add-new.svg',
+        src: '/src/originals/add-new.svg',
         alt: 'Add new project icon',
         class: 'add-new',
     }, projectsBarHeader);
@@ -122,7 +122,7 @@ function renderMainPageTemplate() {
 
     const mainHeadBox = createElementWithAttributes('div', {class: 'header'}, main);
     const mainHeadImage = createElementWithAttributes('img', { 
-        src: '../src/originals/calendar-all.svg',
+        src: '/src/originals/calendar-all.svg',
         alt: 'All tasks icon'
     }, mainHeadBox);
     const mainHeadText = createElementWithAttributes('span', {}, mainHeadBox);
@@ -135,7 +135,7 @@ function renderMainPageTemplate() {
     taskBarText.textContent = 'Tasks';
 
     const addNewTaskIcon = createElementWithAttributes('img', { 
-        src: '../src/originals/add-new.svg',
+        src: '/src/originals/add-new.svg',
         alt: 'Add new Task icon',
         class: 'add-new'
     }, mainTaskBar);
@@ -146,12 +146,12 @@ function renderMainPageTemplate() {
     const pageMenuBox = createElementWithAttributes('div', {class: 'page-menu', }, main);
 
     const firstPageIcon = createElementWithAttributes('img', {
-        src: '../src/originals/first-page.svg', 
+        src: '/src/originals/first-page.svg', 
         alt: 'First page icon',
         class: 'first-page'
     }, pageMenuBox);
     const previousPageIcon = createElementWithAttributes('img', {
-        src: '../src/originals/previous-page.svg', 
+        src: '/src/originals/previous-page.svg', 
         alt: 'Previous page icon',
         class: 'previous-page'
     }, pageMenuBox);
@@ -161,12 +161,12 @@ function renderMainPageTemplate() {
         max: "99", 
     }, pageMenuBox);
     const nextPageIcon = createElementWithAttributes('img', {
-        src: '../src/originals/next-page.svg', 
+        src: '/src/originals/next-page.svg', 
         alt: 'Next page icon',
         class: 'next-page'
     }, pageMenuBox);
     const lastPageIcon = createElementWithAttributes('img', {
-        src: '../src/originals/last-page.svg', 
+        src: '/src/originals/last-page.svg', 
         alt: 'Last page icon',
         class: 'last-page'
     }, pageMenuBox);
@@ -194,7 +194,7 @@ function renderProjectMenuTemplate() {
 
     const projectMenuExitIcon = createElementWithAttributes('img', {
         class: 'exit',
-        src: '../src/originals/close.svg',
+        src: '/src/originals/close.svg',
         alt: 'Exit icon'
     }, projectMenuTitleBox);
 
@@ -221,14 +221,14 @@ function renderProjectMenuTemplate() {
         id: 'project-category-job',
         type: 'radio',
         name: 'iconURL',
-        value: '../src/originals/category-job.svg',
+        value: '/src/originals/category-job.svg',
     }, formIconFieldset);
     inputCategoryJob.setAttribute('data-alt-text', 'Category Job icon');
     const iconCategoryJobLabel = createElementWithAttributes('label', {
         for: 'project-category-job'
     }, formIconFieldset);
     const iconCategoryJob = createElementWithAttributes('img', {
-        src: '../src/originals/category-job.svg',
+        src: '/src/originals/category-job.svg',
         alt: 'Category Job icon'
     }, iconCategoryJobLabel);
 
@@ -236,14 +236,14 @@ function renderProjectMenuTemplate() {
         id: 'project-category-study',
         type: 'radio',
         name: 'iconURL',
-        value: '../src/originals/category-study.svg',
+        value: '/src/originals/category-study.svg',
     }, formIconFieldset);
     inputCategoryStudy.setAttribute('data-alt-text', 'Category Study icon');
     const iconCategoryStudyLabel = createElementWithAttributes('label', {
         for: 'project-category-study',
     }, formIconFieldset);
     const iconCategoryStudy = createElementWithAttributes('img', {
-        src: '../src/originals/category-study.svg',
+        src: '/src/originals/category-study.svg',
         alt: 'Category Study icon'
     }, iconCategoryStudyLabel);
 
@@ -251,14 +251,14 @@ function renderProjectMenuTemplate() {
         id: 'project-category-gift',
         type: 'radio',
         name: 'iconURL',
-        value: '../src/originals/category-gift.svg',
+        value: '/src/originals/category-gift.svg',
     }, formIconFieldset);
     inputCategoryGift.setAttribute('data-alt-text', 'Category Gift icon');
     const iconCategoryGiftLabel = createElementWithAttributes('label', {
         for: 'project-category-gift',
     }, formIconFieldset);
     const iconCategoryGift = createElementWithAttributes('img', {
-        src: '../src/originals/category-gift.svg',
+        src: '/src/originals/category-gift.svg',
         alt: 'Category Gift icon'
     }, iconCategoryGiftLabel);
 
@@ -266,14 +266,14 @@ function renderProjectMenuTemplate() {
         id: 'project-category-international-activity',
         type: 'radio',
         name: 'iconURL',
-        value: '../src/originals/category-international-activity.svg',
+        value: '/src/originals/category-international-activity.svg',
     }, formIconFieldset);
     inputCategoryInternational.setAttribute('data-alt-text', 'Category International activity icon');
     const iconCategoryInternationalLabel = createElementWithAttributes('label', {
         for: 'project-category-international-activity',
     }, formIconFieldset);
     const iconCategoryInternational = createElementWithAttributes('img', {
-        src: '../src/originals/category-international-activity.svg',
+        src: '/src/originals/category-international-activity.svg',
         alt: 'Category International activity icon'
     }, iconCategoryInternationalLabel);
 
@@ -281,14 +281,14 @@ function renderProjectMenuTemplate() {
         id: 'project-category-people',
         type: 'radio',
         name: 'iconURL',
-        value: '../src/originals/category-people.svg',
+        value: '/src/originals/category-people.svg',
     }, formIconFieldset);
     inputCategoryPeople.setAttribute('data-alt-text', 'Category People icon');
     const iconCategoryPeopleLabel = createElementWithAttributes('label', {
         for: 'project-category-people',
     }, formIconFieldset);
     const iconCategoryPeople = createElementWithAttributes('img', {
-        src: '../src/originals/category-people.svg',
+        src: '/src/originals/category-people.svg',
         alt: 'Category People icon'
     }, iconCategoryPeopleLabel);
 
@@ -296,14 +296,14 @@ function renderProjectMenuTemplate() {
         id: 'project-category-science',
         type: 'radio',
         name: 'iconURL',
-        value: '../src/originals/category-science.svg',
+        value: '/src/originals/category-science.svg',
     }, formIconFieldset);
     inputCategoryScience.setAttribute('data-alt-text', 'Category Science icon');
     const iconCategoryScienceLabel = createElementWithAttributes('label', {
         for: 'project-category-science',
     }, formIconFieldset);
     const iconCategoryScience = createElementWithAttributes('img', {
-        src: '../src/originals/category-science.svg',
+        src: '/src/originals/category-science.svg',
         alt: 'Category Science icon'
     }, iconCategoryScienceLabel);
 
@@ -311,14 +311,14 @@ function renderProjectMenuTemplate() {
         id: 'project-category-it',
         type: 'radio',
         name: 'iconURL',
-        value: '../src/originals/category-it.svg',
+        value: '/src/originals/category-it.svg',
     }, formIconFieldset);
     inputCategoryIT.setAttribute('data-alt-text', 'Category IT icon');
     const iconCategoryITLabel = createElementWithAttributes('label', {
         for: 'project-category-it',
     }, formIconFieldset);
     const iconCategoryIT = createElementWithAttributes('img', {
-        src: '../src/originals/category-it.svg',
+        src: '/src/originals/category-it.svg',
         alt: 'Category IT icon'
     }, iconCategoryITLabel);
 
@@ -326,14 +326,14 @@ function renderProjectMenuTemplate() {
         id: 'project-category-other',
         type: 'radio',
         name: 'iconURL',
-        value: '../src/originals/category-other.svg',
+        value: '/src/originals/category-other.svg',
     }, formIconFieldset);
     inputCategoryOther.setAttribute('data-alt-text', 'Category Other icon');
     const iconCategoryOtherLabel = createElementWithAttributes('label', {
         for: 'project-category-other',
     }, formIconFieldset);
     const iconCategoryOther = createElementWithAttributes('img', {
-        src: '../src/originals/category-other.svg',
+        src: '/src/originals/category-other.svg',
         alt: 'Category Other icon'
     }, iconCategoryOtherLabel);
 
@@ -370,7 +370,7 @@ function renderTaskMenuTemplate() {
 
     const taskMenuExitIcon = createElementWithAttributes('img', {
         class: 'exit',
-        src: '../src/originals/close.svg',
+        src: '/src/originals/close.svg',
         alt: 'Exit icon'
     }, taskMenuTitleBox);
 
