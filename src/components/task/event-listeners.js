@@ -8,8 +8,8 @@ export function addListenersManageTasks() {
 
     main.addEventListener('click', (e) => {
         const target = e.target;
-        const task = target.closest('.task');
-        if (task) {
+        const element = target.closest('.task, img');
+        if (element) {
             handleTaskActions(e);
         }
     });
@@ -21,9 +21,7 @@ export function addListenersManageTasks() {
 const handleTaskActions = (e) => {
     const target = e.target;
     const action = target.getAttribute('data-task-action');
-    if (action) {
-        taskAction(action, target);
-    }
+    taskAction(action, target);
 }
 
 const taskAction = (action, target) => {
@@ -39,8 +37,12 @@ const taskAction = (action, target) => {
     }
 
     const task = target.closest('.task');
-    const projectId = task.getAttribute('data-project-id');
-    const taskId = task.getAttribute('data-task-id');
+    let projectId;
+    let taskId;
+    if (task) {
+        projectId = task.getAttribute('data-project-id');
+        taskId = task.getAttribute('data-task-id');
+    }
 
     switch (action) {
         case ACTIONS_TASKS.ADD_NEW:
@@ -128,9 +130,6 @@ const taskAction = (action, target) => {
                 target.setAttribute('src', '../src/originals/fold.svg');
             }
             break;
-        
-        default:
-            alert ('Error: task action is not valid');
     }
 }
 

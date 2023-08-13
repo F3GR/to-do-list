@@ -118,6 +118,7 @@ export const tasksController = {
         const removedTaskIndex = findIndex(tasksList, taskId);
         const editedTaskList = [...tasksList];
         editedTaskList.splice(removedTaskIndex, 1);
+        removed = true;
 
         return { editedTaskList, removed };
     },
