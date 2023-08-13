@@ -1,6 +1,7 @@
 import { createElementWithAttributes } from './utils.js';
 import { ACTIONS_PROJECTS } from './utils.js';
 import { ACTIONS_TASKS } from './utils.js';
+import { STANDARD_GROUPS } from './utils.js';
 
 export function renderMainPage() {
     renderMainPageTemplate();
@@ -482,4 +483,6 @@ function renderTaskMenuTemplate() {
     }, buttonsGrid);
     buttonCancel.textContent = 'Cancel';
 }
+
+
 

@@ -49,12 +49,8 @@ export const tasksController = {
         }
 
         const editedTaskIndex = findIndex(tasksList, taskId);
-        if (!editedTaskIndex) {
-            return false;
-        }
-
         const editedTask = Object.assign({}, tasksList[editedTaskIndex]);
-        const editedTaskList = [...tasksList];
+        const editedTasksList = [...tasksList];
 
         if (editedTask.title !== editedTitle) {
             editedTask.title = editedTitle;
@@ -75,7 +71,9 @@ export const tasksController = {
             editedTask.notes = editedNotes;
         }
 
-        return { editedTaskList, editedTask };
+        editedTasksList.splice(editedTaskIndex, 1, editedTask);
+
+        return { editedTasksList, editedTask };
     },
 
     toggleTaskStatus: (tasksList, taskId) => {
@@ -83,13 +81,9 @@ export const tasksController = {
             return false;
         }
 
-        const editedTaskIndex = findIndex(tasksList, taskId);
-        if (!editedTaskIndex) {
-            return false;
-        }
-        
+        const editedTaskIndex = findIndex(tasksList, taskId);        
         const editedTask = Object.assign({}, tasksList[editedTaskIndex]);
-        const editedTaskList = [...tasksList];
+        const editedTasksList = [...tasksList];
 
         if (editedTask.status === STATUS.COMPLETED) {
             let updatedStatus = STATUS.ONGOING;
@@ -99,7 +93,9 @@ export const tasksController = {
         }
         const editedStatus = editedTask.status;
 
-        return { editedTaskList, editedStatus };
+        editedTasksList.splice(editedTaskIndex, 1, editedTask);
+
+        return { editedTasksList, editedStatus };
     },
 
     updateProjectName: (tasksList, editedProjectName) => {
@@ -120,10 +116,6 @@ export const tasksController = {
         }
 
         const removedTaskIndex = findIndex(tasksList, taskId);
-        if (!removedTaskIndex) {
-            return removed;
-        }
-
         const editedTaskList = [...tasksList];
         editedTaskList.splice(removedTaskIndex, 1);
 

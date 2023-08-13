@@ -1,4 +1,7 @@
 import { add } from 'date-fns';
+import { getYear } from 'date-fns';
+import { getMonth } from 'date-fns';
+import { getDate } from 'date-fns';
 
 const now = new Date();
 const year1 = now.getFullYear();
@@ -9,12 +12,11 @@ const date = new Date(year1, month1, day1);
 
 const result1 = add(date, {
     months: 1
-}).toLocaleDateString();
+});
 
 const result2 = add(date, {
     days: -1
-}).toLocaleDateString();
-
+});
 
 export const projectExample = {
     name: 'New project', 
@@ -22,11 +24,10 @@ export const projectExample = {
     altText: 'Category IT icon'
 };
 
-
 export const taskExample1 = {
     projectId: "1",
     title: 'Task example 1', 
-    dueDate: result1, 
+    dueDate: `${getYear(result1)}-${getMonth(result1).toString().padStart(2, '0')}-${getDate(result1).toString().padStart(2, '0')}`, 
     priority: '2', 
     description: '', 
     notes: ''
@@ -35,7 +36,7 @@ export const taskExample1 = {
 export const taskExample2 = {
     projectId: "1",
     title: 'Task example 2', 
-    dueDate: result2, 
+    dueDate: `${getYear(result2)}-${getMonth(result2).toString().padStart(2, '0')}-${getDate(result2).toString().padStart(2, '0')}`,
     priority: '1', 
     description: '', 
     notes: ''

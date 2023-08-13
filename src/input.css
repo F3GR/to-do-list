@@ -688,7 +688,7 @@ main .task-bar {
   transform: scale(1);
 }
 
-.task-bar .add-new.hidden {
+.task-bar .add-new.shown {
   display: none;
 }
 

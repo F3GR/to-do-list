@@ -1,31 +1,8 @@
 import { application } from '../main-app.js';
 import { renderTask } from '../task/dom.js';
 import { getMainNodes, getViewOptionsNodes } from './static-selectors.js';
-import { SORTBY, isBoolean } from '../utils.js';
 
-export function addListenersViewOptions(savedState) {
-
-    const { 
-        flagIncludeHigh, 
-        flagIncludeMedium,
-        flagIncludeNormal, 
-        flagIncludeOverdue, 
-        flagIncludeOnGoing, 
-        flagIncludeCompleted, 
-        sortBy, 
-        ascendingOrder
-    } = savedState;
-    if (!isBoolean(flagIncludeHigh) || 
-        !isBoolean(flagIncludeMedium) || 
-        !isBoolean(flagIncludeNormal) ||
-        !isBoolean(flagIncludeOnGoing) || 
-        !isBoolean(flagIncludeCompleted) || 
-        !isBoolean(flagIncludeOverdue) ||
-        !Object.values(SORTBY).includes(sortBy) ||
-        !isBoolean(ascendingOrder)) {
-        alert('Error: one or more the filter option values weren\'t found');
-    }
-
+export function addListenersViewOptions() {
     const {
         checkboxPriorityHigh,
         checkboxPriorityMedium,
@@ -72,24 +49,23 @@ export function addListenersViewOptions(savedState) {
     viewBox.addEventListener('change', (e) => {
         const target = e.target.closest('input[type="checkbox"], select');
         if (target) {
-            handleViewOptionsChange(e, savedState, queries);
+            handleViewOptionsChange(queries);
         }
     });
 }
 
-const handleViewOptionsChange = (state, queries) => {
+const handleViewOptionsChange = (queries) => {
     
-    const stateCopy = { ...state };
-    let { 
-        flagIncludeHigh, 
-        flagIncludeMedium,
-        flagIncludeNormal, 
-        flagIncludeOverdue, 
-        flagIncludeOnGoing, 
-        flagIncludeCompleted, 
-        sortBy, 
-        ascendingOrder
-    } = stateCopy;
+    let newState = { 
+        flagIncludeHigh: null, 
+        flagIncludeMedium: null,
+        flagIncludeNormal: null, 
+        flagIncludeOverdue: null, 
+        flagIncludeOnGoing: null, 
+        flagIncludeCompleted: null, 
+        sortBy: null, 
+        ascendingOrder: null
+    }
 
     const { 
         taskList,
@@ -103,16 +79,16 @@ const handleViewOptionsChange = (state, queries) => {
         checkboxSortAscendingOrder 
     } = queries;
 
-    flagIncludeHigh = checkboxPriorityHigh.checked;
-    flagIncludeMedium = checkboxPriorityMedium.checked;
-    flagIncludeNormal = checkboxPriorityNormal.checked;
-    flagIncludeOverdue = checkboxStatusOverdue.checked;
-    flagIncludeOnGoing = checkboxStatusOnGoing.checked;
-    flagIncludeCompleted = checkboxStatusCompleted.checked;
-    sortBy = sortOptions.value;
-    ascendingOrder = checkboxSortAscendingOrder.checked;
+    newState.flagIncludeHigh = checkboxPriorityHigh.checked;
+    newState.flagIncludeMedium = checkboxPriorityMedium.checked;
+    newState.flagIncludeNormal = checkboxPriorityNormal.checked;
+    newState.flagIncludeOverdue = checkboxStatusOverdue.checked;
+    newState.flagIncludeOnGoing = checkboxStatusOnGoing.checked;
+    newState.flagIncludeCompleted = checkboxStatusCompleted.checked;
+    newState.sortBy = sortOptions.value;
+    newState.ascendingOrder = checkboxSortAscendingOrder.checked;
 
-    const tasksWithUpdatedView = application.applyViewOptions(stateCopy);
+    const tasksWithUpdatedView = application.applyViewOptions(newState);
     if (!tasksWithUpdatedView) {
         alert('Applying new view options failed.');
         return;

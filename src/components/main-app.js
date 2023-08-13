@@ -10,12 +10,12 @@ import { viewController } from './view-options/controller.js';
 import { localStorageController } from './controller-local-storage.js';
 
 import { renderProject } from './project/dom.js';
-import { renderTask } from './task/dom.js';
 import { renderFilterOptionsMenu } from './view-options/dom.js';
-import { applySavedViewState } from './view-options/dom.js';
+import { renderGroup } from './group/dom.js';
 
 import { STANDARD_GROUPS } from './utils.js';
 import { projectExample, taskExample1, taskExample2 } from './examples.js';
+
 
 class Application {
     constructor() {
@@ -26,14 +26,12 @@ class Application {
     }
 
     start = () => {
-        const savedState = application.getViewState();
-
         renderMainPage();
         renderFilterOptionsMenu();
 
         addListenersSidebar();
         addListenersManageProjects();
-        addListenersViewOptions(savedState);
+        addListenersViewOptions();
         addListenersManageTasks();
         
         let { projectsList, listStored } = localStorageController.getProjectsList();
@@ -47,15 +45,12 @@ class Application {
             const { projectsList: newProjectsList, listStored } = localStorageController.getProjectsList();
             projectsList = newProjectsList;
         }
+        
         console.log('Before forEach:', projectsList);
         projectsList.forEach((project) => renderProject(project));
 
-        const taskGroup = application.applyViewOptions(savedState);
-        if (!taskGroup) {
-            alert('Error: saved tasks can\'t be rendered (no saved tasks / view options)');
-            return;
-        }  
-        taskGroup.forEach((task) => renderTask(task));
+        const savedGroupId = localStorageController.getCurrentGroupIdentifier();
+        renderGroup(savedGroupId);
     }
 
     createNewProject = (inputNewProject) => {
@@ -131,9 +126,9 @@ class Application {
     toggleTaskStatus = (projectId, taskId) => {
         const currentTasksList = localStorageController.getTasksListByProjectId(projectId);
         console.log(`Before tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
-        const { editedTaskList, editedStatus } = tasksController.toggleTaskStatus(currentTasksList, taskId);
+        const { editedTasksList, editedStatus } = tasksController.toggleTaskStatus(currentTasksList, taskId);
 
-        localStorageController.setTasksListByProjectId(projectId, editedTaskList);
+        localStorageController.setTasksListByProjectId(projectId, editedTasksList);
         console.log(`After tasklist: ${localStorage.getItem(`TrackIt: ${projectId}`)}`);
         return editedStatus;
     }
@@ -150,17 +145,17 @@ class Application {
 
     getTasksGroup = (newGroupIdentifier) => {
         let newGroup;
+
         if (Object.values(STANDARD_GROUPS).includes(newGroupIdentifier)) {
-            
             const allTasks = localStorageController.getAllTasks();
             newGroup = groupsController.getTaskListByGroup(allTasks, newGroupIdentifier);
         } else {
             newGroup = localStorageController.getTasksListByProjectId(newGroupIdentifier);
         }
-        console.log(`Selected group: ${newGroup}`);
 
+        console.log(`Selected group: ${newGroup}`);
         localStorageController.setCurrentGroupIdentifier(newGroupIdentifier);
-        return { newGroup, newGroupIdentifier };
+        return newGroup;
     }
 
     getViewState = () => {
@@ -168,17 +163,13 @@ class Application {
         return currentViewState;
     }
 
-    applyViewOptions = (viewState) => {
+    applyViewOptions = (viewState, tasksGroup) => {
         localStorageController.setViewState(viewState);
-        const currentGroupIdentifier = localStorageController.getCurrentGroupIdentifier();
-        const { newGroup, newGroupIdentifier } = application.getTasksGroup(currentGroupIdentifier);
+        if (!tasksGroup) {
+            tasksGroup = application.getTasksGroup(localStorageController.getCurrentGroupIdentifier());
+        }
 
-        const filteredTasks = viewController
-        .filter(
-            newGroup, 
-            viewState
-        );
-
+        const filteredTasks = viewController.filter(tasksGroup, viewState);
         const filteredSortedTasks = viewController.sort(filteredTasks, viewState);
         return filteredSortedTasks;
     }

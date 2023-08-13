@@ -45,6 +45,7 @@ export const localStorageController = {
         const storedCurrentGroup = localStorage.getItem('TrackIt: current-group');
         if (!storedCurrentGroup) {
             const newCurrentGroup = 'all';
+            localStorageController.setCurrentGroupIdentifier(newCurrentGroup);
             return newCurrentGroup;
         }
         return storedCurrentGroup;

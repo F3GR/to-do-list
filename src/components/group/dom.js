@@ -1,6 +1,7 @@
 import { application } from '../main-app.js';
 import { renderTask } from '../task/dom.js';
 import { getGroupNodes } from './static-selectors.js';
+import { STANDARD_GROUPS } from '../utils.js';
 
 export function renderGroup(groupIdentifier) {
     const { mainGroupName, mainGroupIcon, taskList } = getGroupNodes();
@@ -8,8 +9,8 @@ export function renderGroup(groupIdentifier) {
         alert ('Error: the elements weren\'t found to render the task group');
     }
     
-    const { newGroup, newGroupIdentifier } = application.getTasksGroup(groupIdentifier);
-    if (!newGroup || !newGroupIdentifier) {
+    const newGroup = application.getTasksGroup(groupIdentifier);
+    if (!newGroup) {
         alert('Error: group wasn\'t found');
         return;
     }
@@ -20,7 +21,7 @@ export function renderGroup(groupIdentifier) {
         return;
     }
 
-    const filteredSortedNewGroup = application.applyViewOptions(currentViewState);
+    const filteredSortedNewGroup = application.applyViewOptions(currentViewState, newGroup);
     if (!filteredSortedNewGroup) {
         alert('Error: applying view options to tasklist was failed');
         filteredSortedNewGroup = newGroup;
@@ -41,6 +42,13 @@ export function renderGroup(groupIdentifier) {
     if (!selectedGroup) {
         alert ('Error: the group panel with the selected id wasn\'t found');
         return;
+    }
+
+    const { addTaskIcon } = getGroupNodes();
+    if (Object.values(STANDARD_GROUPS).includes(groupIdentifier)) {
+        addTaskIcon.classList.add('shown');
+    } else {
+        addTaskIcon.classList.remove('shown');
     }
 
     const selectedGroupName = selectedGroup.querySelector('span');

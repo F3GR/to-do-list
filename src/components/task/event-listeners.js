@@ -21,7 +21,9 @@ export function addListenersManageTasks() {
 const handleTaskActions = (e) => {
     const target = e.target;
     const action = target.getAttribute('data-task-action');
-    taskAction(action, target);
+    if (action) {
+        taskAction(action, target);
+    }
 }
 
 const taskAction = (action, target) => {
@@ -150,13 +152,8 @@ const handleSubmit = (e) => {
     }
     
     const priorityInput = document.querySelector('.task-menu input[name="priority"]:checked');
-    const menuAction = menu.getAttribute('data-task-action');
     if (!priorityInput) {
         alert('Error: one or more input fields weren\'t found');
-        return;
-    }
-    if (!menuAction) {
-        alert('Error: action for a task menu wasn\'t found');
         return;
     }
 
@@ -169,17 +166,19 @@ const handleSubmit = (e) => {
         return;
     }
 
-    const target = e.target;
-    const action = target.getAttribute('data-task-action');
+    const action = menu.getAttribute('data-task-action');
+    if (!action) {
+        alert('Error: action for a task menu wasn\'t found');
+        return;
+    }
     const projectId = menu.getAttribute('data-project-id');
+    if (!action || !projectId) {
+        alert('Error: action and/or projectId weren\'found');
+        return;
+    }
 
     switch(action) {
         case ACTIONS_TASKS.ADD_NEW:
-            if (!action || !projectId) {
-                alert('Error: action and/or projectId weren\'found');
-                return;
-            }
-
             const inputNewTask = {  
                 projectId: projectId, 
                 title: titleInput.value, 
@@ -203,10 +202,6 @@ const handleSubmit = (e) => {
             break;
 
         case ACTIONS_TASKS.EDIT:
-            if (!action || !projectId) {
-                alert('Error: taskId and/or projectId weren\'found');
-                return;
-            }
             const taskId = menu.getAttribute('data-task-id');
             if (!taskId) {
                 alert('Error: taskId and/or projectId weren\'found');
