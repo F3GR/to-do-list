@@ -2,6 +2,7 @@ import { add } from 'date-fns';
 import { getYear } from 'date-fns';
 import { getMonth } from 'date-fns';
 import { getDate } from 'date-fns';
+import { assets } from './assets';
 
 const now = new Date();
 const year1 = now.getFullYear();
@@ -20,7 +21,7 @@ const result2 = add(date, {
 
 export const projectExample = {
     name: 'New project', 
-    iconURL: './originals/category-it.svg', 
+    iconURL: assets.iconCategoryITPath, 
     altText: 'Category IT icon'
 };
 
