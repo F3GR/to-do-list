@@ -15,9 +15,9 @@ export function renderFilterOptionsMenu() {
     }, main);
 
     const priorityOptionsText = createElementWithAttributes('h2', {
-        class: `priority-header`
+        class: 'priority-header'
     }, viewOptionsBox);
-    priorityOptionsText.textContent = `Priority:`;
+    priorityOptionsText.textContent = 'Priority:';
 
     const labelPriorityHigh = createElementWithAttributes('label', {
         for: 'view-priority-high'
@@ -29,8 +29,8 @@ export function renderFilterOptionsMenu() {
     }, labelPriorityHigh);
 
     const textPriorityHigh = createElementWithAttributes('span', {
-        class: `priority-high`}, labelPriorityHigh);
-    textPriorityHigh.textContent = `High`;
+        class: 'priority-high'}, labelPriorityHigh);
+    textPriorityHigh.textContent = 'High';
 
     const labelPriorityMedium = createElementWithAttributes('label', {
         for: 'view-priority-medium'
@@ -42,8 +42,8 @@ export function renderFilterOptionsMenu() {
     }, labelPriorityMedium);
 
     const textPriorityMedium = createElementWithAttributes('span', {
-        class: `priority-medium`}, labelPriorityMedium);
-    textPriorityMedium.textContent = `Medium`;
+        class: 'priority-medium'}, labelPriorityMedium);
+    textPriorityMedium.textContent = 'Medium';
 
     const labelPriorityNormal = createElementWithAttributes('label', {
         for: 'view-priority-normal'
@@ -55,14 +55,14 @@ export function renderFilterOptionsMenu() {
     }, labelPriorityNormal);
 
     const textPriorityNormal = createElementWithAttributes('span', {
-        class: `priority-normal`}, labelPriorityNormal);
-    textPriorityNormal.textContent = `Normal`;
+        class: 'priority-normal'}, labelPriorityNormal);
+    textPriorityNormal.textContent = 'Normal';
     
 
     const textOptionsStatus = createElementWithAttributes('h2', {
-        class: `status-header`
+        class: 'status-header'
     }, viewOptionsBox);
-    textOptionsStatus.textContent = `Status:`;
+    textOptionsStatus.textContent = 'Status:';
 
     const labelStatusOverdue = createElementWithAttributes('label', {
         for: 'view-status-overdue'
@@ -74,8 +74,8 @@ export function renderFilterOptionsMenu() {
     }, labelStatusOverdue);
 
     const textStatusOverdue = createElementWithAttributes('span', {
-        class: `status-overdue`}, labelStatusOverdue);
-    textStatusOverdue.textContent = `Overdue`;
+        class: 'status-overdue'}, labelStatusOverdue);
+    textStatusOverdue.textContent = 'Overdue';
 
     const labelStatusOnGoing = createElementWithAttributes('label', {
         for: 'view-status-ongoing'
@@ -87,8 +87,8 @@ export function renderFilterOptionsMenu() {
     }, labelStatusOnGoing);
     
     const textStatusOnGoing = createElementWithAttributes('span', {
-        class: `status-ongoing`}, labelStatusOnGoing);
-    textStatusOnGoing.textContent = `Ongoing`;
+        class: 'status-ongoing'}, labelStatusOnGoing);
+    textStatusOnGoing.textContent = 'Ongoing';
 
     const labelStatusCompleted = createElementWithAttributes('label', {
         for: 'view-status-completed'
@@ -100,35 +100,35 @@ export function renderFilterOptionsMenu() {
     }, labelStatusCompleted);
     
     const textStatusCompleted = createElementWithAttributes('span', {
-        class: `status-completed`}, labelStatusCompleted);
-    textStatusCompleted.textContent = `Completed`;
+        class: 'status-completed'}, labelStatusCompleted);
+    textStatusCompleted.textContent = 'Completed';
 
 
     const sortOptionsBox = createElementWithAttributes('div', {
         class: 'sort-options-box'
     }, viewOptionsBox);
 
-    const sortOptionsText = createElementWithAttributes('label', {class: ``}, sortOptionsBox);
+    const sortOptionsText = createElementWithAttributes('label', {class: ''}, sortOptionsBox);
     sortOptionsText.textContent = 'Sort by:';
 
     const selectSortOptions = createElementWithAttributes('select', {
-        name: `sort-by`
+        name: 'sort-by'
     }, sortOptionsBox);
 
     const sortByDate = createElementWithAttributes('option', {
-        value: `date`
+        value: 'date'
     },selectSortOptions);
-    sortByDate.textContent = `Date`;
+    sortByDate.textContent = 'Date';
 
     const sortByPriority = createElementWithAttributes('option', {
-        value: `priority`
+        value: 'priority'
     },selectSortOptions);
-    sortByPriority.textContent = `Priority`;
+    sortByPriority.textContent = 'Priority';
 
     const sortByStatus = createElementWithAttributes('option', {
-        value: `status`
+        value: 'status'
     },selectSortOptions);
-    sortByStatus.textContent = `Status`;
+    sortByStatus.textContent = 'Status';
 
     const labelSortOrder = createElementWithAttributes('label', { 
         class: 'sort-order',
@@ -142,7 +142,7 @@ export function renderFilterOptionsMenu() {
 
     const sortOrderIcon = createElementWithAttributes('img', { 
         src: '/src/originals/arrow-downward.svg',
-        alt: `Sort order icon`,
+        alt: 'Sort order icon',
         class: 'sort-arrow'
     }, labelSortOrder);
 
