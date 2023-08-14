@@ -1,6 +1,7 @@
 import { createElementWithAttributes } from '../utils.js';
 import { ACTIONS_TASKS } from '../utils.js';
 import { getTaskNodes } from './static-selectors.js';
+import { assets } from './assets.js';
 
 export function renderTask(taskObj) {
     const { 
@@ -66,32 +67,34 @@ export function renderTask(taskObj) {
     const taskOverDueBox = createElementWithAttributes('div', {
         class: 'overdue-box'
     }, task); 
+
     const taskOverDueIcon = createElementWithAttributes('img', {
-        src: '../originals/status-overdue.svg', 
+        src: assets.taskOverDueIconPath, 
         alt: 'Task overdue status icon',
         class: 'overdue'
     }, taskOverDueBox);
 
     const taskDueDateBox = createElementWithAttributes('div', {class: 'task-due-date', }, task);
+
     const taskDueDateText = createElementWithAttributes('span', {class: '', }, taskDueDateBox);
     taskDueDateText.textContent = `${dueDate}`;
 
     const taskEditIcon = createElementWithAttributes('img', {
-        src: '../originals/edit.svg', 
+        src: assets.taskEditIconPath, 
         alt: 'Task edit information icon',
         class: 'edit'
     }, task);
     taskEditIcon.setAttribute('data-task-action', ACTIONS_TASKS.EDIT);
 
     const taskRemoveIcon = createElementWithAttributes('img', {
-        src: '../originals/delete.svg', 
+        src: assets.taskRemoveIconPath, 
         alt: 'Task remove icon',
         class: 'remove'
     }, task);
     taskRemoveIcon.setAttribute('data-task-action', ACTIONS_TASKS.REMOVE);
 
     const taskUnfoldIcon = createElementWithAttributes('img', {
-        src: '../originals/unfold.svg', 
+        src: assets.taskUnfoldIconPath, 
         alt: 'Task information unfold or fold icon',
         class: 'unfold'
     }, task);

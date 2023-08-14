@@ -1,6 +1,7 @@
 import { createElementWithAttributes } from '../utils.js';
 import { ACTIONS_PROJECTS } from '../utils.js';
 import { getProjectNodes } from './static-selectors.js';
+import { assets } from './assets.js';
 
 export function renderProject(project) {
     const { projectsList } = getProjectNodes();
@@ -28,14 +29,14 @@ export function renderProject(project) {
     newProjectText.textContent = name;
 
     const newProjectEditImage = createElementWithAttributes('img', {
-        src: '../originals/edit.svg',
+        src: assets.newProjectEditImagePath,
         alt: 'Edit project icon',
         class: 'edit'
     }, nodeNewProject);
     newProjectEditImage.setAttribute('data-project-action', ACTIONS_PROJECTS.EDIT);
     
     const newProjectDeleteImage = createElementWithAttributes('img', {
-        src: '../originals/delete.svg',
+        src: assets.newProjectDeleteImagePath,
         alt: 'Remove project icon',
         class: 'remove'
     }, nodeNewProject);

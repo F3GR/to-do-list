@@ -1,7 +1,7 @@
 import { createElementWithAttributes } from './utils.js';
 import { ACTIONS_PROJECTS } from './utils.js';
 import { ACTIONS_TASKS } from './utils.js';
-import { STANDARD_GROUPS } from './utils.js';
+import { assets } from './assets.js';
 
 export function renderMainPage() {
     renderMainPageTemplate();
@@ -14,18 +14,18 @@ function renderMainPageTemplate() {
 
     const header = createElementWithAttributes('header', {}, content);
 
-    const sideBarIcon = createElementWithAttributes('img', {
-        src: '../originals/menu.svg',
+    const sidebarIcon = createElementWithAttributes('img', {
         alt: 'Sidebar menu icon',
         class: 'sidebar-icon hidden'
     }, header);
+    sidebarIcon.src = assets.sidebarIconPath;
 
     const heading = createElementWithAttributes('div', {class: 'heading'}, header);
 
     const logoIcon = createElementWithAttributes('img', { 
-        src: '../originals/fav-icon.svg',
         class: 'logo',
         alt: 'TrackIt logo'}, heading);
+    logoIcon.src = assets.logoIconPath;
 
     const headingText = createElementWithAttributes('h1', {}, heading);
     headingText.textContent = 'TrackIt';
@@ -33,10 +33,10 @@ function renderMainPageTemplate() {
     const emptyDiv = createElementWithAttributes('div', {class: 'empty'}, header);
 
     const viewOptionsIcon = createElementWithAttributes('img', { 
-        src: '../originals/view-options.svg',
         alt: 'View Options logo',
         class: 'options'
     }, header);
+    viewOptionsIcon.src = assets.viewOptionsIconPath;
 
     const sidebar = createElementWithAttributes('aside', {}, content);
 
@@ -44,64 +44,77 @@ function renderMainPageTemplate() {
 
     const tasksAll = createElementWithAttributes('div', {class: 'tasks-all'}, barTypes);
     tasksAll.setAttribute('data-group-id', 'all');
+
     const tasksAllImage = createElementWithAttributes('img', { 
-        src: '../originals/calendar-all.svg',
         alt: 'All tasks icon'
     }, tasksAll);
+    tasksAllImage.src = assets.tasksAllImagePath;
+
     const tasksAllText = createElementWithAttributes('span', {}, tasksAll);
     tasksAllText.textContent = 'All';
 
     const tasksToday = createElementWithAttributes('div', {class: 'tasks-today'}, barTypes);
     tasksToday.setAttribute('data-group-id', 'today');
+
     const tasksTodayImage = createElementWithAttributes('img', {
-        src: '../originals/calendar-today.svg',
         alt: 'Today tasks icon'
     }, tasksToday);
+    tasksTodayImage.src = assets.tasksTodayImagePath;
+
     const tasksTodayText = createElementWithAttributes('span', {}, tasksToday);
     tasksTodayText.textContent = 'Today';
 
     const tasksWeek = createElementWithAttributes('div', {class: 'tasks-week'}, barTypes);
     tasksWeek.setAttribute('data-group-id', 'week');
+
     const tasksWeekImage = createElementWithAttributes('img', {
-        src: '../originals/calendar-week.svg',
         alt: 'Week tasks icon'
     }, tasksWeek);
+    tasksWeekImage.src = assets.tasksWeekImagePath;
+
     const tasksWeekText = createElementWithAttributes('span', {}, tasksWeek);
     tasksWeekText.textContent = 'Week';
 
     const tasksCompleted = createElementWithAttributes('div', {class: 'tasks-completed'}, barTypes);
     tasksCompleted.setAttribute('data-group-id', 'completed');
+
     const tasksCompletedImage = createElementWithAttributes('img', {
-        src: '../originals/calendar-finished.svg',
         alt: 'Completed tasks icon'
     }, tasksCompleted);
+    tasksCompletedImage.src = assets.tasksCompletedImagePath;
+
     const tasksCompletedText = createElementWithAttributes('span', {}, tasksCompleted);
     tasksCompletedText.textContent = 'Completed';
 
     const tasksOverdue = createElementWithAttributes('div', {class: 'tasks-overdue'}, barTypes);
     tasksOverdue.setAttribute('data-group-id', 'overdue');
+
     const tasksOverdueImage = createElementWithAttributes('img', {
-        src: '../originals/calendar-overdue.svg',
         alt: 'Overdue tasks icon'
     }, tasksOverdue);
+    tasksOverdueImage.src = assets.tasksOverdueImagePath;
+
     const tasksOverdueText = createElementWithAttributes('span', {}, tasksOverdue);
     tasksOverdueText.textContent = 'Overdue';
 
     const barProjects = createElementWithAttributes('div', {class: 'bar-projects'}, sidebar);
 
     const projectsBarHeader = createElementWithAttributes('div', {class: 'header'}, barProjects);
+
     const projectsBarHeaderImage = createElementWithAttributes('img', {
-        src: '../originals/projects.svg',
         alt: 'Projects icon'
     }, projectsBarHeader);
+    projectsBarHeaderImage.src = assets.projectsBarHeaderImagePath;
+
     const projectsBarHeaderText = createElementWithAttributes('span', {}, projectsBarHeader);
     projectsBarHeaderText.textContent = 'Projects';
 
     const projectsBarHeaderAddImage = createElementWithAttributes('img', {
-        src: '../originals/add-new.svg',
         alt: 'Add new project icon',
         class: 'add-new',
     }, projectsBarHeader);
+    projectsBarHeaderAddImage.src = assets.projectsBarHeaderAddImagePath;
+
     projectsBarHeaderAddImage.setAttribute('data-project-action', ACTIONS_PROJECTS.ADD_NEW);
 
     const projectsList = createElementWithAttributes('ul', {class: 'projects-list'}, barProjects);
@@ -121,24 +134,28 @@ function renderMainPageTemplate() {
     }, main);
 
     const mainHeadBox = createElementWithAttributes('div', {class: 'header'}, main);
+
     const mainHeadImage = createElementWithAttributes('img', { 
-        src: '../originals/calendar-all.svg',
         alt: 'All tasks icon'
     }, mainHeadBox);
+    mainHeadImage.src = assets.mainHeadImagePath;
+
     const mainHeadText = createElementWithAttributes('span', {}, mainHeadBox);
     mainHeadText.textContent = "All";
 
     const mainTaskBar = createElementWithAttributes('div', {class: 'task-bar'}, main);
 
     const mainTaskNumber = createElementWithAttributes('div', {class: 'task-number'}, mainTaskBar);
+    
     const taskBarText = createElementWithAttributes('span', {}, mainTaskNumber);
     taskBarText.textContent = 'Tasks';
 
     const addNewTaskIcon = createElementWithAttributes('img', { 
-        src: '../originals/add-new.svg',
         alt: 'Add new Task icon',
         class: 'add-new'
     }, mainTaskBar);
+    addNewTaskIcon.src = assets.addNewTaskIconPath;
+
     addNewTaskIcon.setAttribute('data-task-action', ACTIONS_TASKS.ADD_NEW);
 
     const taskList = createElementWithAttributes('ul', {class: 'task-list'}, main);
@@ -146,30 +163,34 @@ function renderMainPageTemplate() {
     const pageMenuBox = createElementWithAttributes('div', {class: 'page-menu', }, main);
 
     const firstPageIcon = createElementWithAttributes('img', {
-        src: '../originals/first-page.svg', 
         alt: 'First page icon',
         class: 'first-page'
     }, pageMenuBox);
+    firstPageIcon.src = assets.firstPageIconPath;
+
     const previousPageIcon = createElementWithAttributes('img', {
-        src: '../originals/previous-page.svg', 
         alt: 'Previous page icon',
         class: 'previous-page'
     }, pageMenuBox);
+    previousPageIcon.src = assets.previousPageIconPath;
+
     const inputPage = createElementWithAttributes('input', {
         type: 'number',
         min: "1",
         max: "99", 
     }, pageMenuBox);
+
     const nextPageIcon = createElementWithAttributes('img', {
-        src: '../originals/next-page.svg', 
         alt: 'Next page icon',
         class: 'next-page'
     }, pageMenuBox);
+    nextPageIcon.src = assets.nextPageIconPath;
+
     const lastPageIcon = createElementWithAttributes('img', {
-        src: '../originals/last-page.svg', 
         alt: 'Last page icon',
         class: 'last-page'
     }, pageMenuBox);
+    lastPageIcon.src = assets.lastPageIconPath;
 }
 
 function renderProjectMenuTemplate() {
@@ -194,16 +215,17 @@ function renderProjectMenuTemplate() {
 
     const projectMenuExitIcon = createElementWithAttributes('img', {
         class: 'exit',
-        src: '../originals/close.svg',
         alt: 'Exit icon'
     }, projectMenuTitleBox);
+    projectMenuExitIcon.src = assets.projectMenuExitIconPath;
 
     const projectMenuForm = createElementWithAttributes('form', {}, projectMenu);
     
     const formNameLabel = createElementWithAttributes('label', {
         for: 'project-name'
     }, projectMenuForm);
-    formNameLabel.textContent = 'Name*:'
+    formNameLabel.textContent = 'Name*:';
+
     const formName = createElementWithAttributes('input', {
         type: 'text',
         id: 'project-name',
@@ -221,121 +243,137 @@ function renderProjectMenuTemplate() {
         id: 'project-category-job',
         type: 'radio',
         name: 'iconURL',
-        value: '../originals/category-job.svg',
+        value: './originals/category-job.svg',
     }, formIconFieldset);
     inputCategoryJob.setAttribute('data-alt-text', 'Category Job icon');
+
     const iconCategoryJobLabel = createElementWithAttributes('label', {
         for: 'project-category-job'
     }, formIconFieldset);
+
     const iconCategoryJob = createElementWithAttributes('img', {
-        src: '../originals/category-job.svg',
         alt: 'Category Job icon'
     }, iconCategoryJobLabel);
+    iconCategoryJob.src = assets.iconCategoryJobPath;
 
     const inputCategoryStudy = createElementWithAttributes('input', {
         id: 'project-category-study',
         type: 'radio',
         name: 'iconURL',
-        value: '../originals/category-study.svg',
+        value: './originals/category-study.svg',
     }, formIconFieldset);
     inputCategoryStudy.setAttribute('data-alt-text', 'Category Study icon');
+
     const iconCategoryStudyLabel = createElementWithAttributes('label', {
         for: 'project-category-study',
     }, formIconFieldset);
+
     const iconCategoryStudy = createElementWithAttributes('img', {
-        src: '../originals/category-study.svg',
         alt: 'Category Study icon'
     }, iconCategoryStudyLabel);
+    iconCategoryStudy.src = assets.iconCategoryStudyPath;
 
     const inputCategoryGift = createElementWithAttributes('input', {
         id: 'project-category-gift',
         type: 'radio',
         name: 'iconURL',
-        value: '../originals/category-gift.svg',
+        value: './originals/category-gift.svg',
     }, formIconFieldset);
     inputCategoryGift.setAttribute('data-alt-text', 'Category Gift icon');
+
     const iconCategoryGiftLabel = createElementWithAttributes('label', {
         for: 'project-category-gift',
     }, formIconFieldset);
+
     const iconCategoryGift = createElementWithAttributes('img', {
-        src: '../originals/category-gift.svg',
         alt: 'Category Gift icon'
     }, iconCategoryGiftLabel);
+    iconCategoryGift.src = assets.iconCategoryGiftPath;
 
     const inputCategoryInternational = createElementWithAttributes('input', {
         id: 'project-category-international-activity',
         type: 'radio',
         name: 'iconURL',
-        value: '../originals/category-international-activity.svg',
+        value: './originals/category-international-activity.svg',
     }, formIconFieldset);
     inputCategoryInternational.setAttribute('data-alt-text', 'Category International activity icon');
+
     const iconCategoryInternationalLabel = createElementWithAttributes('label', {
         for: 'project-category-international-activity',
     }, formIconFieldset);
+
     const iconCategoryInternational = createElementWithAttributes('img', {
-        src: '../originals/category-international-activity.svg',
         alt: 'Category International activity icon'
     }, iconCategoryInternationalLabel);
+    iconCategoryInternational.src = assets.iconCategoryInternationalPath;
 
     const inputCategoryPeople = createElementWithAttributes('input', {
         id: 'project-category-people',
         type: 'radio',
         name: 'iconURL',
-        value: '../originals/category-people.svg',
+        value: './originals/category-people.svg',
     }, formIconFieldset);
     inputCategoryPeople.setAttribute('data-alt-text', 'Category People icon');
+
     const iconCategoryPeopleLabel = createElementWithAttributes('label', {
         for: 'project-category-people',
     }, formIconFieldset);
+
     const iconCategoryPeople = createElementWithAttributes('img', {
-        src: '../originals/category-people.svg',
         alt: 'Category People icon'
     }, iconCategoryPeopleLabel);
+    iconCategoryPeople.src = assets.iconCategoryPeoplePath;
 
     const inputCategoryScience = createElementWithAttributes('input', {
         id: 'project-category-science',
         type: 'radio',
         name: 'iconURL',
-        value: '../originals/category-science.svg',
+        value: './originals/category-science.svg',
     }, formIconFieldset);
     inputCategoryScience.setAttribute('data-alt-text', 'Category Science icon');
+
     const iconCategoryScienceLabel = createElementWithAttributes('label', {
         for: 'project-category-science',
     }, formIconFieldset);
+
     const iconCategoryScience = createElementWithAttributes('img', {
-        src: '../originals/category-science.svg',
         alt: 'Category Science icon'
     }, iconCategoryScienceLabel);
+    iconCategoryScience.src = assets.iconCategorySciencePath;
 
     const inputCategoryIT = createElementWithAttributes('input', {
         id: 'project-category-it',
         type: 'radio',
         name: 'iconURL',
-        value: '../originals/category-it.svg',
+        value: './originals/category-it.svg',
     }, formIconFieldset);
     inputCategoryIT.setAttribute('data-alt-text', 'Category IT icon');
+
     const iconCategoryITLabel = createElementWithAttributes('label', {
         for: 'project-category-it',
     }, formIconFieldset);
+
     const iconCategoryIT = createElementWithAttributes('img', {
-        src: '../originals/category-it.svg',
         alt: 'Category IT icon'
     }, iconCategoryITLabel);
+    iconCategoryIT.src = assets.iconCategoryITPath;
 
     const inputCategoryOther = createElementWithAttributes('input', {
         id: 'project-category-other',
         type: 'radio',
         name: 'iconURL',
-        value: '../originals/category-other.svg',
+        value: './originals/category-other.svg',
     }, formIconFieldset);
     inputCategoryOther.setAttribute('data-alt-text', 'Category Other icon');
+
     const iconCategoryOtherLabel = createElementWithAttributes('label', {
         for: 'project-category-other',
     }, formIconFieldset);
+
     const iconCategoryOther = createElementWithAttributes('img', {
-        src: '../originals/category-other.svg',
         alt: 'Category Other icon'
     }, iconCategoryOtherLabel);
+    iconCategoryOther.src = assets.iconCategoryOtherPath;
 
     const buttonsGrid = createElementWithAttributes('div', {
         class: 'button-box',
@@ -370,9 +408,9 @@ function renderTaskMenuTemplate() {
 
     const taskMenuExitIcon = createElementWithAttributes('img', {
         class: 'exit',
-        src: '../originals/close.svg',
         alt: 'Exit icon'
     }, taskMenuTitleBox);
+    taskMenuExitIcon.src = assets.taskMenuExitIconPath;
 
     const taskMenuForm = createElementWithAttributes('form', {
     }, taskMenu);
