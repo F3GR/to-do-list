@@ -141,7 +141,7 @@ export function renderFilterOptionsMenu() {
     }, labelSortOrder);
 
     const sortOrderIcon = createElementWithAttributes('img', { 
-        src: '/src/originals/arrow-downward.svg',
+        src: '../originals/arrow-downward.svg',
         alt: 'Sort order icon',
         class: 'sort-arrow'
     }, labelSortOrder);
