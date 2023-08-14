@@ -2,6 +2,7 @@ import { createElementWithAttributes } from '../utils.js';
 import { getMainNodes, getViewOptionsNodes } from './static-selectors.js';
 import { SORTBY, isBoolean } from '../utils.js';
 import { application } from '../main-app.js';
+import { assets } from './assets.js';
 
 export function renderFilterOptionsMenu() {
     const { main } = getMainNodes();
@@ -141,7 +142,7 @@ export function renderFilterOptionsMenu() {
     }, labelSortOrder);
 
     const sortOrderIcon = createElementWithAttributes('img', { 
-        src: '../originals/arrow-downward.svg',
+        src: assets.sortOrderIconPath,
         alt: 'Sort order icon',
         class: 'sort-arrow'
     }, labelSortOrder);
