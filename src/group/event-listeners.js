@@ -1,4 +1,5 @@
 import { renderGroup } from './dom.js';
+import { isHTMLElement, showErrorModal } from '../utils.js';
 
 export function addListenersSidebar() {
     const sidebarIcon = document.querySelector('header > img.sidebar-icon');
@@ -6,12 +7,14 @@ export function addListenersSidebar() {
     const sidebarCover = document.querySelector('main .sidebar-cover');
     const standardGroups = document.querySelector('.bar-types');
     const projectGroups = document.querySelector('.projects-list');
-    if (!sidebarIcon ||
-        !sidebar ||
-        !sidebarCover ||
-        !standardGroups ||
-        !projectGroups) {
-        alert ('Error: the elements weren\'t found to render the task group');
+    
+    if (!isHTMLElement(sidebarIcon) ||
+        !isHTMLElement(sidebar) ||
+        !isHTMLElement(sidebarCover) ||
+        !isHTMLElement(standardGroups) ||
+        !isHTMLElement(projectGroups)
+        ) {
+        showErrorModal('Error: the elements weren\'t found to render the task group');
     }
 
     sidebarIcon.addEventListener('click', () => {
@@ -24,9 +27,9 @@ export function addListenersSidebar() {
 };
 
 const handleGroupSelection = (e) => {
-    const target = e.target.closest('.bar-types > *, .projects-list > li.project');
+    const selectedGroup = e.target.closest('.bar-types > *, .projects-list > li.project');
 
-    if (target && !target.classList.contains('current')) {
+    if (selectedGroup && !selectedGroup.classList.contains('current')) {
         const groupIdentifier = target.getAttribute('data-group-id');
         renderGroup(groupIdentifier);
     }

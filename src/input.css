@@ -754,6 +754,26 @@ main .sidebar-cover {
   opacity: 50%;
 }
 
+
+/* Error modal */
+
+.error-modal {
+  position: absolute;
+  margin-top: calc((100dvh - var(--menu-height))/2);
+  margin-bottom: calc((100dvh - var(--menu-height))/2);
+  margin-left: calc((100% - var(--menu-width))/2);
+  margin-right: calc((100% - var(--menu-width))/2);
+  width: var(--menu-width);
+  height: var(--menu-width);
+  background-color: var(--white);
+  z-index: 6;
+  border: 0.1rem solid var(--whitesmoke);
+  border-radius: 0.5rem;
+  padding: 0 0 1rem 0;
+  display: none;
+}
+
+
 /* Project menu */
 
 .content .project-menu {

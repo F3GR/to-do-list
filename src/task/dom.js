@@ -1,5 +1,5 @@
 import { createElementWithAttributes } from '../utils.js';
-import { ACTIONS_TASKS } from '../utils.js';
+import { isHTMLElement, isValid, ACTIONS_TASKS } from '../utils.js';
 import { getTaskNodes } from './static-selectors.js';
 import { assets } from './assets.js';
 
@@ -15,9 +15,11 @@ export function renderTask(taskObj) {
         description, 
         notes 
     } = taskObj;
-    if (!projectId || 
+    const { taskList } = getTaskNodes();
+
+    if (!isValid(projectId) || 
         !projectName || 
-        !id || 
+        !isValid(id) || 
         !title || 
         !dueDate || 
         !status || 
@@ -25,9 +27,7 @@ export function renderTask(taskObj) {
             alert('Error: one or more task data values weren\'t found');
             return;
     }
-
-    const { taskList } = getTaskNodes();
-    if (!taskList) {
+    if (!isHTMLElement(taskList)) {
         alert('Error: task list wasn\'t found');
         return;
     }

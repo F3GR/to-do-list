@@ -1,57 +1,58 @@
 import { Task } from './task.js';
-import { noDuplicateTitle, findIndex } from '../utils.js';
 import { differenceInCalendarDays } from 'date-fns';
 import { parseISO } from 'date-fns';
-import { STATUS } from '../utils.js';
+import { isValid, STATUS, noDuplicateTitle, findIndex } from '../utils.js';
 
 export const tasksController = {
     createNew: (tasksList, projectName, inputNewTask) => {
-        const { projectId, title, dueDate, priority } = inputNewTask;
-        if (!tasksList) {
-            return false;
+        const { projectId, title, dueDate, priority, description, notes } = inputNewTask;
+
+        if (!Array.isArray(tasksList)) {
+            return 'Error: the current task list wasn\'t found';
         }
-        if (!projectName) {
-            return false;
+        if (!projectName|| !projectId) {
+            return 'Error: the project name or id  can\'t be found after the submission';
         }
-        if (!projectId || !title || !dueDate || !priority) {
-            return false;
+        if (!title || !dueDate || !priority) {
+            return 'Error: the entered task title, due date or priority can\'t be found after the submission';
+        }
+        if (!isValid(description) || !isValid(notes)) {
+            return 'Error: the entered description or notes can\'t be found';
         }
         if (!noDuplicateTitle(tasksList, title)) {
-            return false;
+            return 'The task with this title already exists in the project!';
         }
 
         let newTaskStatus = '1';
         newTaskStatus = updateOverdueStatus(newTaskStatus, parseISO(dueDate));
         
-        const newTask = new Task(inputNewTask, projectName, newTaskStatus);
+        const newTask = new Task({ projectId, title, dueDate, priority, description, notes }, projectName, newTaskStatus);
         const newTasksList = [...tasksList, newTask];
         return { newTasksList, newTask };
     },
 
     edit: (tasksList, inputEditedTask) => {
-        if (!tasksList) {
-            return false;
-        }
+        const { taskId, projectId, title, dueDate, priority, description, notes } = inputEditedTask;
 
-        const {
-            id: taskId, 
-            title: editedTitle, 
-            dueDate: editedDueDate, 
-            priority: editedPriority, 
-            description: editedDescription, 
-            notes: editedNotes
-        } = inputEditedTask;
-        if (!taskId || !editedTitle || !editedDueDate || !editedPriority) {
-            return false;
+        if (!Array.isArray(tasksList)) {
+            return 'Error: the current task list wasn\'t found';
         }
-        if (!noDuplicateTitle(tasksList, editedTitle, taskId)) {
-            return false;
+        if (!isValid(projectName) || !isValid(projectId), !isValid(taskId)) {
+            return 'Error: the project name or id  can\'t be found after the edit ';
+        }
+        if (!isValid(title) || !isValid(dueDate) || !isValid(priority)) {
+            return 'Error: the entered task title, due date or priority can\'t be found after the edit';
+        }
+        if (!isValid(description) || !isValid(notes)) {
+            return 'Error: the entered description or notes can\'t be found';
+        }
+        if (!noDuplicateTitle(tasksList, title)) {
+            return 'The task with this title already exists in the project!';
         }
 
         const editedTaskIndex = findIndex(tasksList, taskId);
         const editedTask = Object.assign({}, tasksList[editedTaskIndex]);
         const editedTasksList = [...tasksList];
-
         if (editedTask.title !== editedTitle) {
             editedTask.title = editedTitle;
         }
@@ -72,13 +73,15 @@ export const tasksController = {
         }
 
         editedTasksList.splice(editedTaskIndex, 1, editedTask);
-
         return { editedTasksList, editedTask };
     },
 
     toggleTaskStatus: (tasksList, taskId) => {
-        if (!tasksList || !taskId) {
-            return false;
+        if (!Array.isArray(tasksList)) {
+            return 'Error: the current task list wasn\'t found';
+        }
+        if (!isValid(taskId)) {
+            return 'Error: the project name or id  can\'t be found after the toggle ';
         }
 
         const editedTaskIndex = findIndex(tasksList, taskId);        
@@ -99,8 +102,11 @@ export const tasksController = {
     },
 
     updateProjectName: (tasksList, editedProjectName) => {
-        if (!tasksList || !editedProjectName) {
-            return false;
+        if (!Array.isArray(tasksList)) {
+            return 'Error: the current task list wasn\'t found';
+        }
+        if (!isValid(projectName)) {
+            return 'Error: the edited project name can\'t be found after the edit';
         }
 
         const editedTaskList = [...tasksList];
@@ -110,17 +116,23 @@ export const tasksController = {
     },
 
     remove: (tasksList, taskId) => {
-        let removed = false;
-        if (!tasksList || !taskId) {
-            return removed;
+        if (!Array.isArray(tasksList)) {
+            return 'Error: the current task list wasn\'t found';
+        }
+        if (!isValid(taskId)) {
+            return 'Error: the project name or id  can\'t be found after the toggle ';
         }
 
         const removedTaskIndex = findIndex(tasksList, taskId);
+        
+        if (!removedTaskIndex) {
+            return 'Error: the removed task can\'t be found after the storage';
+        }
+
         const editedTaskList = [...tasksList];
         editedTaskList.splice(removedTaskIndex, 1);
-        removed = true;
 
-        return { editedTaskList, removed };
+        return { editedTaskList, taskId };
     },
 
     resetId: () => Task.resetId
@@ -132,4 +144,4 @@ const updateOverdueStatus = (status, dueDate) => {
         return status;
     }
     return status;
-}
+};

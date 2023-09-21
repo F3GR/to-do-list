@@ -1,18 +1,18 @@
 import { createElementWithAttributes } from '../utils.js';
-import { ACTIONS_PROJECTS } from '../utils.js';
+import { showErrorModal, ACTIONS_PROJECTS, isHTMLElement, isValid } from '../utils.js';
 import { getProjectNodes } from './static-selectors.js';
 import { assets } from './assets.js';
 
 export function renderProject(project) {
     const { projectsList } = getProjectNodes();
-    if (!projectsList) {
-        alert('Error: project list panel wasn\'t found');
+    const { id, name, iconURL, altText } = project;
+    
+    if (!isHTMLElement(projectsList)) {
+        showErrorModal('Error: project list panel wasn\'t found');
         return;
     }
-    
-    const { id, name, iconURL, altText } = project;
-    if (!id || !name || !iconURL || !altText) {
-        alert('Error: project cannot be rendered');
+    if (!isValid(id) || !isValid(name) || !isValid(iconURL) || !isValid(altText)) {
+        showErrorModal('Error: one of the project parameters aren\'t found');
         return;
     }
 
@@ -22,7 +22,7 @@ export function renderProject(project) {
     const newProjectImage = createElementWithAttributes('img', {
         src: `${iconURL}`,
         alt: `${altText}`,
-        class: 'icon'
+        class: 'icon',
     }, nodeNewProject);
 
     const newProjectText = createElementWithAttributes('span', {}, nodeNewProject);
@@ -31,14 +31,14 @@ export function renderProject(project) {
     const newProjectEditImage = createElementWithAttributes('img', {
         src: assets.newProjectEditImagePath,
         alt: 'Edit project icon',
-        class: 'edit'
+        class: 'edit',
     }, nodeNewProject);
     newProjectEditImage.setAttribute('data-project-action', ACTIONS_PROJECTS.EDIT);
     
     const newProjectDeleteImage = createElementWithAttributes('img', {
         src: assets.newProjectDeleteImagePath,
         alt: 'Remove project icon',
-        class: 'remove'
+        class: 'remove',
     }, nodeNewProject);
     newProjectDeleteImage.setAttribute('data-project-action', ACTIONS_PROJECTS.REMOVE);
 };

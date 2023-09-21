@@ -1,61 +1,65 @@
 import { application } from '../main-app.js';
 import { renderTask } from '../task/dom.js';
 import { getGroupNodes } from './static-selectors.js';
-import { STANDARD_GROUPS } from '../utils.js';
+import { STANDARD_GROUPS, isHTMLElement, isNodeList, isObject, showErrorModal } from '../utils.js';
 
 export function renderGroup(groupIdentifier) {
     const { mainGroupName, mainGroupIcon, taskList } = getGroupNodes();
-    if (!mainGroupName || !mainGroupIcon || !taskList) {
-        alert ('Error: the elements weren\'t found to render the task group');
+    const allGroups = document.querySelectorAll('.bar-types > *, .projects-list > li.project');
+    const selectedGroup = document.querySelector(`.bar-types > *[data-group-id="${groupIdentifier}"], 
+                                                .projects-list > li.project[data-group-id="${groupIdentifier}"]`);
+    const { addTaskIcon } = getGroupNodes();
+    const selectedGroupName = selectedGroup.querySelector('span');
+    const selectedGroupIcon = selectedGroup.querySelector('img');
+
+    if (!isHTMLElement(mainGroupName) || 
+    !isHTMLElement(mainGroupIcon) || 
+    !isHTMLElement(taskList)
+    ) {
+        showErrorModal('Error: the elements weren\'t found to render the task group');
+        return;
+    }
+    if (!isNodeList(allGroups)) {
+        showErrorModal('Error: the all group panels weren\'t found');
+        return;
+    }
+    if (!isHTMLElement(addTaskIcon)) {
+        showErrorModal('Error: the add task icon wasn\'t found');
+        return;
+    }
+    if (!isHTMLElement(selectedGroup)) {
+        showErrorModal('Error: the group panel with the selected group id wasn\'t found');
+        return;
+    }
+    if (!isHTMLElement(selectedGroupName) || !isHTMLElement(selectedGroupIcon)) {
+        showErrorModal('Error: the name and/or icon of the selected group panel weren\'t found');
+        return;
     }
     
     const newGroup = application.getTasksGroup(groupIdentifier);
-    if (!newGroup) {
-        alert('Error: group wasn\'t found');
-        return;
-    }
-
-    const currentViewState = application.getViewState();
-    if (!currentViewState) {
-        alert('Error: View state wasn\'t found');
-        return;
-    }
-
+    const currentViewState= application.getViewState();
     const filteredSortedNewGroup = application.applyViewOptions(currentViewState, newGroup);
-    if (!filteredSortedNewGroup) {
-        alert('Error: applying view options to tasklist was failed');
-        filteredSortedNewGroup = newGroup;
+
+    if (!isNodeList(newGroup)) {
+        showErrorModal(newGroup);
+        return;
+    }
+    if (!isObject(currentViewState)) {
+        showErrorModal(currentViewState);
+        return;
+    }
+    if (!Array.isArray(filteredSortedNewGroup)) {
+        showErrorModal(filteredSortedNewGroup);
         return;
     }
 
     taskList.innerHTML = '';
     filteredSortedNewGroup.forEach((task) => renderTask(task));
 
-    const allGroups = document.querySelectorAll('.bar-types > *, .projects-list > li.project');
-    if (!allGroups) {
-        alert ('Error: the group panels weren\'t found');
-        return;
-    }
-
-    const selectedGroup = document.querySelector(`.bar-types > *[data-group-id="${groupIdentifier}"], 
-                                                .projects-list > li.project[data-group-id="${groupIdentifier}"]`);
-    if (!selectedGroup) {
-        alert ('Error: the group panel with the selected id wasn\'t found');
-        return;
-    }
-
-    const { addTaskIcon } = getGroupNodes();
     if (Object.values(STANDARD_GROUPS).includes(groupIdentifier)) {
         addTaskIcon.classList.add('shown');
     } else {
         addTaskIcon.classList.remove('shown');
-    }
-
-    const selectedGroupName = selectedGroup.querySelector('span');
-    const selectedGroupIcon = selectedGroup.querySelector('img');
-    if (!selectedGroupName || !selectedGroupIcon) {
-        alert ('Error: the name and/or icon of the selected group panel weren\'t found');
-        return;
     }
 
     allGroups.forEach((group) => group.classList.remove('current'));

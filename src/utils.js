@@ -12,6 +12,41 @@ export function createElementWithAttributes(tagName, attributes = {}, parentElem
     return element;
 }
 
+export function showErrorModal(message) {
+    const errorModal = document.querySelector('.error-modal');
+    const messagePara = errorModal.querySelector('.error-message');
+    const menuCover = document.querySelector('.menu-cover');
+    errorModal.classList.add('shown');
+    menuCover.classList.add('shown');
+    messagePara.textContent = message;
+}
+
+
+export function isNodeList(element) {
+  return element instanceof NodeList;
+}
+
+export function isHTMLElement(element) {
+  return element instanceof HTMLElement;
+}
+
+export function isObject(obj) {
+  return obj instanceof Object;
+}
+
+export function isBoolean(value) {
+  return typeof value === 'boolean';
+}
+
+export function isValid(value) {
+  return value !== undefined || value !== null || value !== '' || value !== false;
+}
+
+export function isNotEmpty(value) {
+  return value !== '';
+}
+
+
 export function checkIfCurrent(element) {
   if (element.getAttribute('data-value') === 'current') {
     return true;
@@ -20,6 +55,7 @@ export function checkIfCurrent(element) {
 }
 
 export const removeCurrentStatus = (element) => element.removeAttribute('data-value');
+
 
 export function noDuplicateName(list, name, id) {
   const n = list.length;
@@ -49,6 +85,7 @@ export function noDuplicateTitle(list, title, id) {
   return true;
 }
 
+
 export function findIndex(list, id) {
   let index;
   let n = list.length;
@@ -62,8 +99,19 @@ export function findIndex(list, id) {
   return index;
 }
 
-export function isBoolean(value) {
-  return value === false || value === true;
+
+export function Enum(baseEnum) {  
+  return new Proxy(baseEnum, {
+    get(target, name) {
+      if (!baseEnum.hasOwnProperty(name)) {
+        throw new Error(`"${name}" value does not exist in the enum`)
+      }
+      return baseEnum[name]
+    },
+    set(target, name, value) {
+      throw new Error('Cannot add a new value to the enum')
+    }
+  })
 }
 
 export const ACTIONS_PROJECTS = new Enum ({
@@ -79,20 +127,6 @@ export const ACTIONS_TASKS = new Enum ({
   REMOVE: 'remove',
   UNFOLD: 'unfold',
 });
-
-export function Enum(baseEnum) {  
-  return new Proxy(baseEnum, {
-    get(target, name) {
-      if (!baseEnum.hasOwnProperty(name)) {
-        throw new Error(`"${name}" value does not exist in the enum`)
-      }
-      return baseEnum[name]
-    },
-    set(target, name, value) {
-      throw new Error('Cannot add a new value to the enum')
-    }
-  })
-}
 
 export const STANDARD_GROUPS = {
   ALL: 'all',

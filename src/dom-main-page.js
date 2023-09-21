@@ -2,11 +2,13 @@ import { createElementWithAttributes } from './utils.js';
 import { ACTIONS_PROJECTS } from './utils.js';
 import { ACTIONS_TASKS } from './utils.js';
 import { assets } from './assets.js';
+import { isHTMLElement } from './utils.js';
 
 export function renderMainPage() {
     renderMainPageTemplate();
     renderProjectMenuTemplate();
     renderTaskMenuTemplate();
+    renderErrorModal('');
 };
 
 function renderMainPageTemplate() {
@@ -522,5 +524,35 @@ function renderTaskMenuTemplate() {
     buttonCancel.textContent = 'Cancel';
 }
 
+function renderErrorModal(message) {
+    const body = document.body;
+    const menuCover = document.querySelector('.menu-cover');
+
+    const modalBox = createElementWithAttributes('div', {
+        class: 'error-modal',
+    }, body);
+
+    const messagePara  = createElementWithAttributes('p', {
+        class: 'error-message',
+    }, modalBox);
+
+    const buttonExit = createElementWithAttributes('button', {
+        class: 'exit',
+    }, modalBox);
+    buttonCancel.textContent = 'OK';
+    buttonExit.addEventListener('click', ( )=> {
+        if (!isHTMLElement(menuCover)) {
+            renderErrorModal('Error: Menu cover wasn\'t found');
+            return;
+        }
+        if (!isHTMLElement(messagePara)) {
+            renderErrorModal('Error: Message wasn\'t found');
+            return;
+        }
+        
+        menuCover.classList.remove('shown');
+        messagePara.textContent = '';
+    });
+}
 
 

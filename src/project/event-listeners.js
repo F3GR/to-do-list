@@ -2,21 +2,17 @@ import { application } from '../main-app.js';
 import { renderProject } from './dom.js';
 import { renderGroup } from '../group/dom.js';
 import { getProjectNodes } from './static-selectors.js';
-import { STANDARD_GROUPS } from '../utils.js';
-import { ACTIONS_PROJECTS } from '../utils.js';
+import { showErrorModal, STANDARD_GROUPS, ACTIONS_PROJECTS, isHTMLElement, isValid } from '../utils.js';
 
 export function addListenersManageProjects() {
     const { projectsBar, form, exitButton, cancelButton } = getProjectNodes();
-    if (!projectsBar) {
-        alert('Error: project menu panel wasn\'t found');
-        return;
-    }
-    if (!form) {
-        alert('Error: form panel wasn\'t found');
-        return;
-    }
-    if (!exitButton || !cancelButton) {
-        alert('Error: exit and/or cancel buttons weren\'t found');
+
+    if (!isHTMLElement(projectsBar) ||
+    !isHTMLElement(form) ||
+    !isHTMLElement(exitButton) ||
+    !isHTMLElement(cancelButton)
+        ) {
+        showErrorModal('Error: one or more menu panels weren\'t found');
         return;
     }
 
@@ -30,8 +26,14 @@ const openMenuHandler = (e) => {
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    const target = e.target;
-    const action = target.getAttribute('data-project-action');
+    const selectedProjectIcon = e.target;
+
+    if (!isHTMLElement(selectedProjectIcon)) {
+        showErrorModal('Error: exit and/or cancel buttons weren\'t found');
+        return;
+    }
+
+    const action = selectedProjectIcon.getAttribute('data-project-action');
     openMenu(action, target);
 };
 
@@ -42,8 +44,13 @@ const openMenu = (action, target) => {
         menuTitle,
         submitButton 
     } = getProjectNodes();
-    if (!menu || !menuCover || !menuTitle || !submitButton) {
-        alert('Error: one or more menu components weren\'t found');
+
+    if (!isHTMLElement(menu) || 
+    !isHTMLElement(menuCover) || 
+    !isHTMLElement(menuTitle) || 
+    !isHTMLElement(submitButton)
+    ) {
+        showErrorModal('Error: one or more menu components weren\'t found');
         return;
     }
     
@@ -57,17 +64,16 @@ const openMenu = (action, target) => {
             break;
 
         case ACTIONS_PROJECTS.EDIT:
-            menu.setAttribute('data-project-action', action);
-    
             const editedProject = target.closest('.project');
             const editedProjectId = editedProject.getAttribute('data-group-id');
-            if (!editedProject || !editedProjectId) {
-                alert('Error: edited project and/or its id weren\'t found');
+
+            if (!isHTMLElement(editedProject) || !isValid(editedProjectId)) {
+                showErrorModal('Error: edited project and/or its id weren\'t found');
                 return;
             }   
 
+            menu.setAttribute('data-project-action', action);
             menu.setAttribute('data-group-id', editedProjectId);
-    
             menuCover.classList.add('shown');
             menu.classList.add('shown');
             menuTitle.textContent = 'Edit the project';
@@ -76,24 +82,24 @@ const openMenu = (action, target) => {
 
         case ACTIONS_PROJECTS.REMOVE:
             const { currentGroupIcon, currentGroupName } = getProjectNodes();
-            if (!currentGroupIcon || !currentGroupName) {
-                alert('Error: current group icon and/or heading weren\'t found');
-                return;
-            }
-
             const removedProject = target.closest('.project');
             const removedProjectId = removedProject.getAttribute('data-group-id');
-            if (!removedProject || !removedProjectId) {
-                alert('Error: removed project and/or its id weren\'t found');
+
+            if (!isHTMLElement(currentGroupIcon) || !isHTMLElement(currentGroupName)) {
+                showErrorModal('Error: current group icon and/or heading weren\'t found');
+                return;
+            }
+            if (!isHTMLElement(removedProject) || !isValid(removedProjectId)) {
+                showErrorModal('Error: removed project and/or its id weren\'t found');
                 return;
             }   
 
             const removedProjectIndex = application.removeProject(removedProjectId);
-            if (!removedProjectIndex) {
-                alert('Error: project wasn\'t found in the database');
+
+            if (!isValid(removedProjectIndex)) {
+                showErrorModal('Error: project wasn\'t found in the storage');
                 return;
             }
-            
             if (!removedProject.classList.contains('current')) {
                 removedProject.remove();
                 return;
@@ -102,7 +108,6 @@ const openMenu = (action, target) => {
             currentGroupName.textContent = '';
             currentGroupIcon.src = '';
             currentGroupIcon.alt = '';
-    
             renderGroup(STANDARD_GROUPS.ALL);
             removedProject.remove();
             break;
@@ -115,25 +120,26 @@ const submitHandler = (e) => {
     e.stopImmediatePropagation();
 
     const { menu } = getProjectNodes();
-    if (!menu) {
-        alert('Error: menu wasn\'t found');
+
+    if (!isHTMLElement(menu)) {
+        showErrorModal('Error: menu wasn\'t found');
         return;
     }
 
     const action = menu.getAttribute('data-project-action');
-
     submitForm(action);
 };
 
 const submitForm = (action) => {
     const inputName = document.querySelector('#project-name');
     const inputIcon = document.querySelector('.project-menu input[name="iconURL"]:checked');
-    if (!inputName || !inputName.value) {
-        alert('Please write a project name');
+
+    if (!isHTMLElement(inputName) || !isValid(inputName.value)) {
+        showErrorModal('Please write a project name');
         return;
     }
-    if (!inputIcon || !inputIcon.value || !inputIcon.dataset.altText) {
-        alert('Please select an icon');
+    if (!isHTMLElement(inputIcon) || !isValid(inputIcon.value) || !isValid(inputIcon.dataset.altText)) {
+        showErrorModal('Please select an icon');
         return;
     }
 
@@ -142,12 +148,12 @@ const submitForm = (action) => {
             const inputNewProject = {   
                 name: inputName.value,
                 iconURL: inputIcon.value,
-                altText: inputIcon.dataset.altText   
+                altText: inputIcon.dataset.altText,   
             };
 
             const newProject = application.createNewProject(inputNewProject);
             if (!newProject) {
-                alert('The project with this title already exists!');
+                showErrorModal('The project with this title already exists!');
                 return;  
             }
 
@@ -156,14 +162,14 @@ const submitForm = (action) => {
 
         case ACTIONS_PROJECTS.EDIT:
             const { menu } = getProjectNodes();
+            const id = menu.getAttribute('data-group-id');
+
             if (!menu) {
-                alert('Error: menu wasn\'t found');
+                showErrorModal('Error: menu wasn\'t found');
                 return;
             }
-
-            const id = menu.getAttribute('data-group-id');
             if (!id) {
-                alert('Error: group id wasn\'t found');
+                showErrorModal('Error: group id wasn\'t found');
                 return;
             }
             
@@ -171,49 +177,50 @@ const submitForm = (action) => {
                 id: id,
                 name: inputName.value,
                 iconURL: inputIcon.value,
-                altText: inputIcon.dataset.altText  
+                altText: inputIcon.dataset.altText,
             };
 
             const editedProject = application.editProject(inputEditProject);
-            if (!editedProject) {
-                alert('The project with this title already exists!');
+
+            if (!isHTMLElement(editedProject)) {
+                showErrorModal(editedProject);
                 return;
             }
 
             updateEditedProjectNode(editedProject);
             break;
+        default:
+            showErrorModal('Error: the project action wasn\' found');
     }
 };
 
 const updateEditedProjectNode = (project) => {
     const { currentGroupIcon, currentGroupName } = getProjectNodes();
-    if (!currentGroupIcon || !currentGroupName) {
-        alert('Error: current group icon and/or heading weren\'t found');
-        return;
-    }
-
     const { id, name, iconURL, altText } = project;
-    if (!id || !name || !iconURL || !altText) {
-        alert('Error: one or more edited project data values weren\'t found');
-        return;
-    }
-
     const editedProjectNodeName = document.querySelector(`.project[data-group-id="${id}"] span`);
     const editedProjectNodeIcon = document.querySelector(`.project[data-group-id="${id}"] .icon`);
-    if (!editedProjectNodeName || !editedProjectNodeIcon) {
-        alert('Error: edited project icon and/or name weren\'t found');
+    const editedProjectNode = document.querySelector(`.project[data-group-id="${id}"]`);
+
+    if (!isHTMLElement(currentGroupIcon) || !isHTMLElement(currentGroupName)) {
+        showErrorModal('Error: current group icon and/or heading weren\'t found');
+        return;
+    }
+    if (!isValid(id) || !isValid(name) || !isValid(iconURL) || !isValid(altText)) {
+        showErrorModal('Error: one or more edited project data values weren\'t found');
+        return;
+    }
+    if (!isHTMLElement(editedProjectNodeName) || !isHTMLElement(editedProjectNodeIcon)) {
+        showErrorModal('Error: edited project icon and/or name weren\'t found');
+        return;
+    }
+    if (!isHTMLElement(editedProjectNode)) {
+        showErrorModal('Error: edited project node wasn\'t found');
         return;
     }
     
     editedProjectNodeName.textContent = name;
     editedProjectNodeIcon.src = iconURL;
     editedProjectNodeIcon.alt = altText;
-
-    const editedProjectNode = document.querySelector(`.project[data-group-id="${id}"]`);
-    if (!editedProjectNode) {
-        alert('Error: edited project node wasn\'t found');
-        return;
-    }
 
     if (editedProjectNode.classList.contains('current')) {
         currentGroupName.textContent = name;
@@ -225,8 +232,13 @@ const updateEditedProjectNode = (project) => {
 const exitHandler = (e) => {
     e.preventDefault();
     const { menuCover, menu, menuTitle, submitButton } = getProjectNodes();
-    if (!menu || !menuCover || !menuTitle || !submitButton) {
-        alert('Error: one or more menu components weren\'t found');
+
+    if (!isHTMLElement(menu) || 
+    !isHTMLElement(menuCover) || 
+    !isHTMLElement(menuTitle) || 
+    !isHTMLElement(submitButton)
+    ) {
+        showErrorModal('Error: one or more menu components weren\'t found');
         return;
     }
   
