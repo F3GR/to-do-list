@@ -1,6 +1,6 @@
 import { application } from '../main-app.js';
 import { renderTask } from './dom.js';
-import { ACTIONS_TASKS, isHTMLElement, isNotEmpty, isValid, showErrorModal } from '../utils.js';
+import { ACTIONS_TASKS, isHTMLElement, isNotEmpty, isObject, isValid, showErrorModal } from '../utils.js';
 import { getTaskNodes } from './static-selectors.js';
 
 export function addListenersManageTasks() {
@@ -10,7 +10,7 @@ export function addListenersManageTasks() {
     !isHTMLElement(exitButton) || 
     !isHTMLElement(cancelButton)
     ) {
-        showErrorModal('Error: task menu wasn\'t found');
+        showErrorModal('Error: one or more task menu elements wasn\'t found (rendering task menu)');
         return;
     }
 
@@ -56,7 +56,7 @@ const taskAction = (action, target) => {
         case ACTIONS_TASKS.ADD_NEW:
             const currentProject = document.querySelector('.projects-list .project.current');
             const id = currentProject.getAttribute('data-group-id');
-            if (!isValid(currentProject) || !isValid(id)) {
+            if (!isHTMLElement(currentProject) || !isValid(id)) {
                 showErrorModal('Error: current project and/or its id weren\'t found');
                 return;
             }
@@ -71,13 +71,14 @@ const taskAction = (action, target) => {
             break;
 
         case ACTIONS_TASKS.UPDATE_STATUS:
-            if (!isValid(task) || !isValid(projectId) || !isValid(taskId)) {
+            if (!isHTMLElement(task) || !isValid(projectId) || !isValid(taskId)) {
                 showErrorModal('Error: task panel and/or task and/or projectId weren\'found when updating status');
                 return;
             }
 
             const svg = target.closest('.task').querySelector('label svg');
             const path = target.closest('.task').querySelector('label svg path');
+
             if (!isHTMLElement(svg) || !isHTMLElement(path)) {
                 showErrorModal('Error: status toggle icon wasn\'found');
                 return;
@@ -90,11 +91,12 @@ const taskAction = (action, target) => {
                 showErrorModal('Error: task status wasn\'t updated');
                 return;
             }
+
             task.setAttribute('data-task-status', updatedTaskStatus);
             break;
 
         case ACTIONS_TASKS.EDIT:
-            if (!isValid(task) || !isValid(projectId) || !isValid(taskId)) {
+            if (!isHTMLElement(task) || !isValid(projectId) || !isValid(taskId)) {
                 showErrorModal('Error: task panel and/or task and/or projectId weren\'t found when editing status');
                 return;
             }
@@ -110,12 +112,13 @@ const taskAction = (action, target) => {
             break;
 
         case ACTIONS_TASKS.REMOVE:
-            if (!isValid(task) || !isValid(projectId) || !isValid(taskId)) {
+            if (!isHTMLElement(task) || !isValid(projectId) || !isValid(taskId)) {
                 showErrorModal('Error: task panel and/or task and/or projectId weren\'found when removing the task');
                 return;
             }
 
             const removedTask = application.removeTask(projectId, taskId);
+
             if (!isValid(removedTask)) {
                 showErrorModal('Error: removed task wasn\'t found in the storage')
                 return;
@@ -127,6 +130,7 @@ const taskAction = (action, target) => {
         case ACTIONS_TASKS.UNFOLD:
             const unfoldedTaskPanel = target.closest('.task');
             const taskInfoPanel = unfoldedTaskPanel.querySelector('.task-unfold-box');
+
             if (!isHTMLElement(unfoldedTaskPanel) || !isHTMLElement(taskInfoPanel)) {
                 showErrorModal('Error: task panel and/or its unfolded box weren\'t found');
                 return;
@@ -157,36 +161,34 @@ const handleSubmit = (e) => {
         descriptionInput,
         notesInput 
     } = getTaskNodes();
-    if (!isValid(menu)) {
+    const priorityInput = document.querySelector('.task-menu input[name="priority"]:checked');
+    const action = menu.getAttribute('data-task-action');
+    const projectId = menu.getAttribute('data-project-id');
+
+    if (!isHTMLElement(menu)) {
         showErrorModal('Error: task menu wasn\'t found')
     }
-    if (!isValid(titleInput) || !isValid(dueDateInput) || !isValid(descriptionInput) || !isValid(notesInput)) {
+    if (!isHTMLElement(titleInput) || 
+    !isHTMLElement(dueDateInput) || 
+    !isHTMLElement(descriptionInput) || 
+    !isHTMLElement(notesInput)
+    ) {
         showErrorModal('Error: one or more input fields weren\'t found')
     }
-    
-    const priorityInput = document.querySelector('.task-menu input[name="priority"]:checked');
-    if (!isValid(priorityInput)) {
+    if (!isHTMLElement(priorityInput)) {
         showErrorModal('Error: one or more input fields weren\'t found');
         return;
     }
-
-    if (!isNotEmpty(titleInput.value)) {
-        showErrorModal('Please write title for the task');
-        return;
-    }
-    if (!isValid(priorityInput.value)) {
-        showErrorModal('Please choose a priority for the task');
-        return;
-    }
-
-    const action = menu.getAttribute('data-task-action');
-    if (!isValid(action)) {
-        showErrorModal('Error: action for a task menu wasn\'t found');
-        return;
-    }
-    const projectId = menu.getAttribute('data-project-id');
     if (!isValid(action) || !isValid(projectId)) {
         showErrorModal('Error: action and/or projectId weren\'found');
+        return;
+    }
+
+    if (!isNotEmpty(titleInput.value) || 
+    !isNotEmpty(dueDateInput.value) || 
+    !isNotEmpty(priorityInput.value)
+    ) {
+        showErrorModal('One or more of the required fields\' values are empty');
         return;
     }
 
@@ -200,14 +202,10 @@ const handleSubmit = (e) => {
                 description: descriptionInput.value, 
                 notes: notesInput.value  
             };
-            if (!isValid(titleInput.value) || !isValid(dueDateInput.value) || !isValid(priorityInput.value)) {
-                showErrorModal('One or more of the required fields\' values are empty');
-                return;
-            }
-            
+
             const newTask = application.createNewTask(inputNewTask);
-            if (!isValid(newTask)) {
-                showErrorModal('The task with this title already exists!');
+            if (!isObject(newTask)) {
+                showErrorModal(newTask);
                 return;
             }
 
@@ -216,8 +214,28 @@ const handleSubmit = (e) => {
 
         case ACTIONS_TASKS.EDIT:
             const taskId = menu.getAttribute('data-task-id');
+
+            const taskSelector = `.task[data-project-id="${projectId}"][data-task-id="${taskId}"]`;
+            const editedTaskNode = document.querySelector(taskSelector);
+
+            const oldTitle = document.querySelector(taskSelector + ' .task-title');
+            const oldDueDate = document.querySelector(taskSelector + ' .task-due-date span');
+            const oldDescription = document.querySelector(taskSelector + ' .task-description');
+            const oldNotes = document.querySelector(taskSelector + ' .task-notes');
+
             if (!isValid(taskId)) {
                 showErrorModal('Error: taskId and/or projectId weren\'found');
+                return;
+            }
+            if (!isHTMLElement(editedTaskNode)) {
+                showErrorModal('The edited task panel isn\'t found');
+                return;
+            }
+            if (!isHTMLElement(oldTitle) || 
+            !isHTMLElement(oldDueDate) || 
+            !isHTMLElement(oldDescription) || 
+            !isHTMLElement(oldNotes)) {
+                showErrorModal('One or more edited task panel components weren\'t found');
                 return;
             }
     
@@ -230,36 +248,14 @@ const handleSubmit = (e) => {
                 description: descriptionInput.value, 
                 notes: notesInput.value   
             };
-            if (!isValid(titleInput.value) || !isValid(dueDateInput.value) || !isValid(priorityInput.value)) {
-                showErrorModal('One or more of the required fields\' values are empty');
-                return;
-            }
-    
-            const editedTask = application.editTask(inputEditedTask);
-            if (!isValid(editedTask)) {
-                showErrorModal('The task with this title already exists!');
-                return;
-            }
-    
-            const taskSelector = `.task[data-project-id="${projectId}"][data-task-id="${taskId}"]`;
-            if (!isValid(taskSelector)) {
-                showErrorModal('The edited task panel isn\'t found');
-                return;
-            }
-    
-            const oldTitle = document.querySelector(taskSelector + ' .task-title');
-            const oldDueDate = document.querySelector(taskSelector + ' .task-due-date span');
-            const oldDescription = document.querySelector(taskSelector + ' .task-description');
-            const oldNotes = document.querySelector(taskSelector + ' .task-notes');
-            if (!isValid(oldTitle) || 
-            !isValid(oldDueDate) || 
-            !isValid(oldDescription) || 
-            !isValid(oldNotes)) {
-                showErrorModal('One or more edited task panel components weren\'t found');
-                return;
-            }
 
-            document.querySelector(taskSelector).setAttribute('data-task-priority', `${priorityInput.value}`);
+            const editedTask = application.editTask(inputEditedTask);
+            if (!isObject(editedTask)) {
+                showErrorModal(editedTask);
+                return;
+            }
+            
+            editedTaskNode.setAttribute('data-task-priority', `${priorityInput.value}`);
     
             oldTitle.textContent = titleInput.value;
             oldDueDate.textContent = dueDateInput.value;
@@ -281,10 +277,11 @@ const handleExitMenu = (e) => {
         menuTitle,
         submitButton 
     } = getTaskNodes();
-    if (!isValid(menu) || 
-    !isValid(menuCover) || 
-    !isValid(menuTitle) || 
-    !isValid(submitButton)) {
+
+    if (!isHTMLElement(menu) || 
+    !isHTMLElement(menuCover) || 
+    !isHTMLElement(menuTitle) || 
+    !isHTMLElement(submitButton)) {
         showErrorModal('Error: one or more menu components weren\'t found');
         return;
     }

@@ -13,9 +13,22 @@ export function createElementWithAttributes(tagName, attributes = {}, parentElem
 }
 
 export function showErrorModal(message) {
+    if (!Array.isArray(message)) {
+      showErrorModal(['Error (error modal pop-up)', 'Heading and/or error message weren\'t found']);
+      return;
+    }
+    
     const errorModal = document.querySelector('.error-modal');
     const messagePara = errorModal.querySelector('.error-message');
     const menuCover = document.querySelector('.menu-cover');
+
+
+    if (isValid(message[0])) {
+      messageHeading.textContent = message[0];
+    } else {
+        messageHeading.textContent = 'Invalid input';
+    }
+
     errorModal.classList.add('shown');
     menuCover.classList.add('shown');
     messagePara.textContent = message;

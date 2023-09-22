@@ -1,5 +1,6 @@
 import { renderGroup } from './dom.js';
 import { isHTMLElement, showErrorModal } from '../utils.js';
+import { ERR_HEADINGS } from './errors-text.js';
 
 export function addListenersSidebar() {
     const sidebarIcon = document.querySelector('header > img.sidebar-icon');
@@ -14,7 +15,8 @@ export function addListenersSidebar() {
         !isHTMLElement(standardGroups) ||
         !isHTMLElement(projectGroups)
         ) {
-        showErrorModal('Error: the elements weren\'t found to render the task group');
+        showErrorModal([ERR_HEADINGS.EVENTS_RENDERING, ERR_EVENTS.SIDEBAR_ELEMENTS]);
+        return;
     }
 
     sidebarIcon.addEventListener('click', () => {

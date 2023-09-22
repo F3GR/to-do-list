@@ -1,4 +1,4 @@
-import { createElementWithAttributes } from '../utils.js';
+import { createElementWithAttributes, isHTMLElement, showErrorModal } from '../utils.js';
 import { getMainNodes, getViewOptionsNodes } from './static-selectors.js';
 import { SORTBY, isBoolean } from '../utils.js';
 import { application } from '../main-app.js';
@@ -6,8 +6,8 @@ import { assets } from './assets.js';
 
 export function renderFilterOptionsMenu() {
     const { main } = getMainNodes();
-    if (!main) {
-        alert('Error: main content panel wasn\'t found');
+    if (!isHTMLElement(main)) {
+        showErrorModal('Error (rendering filtering options menu): main content panel wasn\'t found');
         return;
     }
 
@@ -152,7 +152,6 @@ export function renderFilterOptionsMenu() {
 
 function applySavedViewState() {
     const viewState = application.getViewState();
-
     const { 
         flagIncludeHigh, 
         flagIncludeMedium, 
@@ -163,19 +162,6 @@ function applySavedViewState() {
         sortBy,
         ascendingOrder 
     } = viewState;
-
-    if (!isBoolean(flagIncludeHigh) || 
-        !isBoolean(flagIncludeMedium) || 
-        !isBoolean(flagIncludeNormal) ||
-        !isBoolean(flagIncludeOnGoing) || 
-        !isBoolean(flagIncludeCompleted) || 
-        !isBoolean(flagIncludeOverdue) ||
-        !Object.values(SORTBY).includes(sortBy) ||
-        !isBoolean(ascendingOrder)) {
-        alert('Error: one or more the filter option values weren\'t found');
-        return;
-    }
-
     const { 
         checkboxPriorityHigh,
         checkboxPriorityMedium,
@@ -185,21 +171,39 @@ function applySavedViewState() {
         checkboxStatusOverdue,
         checkboxSortAscendingOrder 
     } = getViewOptionsNodes();
+    const selectSortOptions = document.querySelector('.view-options-bar select');
 
-    if (!checkboxPriorityHigh ||
-        !checkboxPriorityMedium ||
-        !checkboxPriorityNormal ||
-        !checkboxStatusOnGoing ||
-        !checkboxStatusCompleted ||
-        !checkboxStatusOverdue ||
-        !checkboxSortAscendingOrder) {
-        alert('Error: one or more the filter option values weren\'t found');
+    if (!isBoolean(flagIncludeHigh) || 
+    !isBoolean(flagIncludeMedium) || 
+    !isBoolean(flagIncludeNormal) ||
+    !isBoolean(flagIncludeOnGoing) || 
+    !isBoolean(flagIncludeCompleted) || 
+    !isBoolean(flagIncludeOverdue)
+    ) {
+        showErrorModal('Error (rendering filtering options menu): one or more of the filter option values is not valid');
         return;
     }
-
-    const selectSortOptions = document.querySelector('.view-options-bar select');
-    if (!selectSortOptions) {
-        alert('Error: select options menu wasn\'t found');
+    if (!isBoolean(ascendingOrder)) {
+        showErrorModal('Error (rendering filtering options menu): the order value of sort option is not valid');
+        return;
+    }
+    if (!Object.values(SORTBY).includes(sortBy)) {
+        showErrorModal('Error (rendering filtering options menu): sort option value is not valid');
+        return;
+    }
+    if (!isHTMLElement(checkboxPriorityHigh) ||
+        !isHTMLElement(checkboxPriorityMedium) ||
+        !isHTMLElement(checkboxPriorityNormal) ||
+        !isHTMLElement(checkboxStatusOnGoing) ||
+        !isHTMLElement(checkboxStatusCompleted) ||
+        !isHTMLElement(checkboxStatusOverdue) ||
+        !isHTMLElement(checkboxSortAscendingOrder)
+        ) {
+        showErrorModal('Error (rendering filtering options menu): one or more the filter option elements weren\'t found');
+        return;
+    }
+    if (!isHTMLElement(selectSortOptions)) {
+        showErrorModal('Error (rendering filtering options menu): select options menu element wasn\'t found');
         return;
     }
 

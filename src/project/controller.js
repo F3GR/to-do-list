@@ -1,18 +1,20 @@
 import { Project } from './project.js';
-import { noDuplicateName, findIndex } from '../utils.js';
+import { noDuplicateName, findIndex, isValid } from '../utils.js';
+import { ERR_CONTROLLER } from './errors-text.js';
 
 export const projectsController = {
     createNew: (projectsList, inputNewProject) => {
         const { name, iconURL, altText } = inputNewProject;
 
         if (!Array.isArray(projectsList)) {
-            return 'Error: the current project list wasn\'t found';
+            throw new Error(ERR_CONTROLLER.PROJECT_LIST);
         }
         if (!name || !iconURL || !altText) {
-            return 'Error: the entered project name or icon can\'t be found';
+            throw new Error(ERR_CONTROLLER.PROJECT_DATA);
         }
+
         if (!noDuplicateName(projectsList, name, "")) {
-            return 'The project with this name already exists!';
+            return -1;
         }
 
         const newProject = new Project(name, iconURL, altText);
@@ -22,20 +24,27 @@ export const projectsController = {
 
     edit: (projectsList, inputEditedProject) => {
         const { id, name, iconURL, altText } = inputEditedProject;
-        
+
         if (!Array.isArray(projectsList)) {
-            return 'Error: the current project list wasn\'t found';
+            throw new Error(ERR_CONTROLLER.PROJECT_LIST);
+        }
+        if (!isValid(id)) {
+            throw new Error(ERR_CONTROLLER.INVALID_INDEX);
         }
         if (!name || !iconURL || !altText) {
-            return 'Error: the new project name or icon aren\'t selected';
+            throw new Error(ERR_CONTROLLER.PROJECT_DATA);
         }
+
+        const storedProjectIndex = findIndex(projectsList, id);
+        if (!isValid(storedProjectIndex)) {
+            throw new Error(ERR_CONTROLLER.NO_INDEX);
+        }
+        
         if (!noDuplicateName(projectsList, name, "")) {
-            return 'The project with this name already exists!';
+            return -1;
         }
 
         const editedProjectsList = [...projectsList];
-
-        const storedProjectIndex = findIndex(editedProjectsList, id);
         const editedProject = editedProjectsList[storedProjectIndex];
 
         if (editedProject.name !== name) {
@@ -52,16 +61,21 @@ export const projectsController = {
     },
 
     remove: (projectsList, projectId) => {
+        
+
         if (!Array.isArray(projectsList)) {
-            return 'Error: the current project list wasn\'t found';
+            throw new Error(ERR_CONTROLLER.PROJECT_LIST);
         }
         if (!isValid(projectId)) {
-            return 'Error: the id of the removed project wasn\'t found';
+            throw new Error(ERR_CONTROLLER.INVALID_INDEX);
         }
 
+        const removedProjectIndex = findIndex(projectsList, projectId);
+        if (!isValid(removedProjectIndex)) {
+            throw new Error(ERR_CONTROLLER.NO_INDEX);
+        }
+        
         const editedProjectsList = [...projectsList];
-        const removedProjectIndex = findIndex(editedProjectsList, projectId);
-
         editedProjectsList.splice(removedProjectIndex, 1);
         const removedId = projectId;
 

@@ -14,7 +14,7 @@ export const viewController = {
         } = viewState;
 
         if (!Array.isArray(tasksGroup)) {
-            return false;
+            return 'Error (filtering tasks): tasks group wasn\'t found';
         }
         if (!isBoolean(flagIncludeHigh) || 
             !isBoolean(flagIncludeMedium) || 
@@ -22,7 +22,7 @@ export const viewController = {
             !isBoolean(flagIncludeOnGoing) || 
             !isBoolean(flagIncludeCompleted) || 
             !isBoolean(flagIncludeOverdue)) {
-            return false;
+            return 'Error (filtering tasks): one or more of the filter option values is not valid';
         }
         
         return tasksGroup
@@ -49,10 +49,15 @@ export const viewController = {
     
     sort: (tasksGroup, viewState) => {
         const { sortBy, ascendingOrder } = viewState;
-        if (!Array.isArray(tasksGroup) ||
-            !isBoolean(ascendingOrder) ||
-            !Object.values(SORTBY).includes(sortBy)) {
-            return false;
+
+        if (!Array.isArray(tasksGroup)) {
+            return 'Error (sorting tasks): tasks group wasn\'t found';
+        }
+        if (!isBoolean(ascendingOrder)) {
+            return 'Error (sorting tasks): the order value of sort option wasn\'t found';
+        }
+        if (!Object.values(SORTBY).includes(sortBy)) {
+            return 'Error (sorting tasks): sort option value is not valid';
         }
 
         switch (sortBy) {
@@ -64,20 +69,19 @@ export const viewController = {
                 return sortTasksByStatus(tasksGroup, ascendingOrder);
         }
     }   
-}
+};
 
 const sortTasksByDate = (tasksGroup, ascendingOrder) => {
     return tasksGroup.sort((task1, task2) => {
         const date1 = parseISO(task1.dueDate);
         const date2 = parseISO(task2.dueDate);
-
         if (ascendingOrder) {
             return date1 - date2;
         } else {
             return date2 - date1;
         }
     });
-}
+};
 
 const sortTasksByPriority = (tasksGroup, ascendingOrder) => {
     return tasksGroup.sort((task1, task2) => {
@@ -87,7 +91,7 @@ const sortTasksByPriority = (tasksGroup, ascendingOrder) => {
             return task1.priority - task2.priority;
         }
     });
-}
+};
 
 const sortTasksByStatus = (tasksGroup, ascendingOrder) => {
     return tasksGroup.sort((task1, task2) => {
@@ -97,4 +101,4 @@ const sortTasksByStatus = (tasksGroup, ascendingOrder) => {
             return task1.status - task2.status;
         }
     });
-}
+};

@@ -3,16 +3,21 @@ import { ACTIONS_PROJECTS } from './utils.js';
 import { ACTIONS_TASKS } from './utils.js';
 import { assets } from './assets.js';
 import { isHTMLElement } from './utils.js';
+import { isValid } from 'date-fns';
 
 export function renderMainPage() {
     renderMainPageTemplate();
     renderProjectMenuTemplate();
     renderTaskMenuTemplate();
-    renderErrorModal('');
+    renderErrorModal(['', '']);
 };
 
 function renderMainPageTemplate() {
     const content = document.querySelector('.content');
+    if (!isHTMLElement(content)) {
+        renderErrorModal(['Error (rendering menu template):', 'Content element wasn\'t found']);
+        return;
+    }
 
     const header = createElementWithAttributes('header', {}, content);
 
@@ -197,6 +202,10 @@ function renderMainPageTemplate() {
 
 function renderProjectMenuTemplate() {
     const content = document.querySelector('.content');
+    if (!isHTMLElement(content)) {
+        renderErrorModal(['Error (rendering menu template):', 'Content element wasn\'t found']);
+        return;
+    }
 
     const menuCover = createElementWithAttributes('div', {
         class: 'menu-cover'
@@ -395,6 +404,10 @@ function renderProjectMenuTemplate() {
 
 function renderTaskMenuTemplate() {
     const content = document.querySelector('.content');
+    if (!isHTMLElement(content)) {
+        renderErrorModal(['Error (rendering menu template):', 'Content element wasn\'t found']);
+        return;
+    }
 
     const taskMenu = createElementWithAttributes('div', {
         class: 'task-menu'
@@ -524,6 +537,8 @@ function renderTaskMenuTemplate() {
     buttonCancel.textContent = 'Cancel';
 }
 
+// message === [error type, error message];
+// if the the error is not the system (app) error => error type === null 
 function renderErrorModal(message) {
     const body = document.body;
     const menuCover = document.querySelector('.menu-cover');
@@ -532,25 +547,36 @@ function renderErrorModal(message) {
         class: 'error-modal',
     }, body);
 
+    const messageHeading  = createElementWithAttributes('h2', {
+        class: 'error-type',
+    }, modalBox);
+    messagePara.textContent = message[0];
+
     const messagePara  = createElementWithAttributes('p', {
         class: 'error-message',
     }, modalBox);
+    messagePara.textContent = message[1];
 
     const buttonExit = createElementWithAttributes('button', {
         class: 'exit',
     }, modalBox);
     buttonCancel.textContent = 'OK';
-    buttonExit.addEventListener('click', ( )=> {
+    buttonExit.addEventListener('click', () => {
         if (!isHTMLElement(menuCover)) {
-            renderErrorModal('Error: Menu cover wasn\'t found');
+            renderErrorModal(['Error (rendering error modal):', 'Modal cover element wasn\'t found']);
             return;
         }
         if (!isHTMLElement(messagePara)) {
-            renderErrorModal('Error: Message wasn\'t found');
+            renderErrorModal(['Error (rendering error modal):', 'Heading element wasn\'t found']);
+            return;
+        }
+        if (!isHTMLElement(messagePara)) {
+            renderErrorModal(['Error (rendering error modal):', 'Message element wasn\'t found']);
             return;
         }
         
         menuCover.classList.remove('shown');
+        messageHeading.textContent = '';
         messagePara.textContent = '';
     });
 }

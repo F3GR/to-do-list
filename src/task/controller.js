@@ -10,7 +10,7 @@ export const tasksController = {
         if (!Array.isArray(tasksList)) {
             return 'Error: the current task list wasn\'t found';
         }
-        if (!projectName|| !projectId) {
+        if (!projectName || !isValid(projectId)) {
             return 'Error: the project name or id  can\'t be found after the submission';
         }
         if (!title || !dueDate || !priority) {
@@ -37,10 +37,10 @@ export const tasksController = {
         if (!Array.isArray(tasksList)) {
             return 'Error: the current task list wasn\'t found';
         }
-        if (!isValid(projectName) || !isValid(projectId), !isValid(taskId)) {
+        if (!projectName || !isValid(projectId), !isValid(taskId)) {
             return 'Error: the project name or id  can\'t be found after the edit ';
         }
-        if (!isValid(title) || !isValid(dueDate) || !isValid(priority)) {
+        if (!title || !dueDate || !priority) {
             return 'Error: the entered task title, due date or priority can\'t be found after the edit';
         }
         if (!isValid(description) || !isValid(notes)) {

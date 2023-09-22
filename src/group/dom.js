@@ -2,6 +2,7 @@ import { application } from '../main-app.js';
 import { renderTask } from '../task/dom.js';
 import { getGroupNodes } from './static-selectors.js';
 import { STANDARD_GROUPS, isHTMLElement, isNodeList, isObject, showErrorModal } from '../utils.js';
+import { ERR_HEADINGS, ERR_POPULATE } from './errors-text.js';
 
 export function renderGroup(groupIdentifier) {
     const { mainGroupName, mainGroupIcon, taskList } = getGroupNodes();
@@ -16,40 +17,47 @@ export function renderGroup(groupIdentifier) {
     !isHTMLElement(mainGroupIcon) || 
     !isHTMLElement(taskList)
     ) {
-        showErrorModal('Error: the elements weren\'t found to render the task group');
+        showErrorModal([ERR_HEADINGS.POPULATE, ERR_POPULATE.CURRENT_GROUP_MAIN]);
         return;
     }
     if (!isNodeList(allGroups)) {
-        showErrorModal('Error: the all group panels weren\'t found');
+        showErrorModal([ERR_HEADINGS.POPULATE, ERR_POPULATE.ALL_GROUP]);
         return;
     }
     if (!isHTMLElement(addTaskIcon)) {
-        showErrorModal('Error: the add task icon wasn\'t found');
+        showErrorModal([ERR_HEADINGS.POPULATE, ERR_POPULATE.ADD_TASK_ICON]);
         return;
     }
     if (!isHTMLElement(selectedGroup)) {
-        showErrorModal('Error: the group panel with the selected group id wasn\'t found');
+        showErrorModal([ERR_HEADINGS.POPULATE, ERR_POPULATE.CURRENT_GROUP]);
         return;
     }
     if (!isHTMLElement(selectedGroupName) || !isHTMLElement(selectedGroupIcon)) {
-        showErrorModal('Error: the name and/or icon of the selected group panel weren\'t found');
+        showErrorModal([ERR_HEADINGS.POPULATE, ERR_POPULATE.CURRENT_GROUP_ELEMENT]);
         return;
     }
     
-    const newGroup = application.getTasksGroup(groupIdentifier);
-    const currentViewState= application.getViewState();
-    const filteredSortedNewGroup = application.applyViewOptions(currentViewState, newGroup);
+    let newGroup;
+    try {
+        newGroup = application.getTasksGroup(groupIdentifier);
+    } catch(e) {
+        showErrorModal([ERR_HEADINGS.POPULATE, e.message]);
+        return;
+    }
 
-    if (!isNodeList(newGroup)) {
-        showErrorModal(newGroup);
+    let currentViewState;
+    try {
+        currentViewState = application.getViewState();
+    } catch(e) {
+        showErrorModal([ERR_HEADINGS.POPULATE, e.message]);
         return;
     }
-    if (!isObject(currentViewState)) {
-        showErrorModal(currentViewState);
-        return;
-    }
-    if (!Array.isArray(filteredSortedNewGroup)) {
-        showErrorModal(filteredSortedNewGroup);
+
+    let filteredSortedNewGroup;
+    try {
+        filteredSortedNewGroup = application.applyViewOptions(currentViewState, newGroup);
+    } catch(e) {
+        showErrorModal([ERR_HEADINGS.POPULATE, e.message]);
         return;
     }
 

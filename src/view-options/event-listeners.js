@@ -1,5 +1,6 @@
 import { application } from '../main-app.js';
 import { renderTask } from '../task/dom.js';
+import { isHTMLElement, showErrorModal } from '../utils.js';
 import { getMainNodes, getViewOptionsNodes } from './static-selectors.js';
 
 export function addListenersViewOptions() {
@@ -14,23 +15,25 @@ export function addListenersViewOptions() {
         viewOptionsIcon,
         viewBox
     } = getViewOptionsNodes();
-    if (!checkboxPriorityHigh ||
-        !checkboxPriorityMedium ||
-        !checkboxPriorityNormal ||
-        !checkboxStatusOnGoing ||
-        !checkboxStatusCompleted ||
-        !checkboxStatusOverdue ||
-        !checkboxSortAscendingOrder) {
-        alert('Error: one or more the filter option checkboxes weren\'t found');
-    }
-
     const {
         taskList
     } = getMainNodes();
+    const selectSortOptions = document.querySelector('.view-options-bar select');
 
-    const sortOptions = document.querySelector('.view-options-bar select');
-    if (!sortOptions) {
-        alert('Error: select options menu wasn\'t found');
+    if (!isHTMLElement(checkboxPriorityHigh) ||
+        !isHTMLElement(checkboxPriorityMedium) ||
+        !isHTMLElement(checkboxPriorityNormal) ||
+        !isHTMLElement(checkboxStatusOnGoing) ||
+        !isHTMLElement(checkboxStatusCompleted) ||
+        !isHTMLElement(checkboxStatusOverdue) ||
+        !isHTMLElement(checkboxSortAscendingOrder)
+        ) {
+        showErrorModal('Error (applying events on filtering options menu): one or more the filter option elements weren\'t found');
+        return;
+    }
+    if (!isHTMLElement(selectSortOptions)) {
+        showErrorModal('Error (rendering filtering options menu): select options menu element wasn\'t found');
+        return;
     }
 
     const queries = { 
@@ -47,8 +50,8 @@ export function addListenersViewOptions() {
 
     viewOptionsIcon.addEventListener('click', () => viewBox.classList.toggle('shown'));
     viewBox.addEventListener('change', (e) => {
-        const target = e.target.closest('input[type="checkbox"], select');
-        if (target) {
+        const filterOrSortOption = e.target.closest('input[type="checkbox"], select');
+        if (filterOrSortOption) {
             handleViewOptionsChange(queries);
         }
     });
@@ -89,8 +92,8 @@ const handleViewOptionsChange = (queries) => {
     newState.ascendingOrder = checkboxSortAscendingOrder.checked;
 
     const tasksWithUpdatedView = application.applyViewOptions(newState);
-    if (!tasksWithUpdatedView) {
-        alert('Applying new view options failed.');
+    if (!isHTMLElement(tasksWithUpdatedView)) {
+        showErrorModal(tasksWithUpdatedView);
         return;
     }
 
