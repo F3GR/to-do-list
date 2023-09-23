@@ -26,20 +26,22 @@ export function addListenersManageProjects() {
 const openMenuHandler = (e) => {
     e.preventDefault();
     e.stopImmediatePropagation();
-
+    
     const action = e.target.getAttribute('data-project-action');
     if (!isValid(action)) {
         return;
     }
-    if (!Object.values(STANDARD_GROUPS).includes(action)) {
+    if (!Object.values(ACTIONS_PROJECTS).includes(action)) {
         showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.DEFAULT_ACTION]);
         return;
     }
 
-    openMenu(action, target);
+    openMenu(action, e.target);
 };
 
 const openMenu = (action, target) => {
+
+
     const { 
         menuCover,
         menu,
@@ -102,6 +104,7 @@ const openMenu = (action, target) => {
                 removedProjectIndex = application.removeProject(removedProjectId);
             } catch (e) {
                 showErrorModal([ERR_HEADINGS.REMOVING, e.message]);
+                return;
             }
 
             if (!removedProject.classList.contains('current')) {
@@ -135,20 +138,12 @@ const submitHandler = (e) => {
 const submitForm = (action) => {
     const inputName = document.querySelector('#project-name');
     const inputIcon = document.querySelector('.project-menu input[name="iconURL"]:checked');
-    if (!isHTMLElement(inputName)) {
-        showErrorModal([ERR_HEADINGS.SUBMITTING, ERR_APPLY_EVENTS.NO_MENU_NAME_PANEL]);
-        return;
-    }
-    if (!isHTMLElement(inputIcon)) {
-        showErrorModal([ERR_HEADINGS.SUBMITTING, ERR_APPLY_EVENTS.NO_ICON_SELECTED_PANEL]);
-        return;
-    }
 
     if (!isValid(inputName.value)) {
         showErrorModal(['Invalid input (project name)', 'Please provide a new project\'s name']);
         return;
     }
-    if (!isValid(inputIcon.value) || !isValid(inputIcon.dataset.altText)) {
+    if (!isHTMLElement(inputIcon) || !isValid(inputIcon.value) || !isValid(inputIcon.dataset.altText)) {
         showErrorModal(['Invalid input (project icon)', 'Please select an icon']);
         return;
     }
@@ -168,7 +163,7 @@ const submitForm = (action) => {
                 showErrorModal([ERR_HEADINGS.SUBMIT_ADDING, e.message]);
                 return;
             }
-            if (!isObject(editedProject)) {
+            if (!isObject(newProject)) {
                 showErrorModal(['Invalid input (project name)', 'A project with the new name already exists!']);
                 return;
             }
@@ -219,6 +214,7 @@ const updateEditedProjectNode = (project) => {
     const editedProjectNodeName = document.querySelector(`.project[data-group-id="${id}"] span`);
     const editedProjectNodeIcon = document.querySelector(`.project[data-group-id="${id}"] .icon`);
     const editedProjectNode = document.querySelector(`.project[data-group-id="${id}"]`);
+    const editedProjectTaskNodes = document.querySelectorAll(`.task[data-project-id="${id}"]`);
 
     if (!isHTMLElement(currentGroupIcon) || 
     !isHTMLElement(currentGroupName) ||
@@ -242,6 +238,13 @@ const updateEditedProjectNode = (project) => {
         currentGroupName.textContent = name;
         currentGroupIcon.src = iconURL;
         currentGroupIcon.alt = altText;
+    }
+
+    if (editedProjectTaskNodes) {
+        editedProjectTaskNodes.forEach(taskNode => {
+            const projectNameNode = taskNode.querySelector('.task-project-name');
+            projectNameNode.textContent = name;
+        });
     }
 };
 

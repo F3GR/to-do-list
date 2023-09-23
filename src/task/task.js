@@ -22,7 +22,13 @@ export class Task {
     }
 
     static taskId = 1;
-    static getNewTaskId = () =>  Task.taskId;
-    static incrementNewTaskId = () => Task.taskId++;
-    static resetId = () => Task.taskId = 1;
+    static getNewTaskId() {
+        return Task.taskId;
+    };
+    static incrementNewTaskId() {
+        Task.taskId++;
+    };
+    static resetId() {
+        Task.taskId = 1;
+    };
 }

@@ -32,7 +32,7 @@ const handleGroupSelection = (e) => {
     const selectedGroup = e.target.closest('.bar-types > *, .projects-list > li.project');
 
     if (selectedGroup && !selectedGroup.classList.contains('current')) {
-        const groupIdentifier = target.getAttribute('data-group-id');
+        const groupIdentifier = selectedGroup.getAttribute('data-group-id');
         renderGroup(groupIdentifier);
     }
 }

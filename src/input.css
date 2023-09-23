@@ -8,6 +8,13 @@
   --menu-width: 30rem;
   --menu-height: 40rem;
   --black: rgb(53, 52, 52);
+  --z-index-error: 7;
+  --z-index-error-cover: 6;
+  --z-index-menu: 5;
+  --z-index-menu-cover: 4;
+  --z-index-aside-shown: 3;
+  --z-index-view-options-shown: 2;
+  --z-index-view-options: 1;
 }
 
 * {
@@ -407,7 +414,7 @@ main .view-options-bar {
   grid-template-rows: repeat(8, 2.6rem) 6rem;
   padding: 1rem 2rem 1.5rem;
   align-items: center;
-  z-index: 1;
+  z-index: var(--z-index-view-options);
   visibility: hidden;
 }
 
@@ -429,7 +436,7 @@ main .view-options-bar {
 
 main .view-options-bar.shown {
   visibility: visible;
-  z-index: 2;
+  z-index: var(--z-index-view-options-shown);
 }
 
 main .view-options-bar * {
@@ -592,11 +599,11 @@ main .task-bar {
   cursor: default;
 }
 
-.task .overdue {
+.task img.overdue {
   display: none;
 }
 
-.task .overdue.shown {
+.task img.overdue.shown {
   display: block;
 }
 
@@ -766,13 +773,34 @@ main .sidebar-cover {
   width: var(--menu-width);
   height: var(--menu-width);
   background-color: var(--white);
-  z-index: 6;
+  z-index: var(--z-index-error);
   border: 0.1rem solid var(--whitesmoke);
   border-radius: 0.5rem;
   padding: 0 0 1rem 0;
   display: none;
 }
 
+.error-modal > p {
+  font-size: 1.6rem;
+}
+
+.error-modal.shown {
+  display: grid;
+}
+
+.content .error-cover {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: var(--black);
+  opacity: 50%;
+  z-index: var(--z-index-error-cover);
+  display: none;
+}
+
+.content .error-cover.shown {
+  display: block;
+}
 
 /* Project menu */
 
@@ -785,7 +813,7 @@ main .sidebar-cover {
   width: var(--menu-width);
   height: var(--menu-width);
   background-color: var(--white);
-  z-index: 4;
+  z-index: var(--z-index-menu);
   border: 0.1rem solid var(--whitesmoke);
   border-radius: 0.5rem;
   padding: 0 0 1rem 0;
@@ -931,7 +959,7 @@ main .sidebar-cover {
   height: 100%;
   background-color: var(--black);
   opacity: 50%;
-  z-index: 3;
+  z-index: var(--z-index-menu-cover);
   display: none;
 }
 
@@ -951,7 +979,7 @@ main .sidebar-cover {
   width: var(--menu-width);
   height: 50rem;
   background-color: var(--white);
-  z-index: 4;
+  z-index: var(--z-index-menu);
   border: 0.1rem solid var(--whitesmoke);
   border-radius: 0.5rem;
   padding: 0 0 1rem 0;
@@ -1024,7 +1052,7 @@ main .sidebar-cover {
     visibility: visible;
     position: absolute;
     width: 25rem;
-    z-index: 2;
+    z-index: var(--z-index-aside-shown);
   }
   header .sidebar-icon {
     visibility: visible;

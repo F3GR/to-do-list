@@ -1,6 +1,6 @@
 import { application } from '../main-app.js';
 import { renderTask } from '../task/dom.js';
-import { isBoolean, isHTMLElement, showErrorModal } from '../utils.js';
+import { isBoolean, isHTMLElement, showErrorModal, SORTBY } from '../utils.js';
 import { getMainNodes, getViewOptionsNodes } from './static-selectors.js';
 import { ERR_APPLY_EVENTS, ERR_HEADINGS } from './errors-text.js';
 
@@ -48,7 +48,7 @@ export function addListenersViewOptions() {
         showErrorModal(ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.FILTER_VALUES);
         return;
     }
-    if (!isBoolean(checkboxSortAscendingOrder.value)) {
+    if (!isBoolean(checkboxSortAscendingOrder.checked)) {
         showErrorModal(ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.SORT_ORDER_VALUE);
         return;
     }
@@ -65,7 +65,7 @@ export function addListenersViewOptions() {
         checkboxStatusOverdue,
         checkboxStatusOnGoing,
         checkboxStatusCompleted,
-        sortOptions,
+        selectSortOptions,
         checkboxSortAscendingOrder 
     };
 
@@ -99,7 +99,7 @@ const handleViewOptionsChange = (queries) => {
         checkboxStatusOverdue,
         checkboxStatusOnGoing,
         checkboxStatusCompleted,
-        sortOptions,
+        selectSortOptions,
         checkboxSortAscendingOrder 
     } = queries;
 
@@ -109,7 +109,7 @@ const handleViewOptionsChange = (queries) => {
     newState.flagIncludeOverdue = checkboxStatusOverdue.checked;
     newState.flagIncludeOnGoing = checkboxStatusOnGoing.checked;
     newState.flagIncludeCompleted = checkboxStatusCompleted.checked;
-    newState.sortBy = sortOptions.value;
+    newState.sortBy = selectSortOptions.value;
     newState.ascendingOrder = checkboxSortAscendingOrder.checked;
 
     let tasksWithUpdatedView;

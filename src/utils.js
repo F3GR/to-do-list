@@ -14,13 +14,14 @@ export function createElementWithAttributes(tagName, attributes = {}, parentElem
 
 export function showErrorModal(message) {
     if (!Array.isArray(message)) {
-      showErrorModal(['Error (error modal pop-up)', 'Heading and/or error message weren\'t found']);
+      showErrorModal(['Error (rendering error modal)', 'Heading and/or error message couldn\'t be found']);
       return;
     }
     
     const errorModal = document.querySelector('.error-modal');
+    const messageHeading = errorModal.querySelector('.error-heading');
     const messagePara = errorModal.querySelector('.error-message');
-    const menuCover = document.querySelector('.menu-cover');
+    const errorCover = document.querySelector('.error-cover');
 
 
     if (isValid(message[0])) {
@@ -30,8 +31,8 @@ export function showErrorModal(message) {
     }
 
     errorModal.classList.add('shown');
-    menuCover.classList.add('shown');
-    messagePara.textContent = message;
+    errorCover.classList.add('shown');
+    messagePara.textContent = message[1];
 }
 
 
@@ -40,7 +41,7 @@ export function isNodeList(element) {
 }
 
 export function isHTMLElement(element) {
-  return element instanceof HTMLElement;
+  return element instanceof HTMLElement || element instanceof Element;
 }
 
 export function isObject(obj) {
@@ -52,7 +53,7 @@ export function isBoolean(value) {
 }
 
 export function isValid(value) {
-  return value !== undefined || value !== null || value !== '' || value !== false;
+  return value !== undefined && value !== null && value !== '' && value !== false;
 }
 
 export function isNotEmpty(value) {

@@ -10,6 +10,18 @@ export const tasksController = {
         if (!Array.isArray(tasksList)) {
             throw new Error(ERR_CONTROLLER.TASK_LIST);
         }
+        if (!projectName || 
+            !isValid(projectId) ||  
+            !title || 
+            !dueDate || 
+            !priority || 
+            description === undefined || 
+            notes === undefined
+            ) {
+            throw new Error(ERR_CONTROLLER.TASK_DATA);
+        }
+
+
         if (!noDuplicateTitle(tasksList, title)) {
             return -1;
         }
@@ -18,7 +30,12 @@ export const tasksController = {
         newTaskStatus = updateOverdueStatus(newTaskStatus, parseISO(dueDate));
         
         const newTask = new Task(
-            { projectId, title, dueDate, priority, description, notes }, 
+            projectId, 
+            title, 
+            dueDate, 
+            priority, 
+            description, 
+            notes, 
             projectName, 
             newTaskStatus
             );
@@ -27,7 +44,7 @@ export const tasksController = {
     },
 
     edit: (tasksList, inputEditedTask) => {
-        const { taskId, projectId, title, dueDate, priority, description, notes } = inputEditedTask;
+        const { projectName, taskId, projectId, title, dueDate, priority, description, notes } = inputEditedTask;
         if (!Array.isArray(tasksList)) {
             throw new Error(ERR_CONTROLLER.TASK_LIST);
         }
@@ -112,10 +129,6 @@ export const tasksController = {
         }
         if (!isValid(editedProjectName)) {
             throw new Error(ERR_CONTROLLER.TASK_DATA);
-        }
-
-        if (!isValid(editedTaskIndex)) {
-            throw new Error(ERR_CONTROLLER.EDIT_PROJECT_DATA);
         }
 
         const editedTaskList = [...tasksList];

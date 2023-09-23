@@ -1,6 +1,6 @@
 import { application } from '../main-app.js';
 import { renderTask } from './dom.js';
-import { ACTIONS_TASKS, isHTMLElement, isNotEmpty, isObject, isValid, showErrorModal } from '../utils.js';
+import { ACTIONS_TASKS, isHTMLElement, isNodeList, isNotEmpty, isObject, isValid, showErrorModal } from '../utils.js';
 import { getTaskNodes } from './static-selectors.js';
 import { ERR_APPLY_EVENTS, ERR_HEADINGS } from './errors-text.js';
 
@@ -16,7 +16,7 @@ export function addListenersManageTasks() {
     }
 
     main.addEventListener('click', (e) => {
-        const reactiveTaskIcon = e.target.closest('.task, img');
+        const reactiveTaskIcon = e.target.closest('.task, button, svg');
         if (isHTMLElement(reactiveTaskIcon)) {
             const action = reactiveTaskIcon.getAttribute('data-task-action');
 
@@ -103,6 +103,8 @@ const taskAction = (action, target) => {
             }
 
             task.setAttribute('data-task-status', updatedTaskStatus);
+
+            handleToggleOverdueIcon(task);
             break;
 
         case ACTIONS_TASKS.EDIT:
@@ -157,6 +159,7 @@ const taskAction = (action, target) => {
                 target.setAttribute('src', '../src/originals/fold.svg');
             }
             break;
+        
     }
 }
 
@@ -170,7 +173,7 @@ const handleTaskEditSubmit = (e) => {
         descriptionInput,
         notesInput 
     } = getTaskNodes();
-    const priorityInput = document.querySelector('.task-menu input[name="priority"]:checked');
+    const priorityInputs = document.querySelectorAll('.task-menu input[name="priority"]');
     const action = menu.getAttribute('data-task-action');
     const projectId = menu.getAttribute('data-project-id');
 
@@ -181,7 +184,7 @@ const handleTaskEditSubmit = (e) => {
     !isHTMLElement(dueDateInput) || 
     !isHTMLElement(descriptionInput) || 
     !isHTMLElement(notesInput) ||
-    !isHTMLElement(priorityInput)
+    !isNodeList(priorityInputs)
     ) {
         showErrorModal([ERR_HEADINGS.SUBMITTING, ERR_APPLY_EVENTS.TASK_MENU_SHOWING])
     }
@@ -190,9 +193,10 @@ const handleTaskEditSubmit = (e) => {
         return;
     }
 
-    if (!isNotEmpty(titleInput.value) || 
-    !isNotEmpty(dueDateInput.value) || 
-    !isNotEmpty(priorityInput.value)
+    const priorityInput = document.querySelector('.task-menu input[name="priority"]:checked');
+    if (!isValid(titleInput) || 
+    !isValid(dueDateInput) || 
+    !isValid(priorityInput)
     ) {
         showErrorModal(['Invalid input (empty field(s))', 'One or more of the required fields\' values are empty!']);
         return;
@@ -211,7 +215,7 @@ const handleTaskEditSubmit = (e) => {
 
             let newTask;
             try {
-                newTask = application.editTask(inputNewTask);
+                newTask = application.createNewTask(inputNewTask);
             } catch (e) {
                 showErrorModal([ERR_HEADINGS.SUBMIT_ADDING, e.message]);
                 return;
@@ -227,9 +231,11 @@ const handleTaskEditSubmit = (e) => {
         case ACTIONS_TASKS.EDIT:
             const taskId = menu.getAttribute('data-task-id');
 
+            
             const taskSelector = `.task[data-project-id="${projectId}"][data-task-id="${taskId}"]`;
             const editedTaskNode = document.querySelector(taskSelector);
-
+            const projectName = document.querySelector(taskSelector + ' .task-project-name');
+            
             const oldTitle = document.querySelector(taskSelector + ' .task-title');
             const oldDueDate = document.querySelector(taskSelector + ' .task-due-date span');
             const oldDescription = document.querySelector(taskSelector + ' .task-description');
@@ -249,6 +255,7 @@ const handleTaskEditSubmit = (e) => {
             }
     
             const inputEditedTask = {   
+                projectName: projectName.textContent,
                 projectId: projectId,
                 id: taskId,
                 title: titleInput.value, 
@@ -276,10 +283,9 @@ const handleTaskEditSubmit = (e) => {
             oldDueDate.textContent = dueDateInput.value;
             oldDescription.textContent = descriptionInput.value;
             oldNotes.textContent = notesInput.value;
-            break;
 
-        default:
-            showErrorModal('Error: action value is not valid');
+            handleToggleOverdueIcon(editedTaskNode);
+            break;
     }
 }
 
@@ -310,4 +316,14 @@ const handleExitMenu = (e) => {
     menu.removeAttribute('data-group-id');
     menu.removeAttribute('data-task-action');
     menu.removeAttribute('data-task-id')
+}
+
+const handleToggleOverdueIcon = (task) => {
+    const icon = task.querySelector('img.overdue');
+    const newStatus = task.getAttribute('data-task-status')
+    if (newStatus === '2') {
+        icon.classList.add('shown');
+    } else {
+        icon.classList.remove('shown');
+    }
 }

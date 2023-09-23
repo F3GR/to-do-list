@@ -8,7 +8,16 @@ export class Project {
     }
 
     static projectId = 1;
-    static getNewId = () => Project.projectId;
-    static incrementNewProjectId = () => Project.projectId++;
-    static resetId = () => Project.projectId = 1;
-};
+    static getNewId() {
+        return Project.projectId;
+    }
+    static incrementNewProjectId() {
+        Project.projectId++;
+    }
+    static resetId() {
+        Project.projectId = 1;
+    }
+}
+
+
+

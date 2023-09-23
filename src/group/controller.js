@@ -1,6 +1,6 @@
 import { isToday, parseISO, differenceInWeeks } from 'date-fns';
 import { STATUS, STANDARD_GROUPS } from '../utils.js';
-import { ERR_CONTROLLER } from '../utils.js';
+import { ERR_CONTROLLER } from './errors-text.js';
 
 export const groupsController = {
     getTaskListByGroup: (taskList, groupIdentifier) => {

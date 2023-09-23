@@ -6,7 +6,7 @@ import { isHTMLElement } from './utils.js';
 import { showErrorModal } from './utils.js';
 
 const ERR_HEADINGS = new Enum ({
-    BODY: 'Error (webpage body)',
+    CONTENT: 'Error (webpage content)',
     MAIN_PAGE: 'Error (rendering main page)',
     MENU_TEMPLATE: 'Error (rendering menu template)',
     ERROR_MODAL: 'Error (rendering error modal)',
@@ -172,11 +172,11 @@ function renderMainPageTemplate() {
     const taskBarText = createElementWithAttributes('span', {}, mainTaskNumber);
     taskBarText.textContent = 'Tasks';
 
-    const addNewTaskIcon = createElementWithAttributes('img', { 
-        alt: 'Add new Task icon',
-        class: 'add-new'
+    const addNewTaskIcon = createElementWithAttributes('button', { 
+        class: 'add-new',
     }, mainTaskBar);
-    addNewTaskIcon.src = assets.addNewTaskIconPath;
+    addNewTaskIcon.ariaLabel = 'Add new task';
+    addNewTaskIcon.style.backgroundImage = `url(${assets.addNewTaskIconPath})`;
 
     addNewTaskIcon.setAttribute('data-task-action', ACTIONS_TASKS.ADD_NEW);
 
@@ -260,7 +260,6 @@ function renderProjectMenuTemplate() {
     }, projectMenuForm);
 
     const formIconFieldset = createElementWithAttributes('fieldset', {
-        required: 'required'
     }, projectMenuForm);
     const formIconLegend = createElementWithAttributes('legend', {}, formIconFieldset);
     formIconLegend.textContent = 'Icon*:'
@@ -271,6 +270,7 @@ function renderProjectMenuTemplate() {
         name: 'iconURL',
         value: './originals/category-job.svg',
     }, formIconFieldset);
+    inputCategoryJob.ariaRequired = true;
     inputCategoryJob.setAttribute('data-alt-text', 'Category Job icon');
 
     const iconCategoryJobLabel = createElementWithAttributes('label', {
@@ -436,11 +436,11 @@ function renderTaskMenuTemplate() {
         class: 'title'
     }, taskMenuTitleBox);
 
-    const taskMenuExitIcon = createElementWithAttributes('img', {
+    const taskMenuExitIcon = createElementWithAttributes('button', {
         class: 'exit',
-        alt: 'Exit icon'
     }, taskMenuTitleBox);
-    taskMenuExitIcon.src = assets.taskMenuExitIconPath;
+    taskMenuExitIcon.ariaLabel = 'Exit task menu';
+    taskMenuExitIcon.style.backgroundImage = `url(${assets.taskMenuExitIconPath})`;
 
     const taskMenuForm = createElementWithAttributes('form', {
     }, taskMenu);
@@ -460,7 +460,7 @@ function renderTaskMenuTemplate() {
     const formDueDateLabel = createElementWithAttributes('label', {
         for: 'task-dueDate'
     }, taskMenuForm);
-    formDueDateLabel.textContent = 'Due Date:'
+    formDueDateLabel.textContent = 'Due Date*:'
 
     const formDueDate = createElementWithAttributes('input', {
         type: 'date',
@@ -473,7 +473,7 @@ function renderTaskMenuTemplate() {
     }, taskMenuForm);
 
     const formPriorityLegend = createElementWithAttributes('legend', {}, formPriorityFieldset);
-    formPriorityLegend.textContent = 'What is the task\'s priority?'
+    formPriorityLegend.textContent = 'What is the task\'s priority?*'
 
     const radioPriorityHigh = createElementWithAttributes('input', {
         id: 'priority-high',
@@ -481,6 +481,7 @@ function renderTaskMenuTemplate() {
         name: 'priority',
         value: '2'
     }, formPriorityFieldset);
+    radioPriorityHigh.ariaRequired = true;
 
     const labelPriorityHigh = createElementWithAttributes('label', {
         for: 'priority-high'
@@ -555,25 +556,35 @@ function renderTaskMenuTemplate() {
 // message === [error type, error message];
 // if the the error is not the system (app) error => error type === null 
 function renderErrorModal() {
-    const body = document.body;
+    const content = document.querySelector('.content');
     const menuCover = document.querySelector('.menu-cover');
-    if (!isHTMLElement(body)) {
-        showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.BODY_NOT_FOUND]);
+    if (!isHTMLElement(content)) {
+        showErrorModal([ERR_HEADINGS.CONTENT, ERR_MESSAGE.CONTENT_NOT_FOUND]);
         return;
     }
-    if (!isHTMLElement(body)) {
+    if (!isHTMLElement(menuCover)) {
         showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.MENU_COVER_NOT_FOUND]);
         return;
     }
 
+    const errorCover = createElementWithAttributes('div', {
+        class: 'error-cover'
+    }, content);
+
     const modalBox = createElementWithAttributes('div', {
         class: 'error-modal',
-    }, body);
+    }, content);
+
+    const modalExitIcon = createElementWithAttributes('img', {
+        class: 'exit',
+        alt: 'Exit icon'
+    }, modalBox);
+    modalExitIcon.src = assets.taskMenuExitIconPath;
 
     const messageHeading  = createElementWithAttributes('h2', {
-        class: 'error-type',
+        class: 'error-heading',
     }, modalBox);
-    messagePara.textContent = '';
+    messageHeading.textContent = '';
 
     const messagePara  = createElementWithAttributes('p', {
         class: 'error-message',
@@ -583,7 +594,7 @@ function renderErrorModal() {
     const buttonExit = createElementWithAttributes('button', {
         class: 'exit',
     }, modalBox);
-    buttonCancel.textContent = 'OK';
+    buttonExit.textContent = 'OK';
     buttonExit.addEventListener('click', () => {
         if (!isHTMLElement(menuCover)) {
             showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.MENU_COVER_NOT_FOUND]);
@@ -597,8 +608,9 @@ function renderErrorModal() {
             showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.PARA_NOT_FOUND]);
             return;
         }
-        
-        menuCover.classList.remove('shown');
+
+        modalBox.classList.remove('shown');
+        errorCover.classList.remove('shown');
         messageHeading.textContent = '';
         messagePara.textContent = '';
     });

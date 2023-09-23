@@ -50,9 +50,11 @@ export function renderTask(taskObj) {
         for: 'task-status', 
         class: 'status-checkbox'
     }, task);
+    
 
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', 'M2,10 L8,16 L18,5');
+    
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
     svg.classList.add('status-checkbox');
@@ -81,30 +83,44 @@ export function renderTask(taskObj) {
     const taskDueDateText = createElementWithAttributes('span', {class: '', }, taskDueDateBox);
     taskDueDateText.textContent = `${dueDate}`;
 
-    const taskEditIcon = createElementWithAttributes('img', {
-        src: assets.taskEditIconPath, 
-        alt: 'Task edit information icon',
+    const taskEditIcon = createElementWithAttributes('button', {
         class: 'edit'
     }, task);
+    taskEditIcon.ariaLabel = 'Edit task';
+    taskEditIcon.style.backgroundImage = `url(${assets.taskEditIconPath})`;
     taskEditIcon.setAttribute('data-task-action', ACTIONS_TASKS.EDIT);
 
-    const taskRemoveIcon = createElementWithAttributes('img', {
-        src: assets.taskRemoveIconPath, 
-        alt: 'Task remove icon',
+    const taskRemoveIcon = createElementWithAttributes('button', {
         class: 'remove'
     }, task);
+    taskEditIcon.ariaLabel = 'Remove task';
+    taskRemoveIcon.style.backgroundImage = `url(${assets.taskRemoveIconPath})`;
     taskRemoveIcon.setAttribute('data-task-action', ACTIONS_TASKS.REMOVE);
 
-    const taskUnfoldIcon = createElementWithAttributes('img', {
-        src: assets.taskUnfoldIconPath, 
-        alt: 'Task information unfold or fold icon',
+    const taskUnfoldIcon = createElementWithAttributes('button', {
         class: 'unfold'
     }, task);
+    taskUnfoldIcon.ariaLabel = 'Unfold or fold task\'s details panel';
+    taskUnfoldIcon.style.backgroundImage = assets.taskUnfoldIconPath;
     taskUnfoldIcon.setAttribute('data-task-action', ACTIONS_TASKS.UNFOLD);
 
     const taskUnfoldedPanel = createElementWithAttributes('div', {
         class: 'task-unfold-box',
     }, task);
+
+    const taskProjectNameBox = createElementWithAttributes('div', {
+        class: 'task-project-name-box',
+    }, taskUnfoldedPanel);
+    
+    const taskProjectTitle = createElementWithAttributes('span', {
+        class: 'task-project-title',
+    }, taskProjectNameBox);
+    taskProjectTitle.textContent = 'Project: ';
+
+    const taskProjectName = createElementWithAttributes('span', {
+        class: 'task-project-name',
+    }, taskProjectNameBox);
+    taskProjectName.textContent = `${projectName}`;
 
     const taskDescriptionBox = createElementWithAttributes('div', {
         class: 'task-description-box',
@@ -133,18 +149,4 @@ export function renderTask(taskObj) {
         class: 'task-notes',
     }, taskNotesBox);
     taskNotes.textContent = `${notes}`;
-
-    const taskProjectNameBox = createElementWithAttributes('div', {
-        class: 'task-project-name-box',
-    }, taskUnfoldedPanel);
-
-    const taskProjectTitle = createElementWithAttributes('span', {
-        class: 'task-project-title',
-    }, taskProjectNameBox);
-    taskProjectTitle.textContent = 'Project: ';
-
-    const taskProjectName = createElementWithAttributes('span', {
-        class: 'task-project-name',
-    }, taskProjectNameBox);
-    taskProjectName.textContent = `${projectName}`;
 }

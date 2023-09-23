@@ -2,7 +2,7 @@ import { createElementWithAttributes } from '../utils.js';
 import { showErrorModal, ACTIONS_PROJECTS, isHTMLElement, isValid } from '../utils.js';
 import { getProjectNodes } from './static-selectors.js';
 import { assets } from './assets.js';
-import { ERR_HEADINGS, ERR_RENDERING } from './errors-msg.js';
+import { ERR_HEADINGS, ERR_RENDERING } from './errors-text.js';
 
 export function renderProject(project) {
     const { projectsList } = getProjectNodes();
@@ -29,17 +29,17 @@ export function renderProject(project) {
     const newProjectText = createElementWithAttributes('span', {}, nodeNewProject);
     newProjectText.textContent = name;
 
-    const newProjectEditImage = createElementWithAttributes('img', {
-        src: assets.newProjectEditImagePath,
-        alt: 'Edit project icon',
+    const newProjectEditImage = createElementWithAttributes('button', {
         class: 'edit',
     }, nodeNewProject);
+    newProjectEditImage.ariaLabel = 'Edit project';
+    newProjectEditImage.style.backgroundImage = `url(${assets.newProjectEditImagePath})`;
     newProjectEditImage.setAttribute('data-project-action', ACTIONS_PROJECTS.EDIT);
     
-    const newProjectDeleteImage = createElementWithAttributes('img', {
-        src: assets.newProjectDeleteImagePath,
-        alt: 'Remove project icon',
+    const newProjectDeleteImage = createElementWithAttributes('button', {
         class: 'remove',
     }, nodeNewProject);
+    newProjectDeleteImage.ariaLabel = 'Remove project';
+    newProjectDeleteImage.style.backgroundImage = `url(${assets.newProjectDeleteImagePath})`,
     newProjectDeleteImage.setAttribute('data-project-action', ACTIONS_PROJECTS.REMOVE);
 };
