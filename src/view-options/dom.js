@@ -3,11 +3,12 @@ import { getMainNodes, getViewOptionsNodes } from './static-selectors.js';
 import { SORTBY, isBoolean } from '../utils.js';
 import { application } from '../main-app.js';
 import { assets } from './assets.js';
+import { ERR_HEADINGS, ERR_RENDERING } from './errors-text.js';
 
 export function renderFilterOptionsMenu() {
     const { main } = getMainNodes();
     if (!isHTMLElement(main)) {
-        showErrorModal('Error (rendering filtering options menu): main content panel wasn\'t found');
+        showErrorModal([ERR_HEADINGS.RENDERING, ERR_RENDERING.MAIN_PANEL]);
         return;
     }
 
@@ -173,6 +174,19 @@ function applySavedViewState() {
     } = getViewOptionsNodes();
     const selectSortOptions = document.querySelector('.view-options-bar select');
 
+    if (!isHTMLElement(checkboxPriorityHigh) ||
+    !isHTMLElement(checkboxPriorityMedium) ||
+    !isHTMLElement(checkboxPriorityNormal) ||
+    !isHTMLElement(checkboxStatusOnGoing) ||
+    !isHTMLElement(checkboxStatusCompleted) ||
+    !isHTMLElement(checkboxStatusOverdue) ||
+    !isHTMLElement(checkboxSortAscendingOrder) ||
+    !isHTMLElement(selectSortOptions)
+    ) {
+        showErrorModal([ERR_HEADINGS.RENDERING, ERR_RENDERING.OPTIONS_NODES]);
+        return;
+    }
+
     if (!isBoolean(flagIncludeHigh) || 
     !isBoolean(flagIncludeMedium) || 
     !isBoolean(flagIncludeNormal) ||
@@ -180,30 +194,15 @@ function applySavedViewState() {
     !isBoolean(flagIncludeCompleted) || 
     !isBoolean(flagIncludeOverdue)
     ) {
-        showErrorModal('Error (rendering filtering options menu): one or more of the filter option values is not valid');
+        showErrorModal(ERR_HEADINGS.RENDERING, ERR_RENDERING.FILTER_VALUES);
         return;
     }
     if (!isBoolean(ascendingOrder)) {
-        showErrorModal('Error (rendering filtering options menu): the order value of sort option is not valid');
+        showErrorModal(ERR_HEADINGS.RENDERING, ERR_RENDERING.SORT_ORDER_VALUE);
         return;
     }
     if (!Object.values(SORTBY).includes(sortBy)) {
-        showErrorModal('Error (rendering filtering options menu): sort option value is not valid');
-        return;
-    }
-    if (!isHTMLElement(checkboxPriorityHigh) ||
-        !isHTMLElement(checkboxPriorityMedium) ||
-        !isHTMLElement(checkboxPriorityNormal) ||
-        !isHTMLElement(checkboxStatusOnGoing) ||
-        !isHTMLElement(checkboxStatusCompleted) ||
-        !isHTMLElement(checkboxStatusOverdue) ||
-        !isHTMLElement(checkboxSortAscendingOrder)
-        ) {
-        showErrorModal('Error (rendering filtering options menu): one or more the filter option elements weren\'t found');
-        return;
-    }
-    if (!isHTMLElement(selectSortOptions)) {
-        showErrorModal('Error (rendering filtering options menu): select options menu element wasn\'t found');
+        showErrorModal(ERR_HEADINGS.RENDERING, ERR_RENDERING.SORT_OPTION_VALUE);
         return;
     }
 

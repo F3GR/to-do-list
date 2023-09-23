@@ -1,7 +1,8 @@
 import { application } from '../main-app.js';
 import { renderTask } from '../task/dom.js';
-import { isHTMLElement, showErrorModal } from '../utils.js';
+import { isBoolean, isHTMLElement, showErrorModal } from '../utils.js';
 import { getMainNodes, getViewOptionsNodes } from './static-selectors.js';
+import { ERR_APPLY_EVENTS, ERR_HEADINGS } from './errors-text.js';
 
 export function addListenersViewOptions() {
     const {
@@ -20,19 +21,39 @@ export function addListenersViewOptions() {
     } = getMainNodes();
     const selectSortOptions = document.querySelector('.view-options-bar select');
 
-    if (!isHTMLElement(checkboxPriorityHigh) ||
-        !isHTMLElement(checkboxPriorityMedium) ||
-        !isHTMLElement(checkboxPriorityNormal) ||
-        !isHTMLElement(checkboxStatusOnGoing) ||
-        !isHTMLElement(checkboxStatusCompleted) ||
-        !isHTMLElement(checkboxStatusOverdue) ||
-        !isHTMLElement(checkboxSortAscendingOrder)
-        ) {
-        showErrorModal('Error (applying events on filtering options menu): one or more the filter option elements weren\'t found');
+    if (!isHTMLElement(taskList)) {
+        showErrorModal([ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.TASK_LIST_PANEL]);
         return;
     }
-    if (!isHTMLElement(selectSortOptions)) {
-        showErrorModal('Error (rendering filtering options menu): select options menu element wasn\'t found');
+    if (!isHTMLElement(checkboxPriorityHigh) ||
+    !isHTMLElement(checkboxPriorityMedium) ||
+    !isHTMLElement(checkboxPriorityNormal) ||
+    !isHTMLElement(checkboxStatusOnGoing) ||
+    !isHTMLElement(checkboxStatusCompleted) ||
+    !isHTMLElement(checkboxStatusOverdue) ||
+    !isHTMLElement(checkboxSortAscendingOrder) ||
+    !isHTMLElement(selectSortOptions)
+    ) {
+        showErrorModal([ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.OPTIONS_NODES]);
+        return;
+    }
+
+    if (!isBoolean(checkboxPriorityHigh.checked) ||
+    !isBoolean(checkboxPriorityMedium.checked) ||
+    !isBoolean(checkboxPriorityNormal.checked) ||
+    !isBoolean(checkboxStatusOnGoing.checked) ||
+    !isBoolean(checkboxStatusCompleted.checked) ||
+    !isBoolean(checkboxStatusOverdue.checked)
+    ) {
+        showErrorModal(ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.FILTER_VALUES);
+        return;
+    }
+    if (!isBoolean(checkboxSortAscendingOrder.value)) {
+        showErrorModal(ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.SORT_ORDER_VALUE);
+        return;
+    }
+    if (!Object.values(SORTBY).includes(selectSortOptions.value)) {
+        showErrorModal(ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.SORT_OPTION_VALUE);
         return;
     }
 
@@ -91,9 +112,11 @@ const handleViewOptionsChange = (queries) => {
     newState.sortBy = sortOptions.value;
     newState.ascendingOrder = checkboxSortAscendingOrder.checked;
 
-    const tasksWithUpdatedView = application.applyViewOptions(newState);
-    if (!isHTMLElement(tasksWithUpdatedView)) {
-        showErrorModal(tasksWithUpdatedView);
+    let tasksWithUpdatedView;
+    try {
+        tasksWithUpdatedView = application.applyViewOptions(newState);
+    } catch (e) {
+        showErrorModal([ERR_APPLY_EVENTS.UPDATING_TASKS_NODE, e.message]);
         return;
     }
 

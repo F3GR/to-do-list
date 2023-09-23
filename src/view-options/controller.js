@@ -1,12 +1,13 @@
 import { parseISO } from 'date-fns';
 import { PRIORITY, STATUS, SORTBY } from '../utils.js';
 import { isBoolean } from '../utils.js';
+import { ERR_CONTROLLER } from './errors-text.js';
 
 export const viewController = {
     filter: (tasksGroup, viewState) => {
         const {
             flagIncludeHigh, 
-            flagIncludeMedium, 
+            flagIncludeMedium,
             flagIncludeNormal,
             flagIncludeOnGoing, 
             flagIncludeCompleted, 
@@ -14,7 +15,7 @@ export const viewController = {
         } = viewState;
 
         if (!Array.isArray(tasksGroup)) {
-            return 'Error (filtering tasks): tasks group wasn\'t found';
+            throw new Error(ERR_CONTROLLER.TASK_GROUP);
         }
         if (!isBoolean(flagIncludeHigh) || 
             !isBoolean(flagIncludeMedium) || 
@@ -22,7 +23,7 @@ export const viewController = {
             !isBoolean(flagIncludeOnGoing) || 
             !isBoolean(flagIncludeCompleted) || 
             !isBoolean(flagIncludeOverdue)) {
-            return 'Error (filtering tasks): one or more of the filter option values is not valid';
+            throw new Error(ERR_CONTROLLER.FILTER_VALUES);
         }
         
         return tasksGroup
@@ -51,13 +52,13 @@ export const viewController = {
         const { sortBy, ascendingOrder } = viewState;
 
         if (!Array.isArray(tasksGroup)) {
-            return 'Error (sorting tasks): tasks group wasn\'t found';
+            throw new Error(ERR_CONTROLLER.TASK_GROUP);
         }
         if (!isBoolean(ascendingOrder)) {
-            return 'Error (sorting tasks): the order value of sort option wasn\'t found';
+            throw new Error(ERR_CONTROLLER.SORT_ORDER_VALUE);
         }
         if (!Object.values(SORTBY).includes(sortBy)) {
-            return 'Error (sorting tasks): sort option value is not valid';
+            throw new Error(ERR_CONTROLLER.SORT_OPTION_VALUE);
         }
 
         switch (sortBy) {

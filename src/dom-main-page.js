@@ -1,21 +1,36 @@
-import { createElementWithAttributes } from './utils.js';
+import { Enum, createElementWithAttributes } from './utils.js';
 import { ACTIONS_PROJECTS } from './utils.js';
 import { ACTIONS_TASKS } from './utils.js';
 import { assets } from './assets.js';
 import { isHTMLElement } from './utils.js';
-import { isValid } from 'date-fns';
+import { showErrorModal } from './utils.js';
+
+const ERR_HEADINGS = new Enum ({
+    BODY: 'Error (webpage body)',
+    MAIN_PAGE: 'Error (rendering main page)',
+    MENU_TEMPLATE: 'Error (rendering menu template)',
+    ERROR_MODAL: 'Error (rendering error modal)',
+});
+
+const ERR_MESSAGE = new Enum ({
+    CONTENT_NOT_FOUND: 'Content element couldn\'t be found',
+    BODY_NOT_FOUND: 'Body element couldn\'t be found',
+    HEADING_NOT_FOUND: 'Heading element couldn\'t be found',
+    PARA_NOT_FOUND: 'Message element couldn\'t be found',
+    MENU_COVER_NOT_FOUND: 'Modal cover element couldn\'t be found',
+});
 
 export function renderMainPage() {
     renderMainPageTemplate();
     renderProjectMenuTemplate();
     renderTaskMenuTemplate();
-    renderErrorModal(['', '']);
+    renderErrorModal();
 };
 
 function renderMainPageTemplate() {
     const content = document.querySelector('.content');
     if (!isHTMLElement(content)) {
-        renderErrorModal(['Error (rendering menu template):', 'Content element wasn\'t found']);
+        showErrorModal([ERR_HEADINGS.MAIN_PAGE, ERR_MESSAGE.CONTENT_NOT_FOUND]);
         return;
     }
 
@@ -203,7 +218,7 @@ function renderMainPageTemplate() {
 function renderProjectMenuTemplate() {
     const content = document.querySelector('.content');
     if (!isHTMLElement(content)) {
-        renderErrorModal(['Error (rendering menu template):', 'Content element wasn\'t found']);
+        showErrorModal([ERR_HEADINGS.MENU_TEMPLATE, ERR_MESSAGE.CONTENT_NOT_FOUND]);
         return;
     }
 
@@ -405,7 +420,7 @@ function renderProjectMenuTemplate() {
 function renderTaskMenuTemplate() {
     const content = document.querySelector('.content');
     if (!isHTMLElement(content)) {
-        renderErrorModal(['Error (rendering menu template):', 'Content element wasn\'t found']);
+        showErrorModal([ERR_HEADINGS.MENU_TEMPLATE, ERR_MESSAGE.CONTENT_NOT_FOUND]);
         return;
     }
 
@@ -539,9 +554,17 @@ function renderTaskMenuTemplate() {
 
 // message === [error type, error message];
 // if the the error is not the system (app) error => error type === null 
-function renderErrorModal(message) {
+function renderErrorModal() {
     const body = document.body;
     const menuCover = document.querySelector('.menu-cover');
+    if (!isHTMLElement(body)) {
+        showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.BODY_NOT_FOUND]);
+        return;
+    }
+    if (!isHTMLElement(body)) {
+        showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.MENU_COVER_NOT_FOUND]);
+        return;
+    }
 
     const modalBox = createElementWithAttributes('div', {
         class: 'error-modal',
@@ -550,12 +573,12 @@ function renderErrorModal(message) {
     const messageHeading  = createElementWithAttributes('h2', {
         class: 'error-type',
     }, modalBox);
-    messagePara.textContent = message[0];
+    messagePara.textContent = '';
 
     const messagePara  = createElementWithAttributes('p', {
         class: 'error-message',
     }, modalBox);
-    messagePara.textContent = message[1];
+    messagePara.textContent = '';
 
     const buttonExit = createElementWithAttributes('button', {
         class: 'exit',
@@ -563,15 +586,15 @@ function renderErrorModal(message) {
     buttonCancel.textContent = 'OK';
     buttonExit.addEventListener('click', () => {
         if (!isHTMLElement(menuCover)) {
-            renderErrorModal(['Error (rendering error modal):', 'Modal cover element wasn\'t found']);
+            showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.MENU_COVER_NOT_FOUND]);
             return;
         }
         if (!isHTMLElement(messagePara)) {
-            renderErrorModal(['Error (rendering error modal):', 'Heading element wasn\'t found']);
+            showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.HEADING_NOT_FOUND]);
             return;
         }
         if (!isHTMLElement(messagePara)) {
-            renderErrorModal(['Error (rendering error modal):', 'Message element wasn\'t found']);
+            showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.PARA_NOT_FOUND]);
             return;
         }
         

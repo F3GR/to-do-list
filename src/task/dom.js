@@ -1,9 +1,11 @@
-import { createElementWithAttributes } from '../utils.js';
+import { createElementWithAttributes, showErrorModal } from '../utils.js';
 import { isHTMLElement, isValid, ACTIONS_TASKS } from '../utils.js';
 import { getTaskNodes } from './static-selectors.js';
 import { assets } from './assets.js';
+import { ERR_HEADINGS, ERR_RENDERING } from './errors-text.js';
 
 export function renderTask(taskObj) {
+    const { taskList } = getTaskNodes();
     const { 
         projectId, 
         projectName, 
@@ -15,8 +17,11 @@ export function renderTask(taskObj) {
         description, 
         notes 
     } = taskObj;
-    const { taskList } = getTaskNodes();
 
+    if (!isHTMLElement(taskList)) {
+        showErrorModal([ERR_HEADINGS.RENDERING, ERR_RENDERING.TASK_LIST_PANEL]);
+        return;
+    }
     if (!isValid(projectId) || 
         !projectName || 
         !isValid(id) || 
@@ -24,13 +29,10 @@ export function renderTask(taskObj) {
         !dueDate || 
         !status || 
         !priority) {
-            alert('Error: one or more task data values weren\'t found');
+            showErrorModal([ERR_HEADINGS.RENDERING, ERR_RENDERING.TASK_VALUES]);
             return;
     }
-    if (!isHTMLElement(taskList)) {
-        alert('Error: task list wasn\'t found');
-        return;
-    }
+
     
     const task = createElementWithAttributes('li', {class: 'task'}, taskList);
     task.setAttribute('data-project-id', `${projectId}`);

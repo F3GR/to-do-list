@@ -3,7 +3,7 @@ import { renderProject } from './dom.js';
 import { renderGroup } from '../group/dom.js';
 import { getProjectNodes } from './static-selectors.js';
 import { showErrorModal, STANDARD_GROUPS, ACTIONS_PROJECTS, isHTMLElement, isValid, isObject } from '../utils.js';
-import { ERR_APPLY_EVENTS, ERR_HEADINGS, } from './errors-text.js';
+import { ERR_APPLY_EVENTS, ERR_HEADINGS } from './errors-text.js';
 
 export function addListenersManageProjects() {
     const { projectsBar, form, exitButton, cancelButton } = getProjectNodes();
@@ -168,8 +168,7 @@ const submitForm = (action) => {
                 showErrorModal([ERR_HEADINGS.SUBMIT_ADDING, e.message]);
                 return;
             }
-
-            if (!isHTMLElement(editedProject)) {
+            if (!isObject(editedProject)) {
                 showErrorModal(['Invalid input (project name)', 'A project with the new name already exists!']);
                 return;
             }
@@ -182,7 +181,7 @@ const submitForm = (action) => {
             const id = menu.getAttribute('data-group-id');
 
             if (!menu) {
-                showErrorModal([ERR_HEADINGS.SUBMIT_EDITING, ERR_APPLY_EVENTS.PROJECT_MENU]);
+                showErrorModal([ERR_HEADINGS.SUBMIT_EDITING, ERR_APPLY_EVENTS.PROJECT_MENU_SHOWING]);
                 return;
             }
             if (!id) {
@@ -204,7 +203,6 @@ const submitForm = (action) => {
                 showErrorModal([ERR_HEADINGS.SUBMIT_EDITING, e.message]);
                 return;
             }
-
             if (!isObject(editedProject)) {
                 showErrorModal(['Invalid input (project name)', 'A project with the new name already exists!']);
                 return;
@@ -222,20 +220,17 @@ const updateEditedProjectNode = (project) => {
     const editedProjectNodeIcon = document.querySelector(`.project[data-group-id="${id}"] .icon`);
     const editedProjectNode = document.querySelector(`.project[data-group-id="${id}"]`);
 
-    if (!isHTMLElement(currentGroupIcon) || !isHTMLElement(currentGroupName)) {
-        showErrorModal('Error: current group icon and/or heading weren\'t found');
+    if (!isHTMLElement(currentGroupIcon) || 
+    !isHTMLElement(currentGroupName) ||
+    !isHTMLElement(editedProjectNodeName) || 
+    !isHTMLElement(editedProjectNodeIcon) ||
+    !isHTMLElement(editedProjectNode)
+    ) {
+        showErrorModal([ERR_HEADINGS.UPDATING_PROJECT_NODE, ERR_APPLY_EVENTS.EDITED_PROJECT_NODES]);
         return;
     }
     if (!isValid(id) || !isValid(name) || !isValid(iconURL) || !isValid(altText)) {
-        showErrorModal('Error: one or more edited project data values weren\'t found');
-        return;
-    }
-    if (!isHTMLElement(editedProjectNodeName) || !isHTMLElement(editedProjectNodeIcon)) {
-        showErrorModal('Error: edited project icon and/or name weren\'t found');
-        return;
-    }
-    if (!isHTMLElement(editedProjectNode)) {
-        showErrorModal('Error: edited project node wasn\'t found');
+        showErrorModal([ERR_HEADINGS.UPDATING_PROJECT_NODE, ERR_APPLY_EVENTS.EDITED_DATA_VALUES]);
         return;
     }
     
@@ -248,7 +243,7 @@ const updateEditedProjectNode = (project) => {
         currentGroupIcon.src = iconURL;
         currentGroupIcon.alt = altText;
     }
-}
+};
 
 const exitHandler = (e) => {
     e.preventDefault();
@@ -259,7 +254,7 @@ const exitHandler = (e) => {
     !isHTMLElement(menuTitle) || 
     !isHTMLElement(submitButton)
     ) {
-        showErrorModal('Error: one or more menu components weren\'t found');
+        showErrorModal([ERR_HEADINGS.EXITING, ERR_APPLY_EVENTS.PROJECT_MENU_RENDERING]);
         return;
     }
   
