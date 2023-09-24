@@ -28,7 +28,7 @@ export const ERR_RENDERING = new Enum({
 export const ERR_APPLY_EVENTS = new Enum({
     PROJECT_MENU_RENDERING: 'One or more menu components couldn\'t be found',
     PROJECT_MENU_SHOWING: 'One or more menu components couldn\'t be found',
-    PROJECT_MENU_SHOWING_REMOVED: 'Removed project or its id couldn\'t be found',
+    PROJECT_MENU_SHOWING_REMOVED: 'Removed project and/or its id couldn\'t be found',
     EDITED_PROJECT: 'Edited project and/or its id couldn\'t be found',
     REMOVED_PROJECT_NODES: 'Current group icon and/or heading couldn\'t be found',
     REMOVED_PROJECT: 'Removed project and/or its id couldn\'t be found',

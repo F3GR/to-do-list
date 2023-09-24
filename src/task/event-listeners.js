@@ -5,11 +5,12 @@ import { getTaskNodes } from './static-selectors.js';
 import { ERR_APPLY_EVENTS, ERR_HEADINGS } from './errors-text.js';
 
 export function addListenersManageTasks() {
-    const { main, form, exitButton, cancelButton } = getTaskNodes();
+    const { main, form, exitButton, cancelButton, removeConfirm } = getTaskNodes();
     if (!isHTMLElement(main) || 
     !isHTMLElement(form) || 
     !isHTMLElement(exitButton) || 
-    !isHTMLElement(cancelButton)
+    !isHTMLElement(cancelButton) ||
+    !isHTMLElement(removeConfirm)
     ) {
         showErrorModal([ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.TASK_MENU_RENDERING]);
         return;
@@ -31,9 +32,14 @@ export function addListenersManageTasks() {
             taskAction(action, reactiveTaskIcon);
         }
     });
-    form.addEventListener('submit', (e) => handleTaskEditSubmit(e));
-    exitButton.addEventListener('click', (e) => handleExitMenu(e));
-    cancelButton.addEventListener('click', (e) => handleExitMenu(e));
+    form.addEventListener('submit', (e) => submitHandler(e));
+    removeConfirm.addEventListener('click', (e) => {
+        if (document.querySelector('.remove-menu').getAttribute('data-task-id')) {
+            removeHandler(e);
+        }
+    });
+    exitButton.addEventListener('click', (e) => exitHandler(e));
+    cancelButton.addEventListener('click', (e) => exitHandler(e));
 }
 
 const taskAction = (action, target) => {
@@ -41,13 +47,19 @@ const taskAction = (action, target) => {
         menu,
         menuCover,
         menuTitle,
-        submitButton
+        submitButton,
+        removeMenu,
+        removeHeading,
+        removeMessage,
     } = getTaskNodes();
 
     if (!isHTMLElement(menu) || 
     !isHTMLElement(menuCover) ||
     !isHTMLElement(menuTitle) || 
-    !isHTMLElement(submitButton)
+    !isHTMLElement(submitButton) ||
+    !isHTMLElement(removeMenu) ||
+    !isHTMLElement(removeHeading) || 
+    !isHTMLElement(removeMessage)
     ) {
         showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.TASK_MENU_SHOWING]);
         return;
@@ -88,7 +100,6 @@ const taskAction = (action, target) => {
 
             const svg = target.closest('.task').querySelector('label svg');
             const path = target.closest('.task').querySelector('label svg path');
-
             if (!isHTMLElement(svg) || !isHTMLElement(path)) {
                 showErrorModal([ERR_HEADINGS.UPDATING_TASK_NODE, ERR_APPLY_EVENTS.NO_TOGGLE_ICON]);
                 return;
@@ -96,15 +107,14 @@ const taskAction = (action, target) => {
 
             const currentTaskStatus = task.getAttribute('data-task-status');
             const updatedTaskStatus = application.toggleTaskStatus(projectId, taskId);
-
             if (!isValid(updatedTaskStatus) || currentTaskStatus === updatedTaskStatus) {
                 showErrorModal([ERR_HEADINGS.UPDATING_TASK_NODE, e.message]);
                 return;
             }
 
             task.setAttribute('data-task-status', updatedTaskStatus);
-
             handleToggleOverdueIcon(task);
+
             break;
 
         case ACTIONS_TASKS.EDIT:
@@ -129,15 +139,15 @@ const taskAction = (action, target) => {
                 return;
             }
 
-            let removedTask;
-            try {
-                removedTask = application.removeTask(projectId, taskId);
-            } catch (e) {
-                showErrorModal([ERR_HEADINGS.SUBMIT_REMOVING, e.message]);
-                return;
-            }
+            removeMenu.task = task;
+            removeMenu.setAttribute('data-project-id', projectId);
+            removeMenu.setAttribute('data-task-id', taskId);
+            removeMenu.setAttribute('data-project-action', action);
 
-            task.remove();
+            menuCover.classList.add('shown');
+            removeMenu.classList.add('shown');
+            removeHeading.textContent = 'Remove the task';
+            removeMessage.textContent = 'Are you sure you want to delete the task?';
             break;
 
         case ACTIONS_TASKS.UNFOLD:
@@ -159,11 +169,53 @@ const taskAction = (action, target) => {
                 target.setAttribute('src', '../src/originals/fold.svg');
             }
             break;
-        
     }
-}
+};
 
-const handleTaskEditSubmit = (e) => {
+const removeHandler = (e) => {
+    const {
+        removeMenu,
+        removeConfirm,
+        removeHeading,
+        removeMessage,
+    } = getTaskNodes();
+
+    if (!isHTMLElement(removeMenu) ||
+    !isHTMLElement(removeConfirm) ||
+    !isHTMLElement(removeHeading) ||
+    !isHTMLElement(removeMessage)
+    ) {
+        showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.PROJECT_MENU_SHOWING]);
+        return;
+    }
+
+    const task = removeMenu.task;
+    const removedProjectId = removeMenu.getAttribute('data-project-id');
+    const removedTaskId = removeMenu.getAttribute('data-task-id');
+    if (!isHTMLElement(task) || !isValid(removedProjectId) || !isValid(removedTaskId)) {
+        showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.PROJECT_MENU_SHOWING_REMOVED]);
+        return;
+    }
+    
+    let removedTask;
+    try {
+        removedTask = application.removeTask(removedProjectId, removedTaskId);
+    } catch (e) {
+        showErrorModal([ERR_HEADINGS.SUBMIT_REMOVING, e.message]);
+        return;
+    }
+
+    task.remove();
+
+    removeMenu.removedTask = null;
+    removeMenu.setAttribute('data-project-id', null);
+    removeMenu.setAttribute('data-task-id', null);
+    removeMenu.setAttribute('data-project-action', null);
+    removeHeading.textContent = '';
+    removeMessage.textContent = '';
+};
+
+const submitHandler = (e) => {
     e.preventDefault();
 
     const { 
@@ -287,9 +339,9 @@ const handleTaskEditSubmit = (e) => {
             handleToggleOverdueIcon(editedTaskNode);
             break;
     }
-}
+};
 
-const handleExitMenu = (e) => {
+const exitHandler = (e) => {
     e.preventDefault();
 
     const { 
@@ -326,4 +378,4 @@ const handleToggleOverdueIcon = (task) => {
     } else {
         icon.classList.remove('shown');
     }
-}
+};

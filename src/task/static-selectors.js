@@ -24,6 +24,11 @@ export function getTaskNodes() {
     const descriptionInput = document.querySelector('.task-menu #task-description');
     const notesInput = document.querySelector('.task-menu #task-notes');
 
+    const removeMenu = document.querySelector('.remove-menu');
+    const removeConfirm = document.querySelector('.remove-confirm');
+    const removeHeading = document.querySelector('.remove-heading');
+    const removeMessage = document.querySelector('.remove-message');
+    
     return taskNodes = {    
         taskList,
         main,
@@ -37,6 +42,10 @@ export function getTaskNodes() {
         titleInput,
         dueDateInput,
         descriptionInput,
-        notesInput    
+        notesInput,
+        removeMenu,
+        removeConfirm,
+        removeHeading,
+        removeMessage,
     };
 };

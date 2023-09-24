@@ -21,7 +21,11 @@ export function addListenersManageProjects() {
 
     projectsBar.addEventListener('click', (e) => openMenuHandler(e));
     form.addEventListener('submit', (e) => submitHandler(e));
-    removeConfirm.addEventListener('click', (e) => removeHandler(e));
+    removeConfirm.addEventListener('click', (e) => {
+        if (!document.querySelector('.remove-menu').getAttribute('data-task-id')) {
+            removeHandler(e);
+        }
+    });
     exitButton.addEventListener('click', (e) => exitHandler(e));
     cancelButton.addEventListener('click', (e) =>  exitHandler(e));
 };
@@ -49,7 +53,6 @@ const openMenu = (action, target) => {
         menuTitle,
         submitButton,
         removeMenu,
-        removeConfirm,
         removeHeading,
         removeMessage,
     } = getProjectNodes();
@@ -59,7 +62,6 @@ const openMenu = (action, target) => {
     !isHTMLElement(menuTitle) || 
     !isHTMLElement(submitButton) ||
     !isHTMLElement(removeMenu) ||
-    !isHTMLElement(removeConfirm) ||
     !isHTMLElement(removeHeading) ||
     !isHTMLElement(removeMessage)
     ) {
@@ -95,20 +97,20 @@ const openMenu = (action, target) => {
 
         case ACTIONS_PROJECTS.REMOVE:
             const { currentGroupIcon, currentGroupName } = getProjectNodes();
-            const removedProject = target.closest('.project');
-            const removedProjectId = removedProject.getAttribute('data-group-id');
+            const project = target.closest('.project');
+            const projectId = project.getAttribute('data-group-id');
 
             if (!isHTMLElement(currentGroupIcon) || !isHTMLElement(currentGroupName)) {
                 showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.REMOVED_PROJECT_NODES]);
                 return;
             }
-            if (!isHTMLElement(removedProject) || !isValid(removedProjectId)) {
+            if (!isHTMLElement(project) || !isValid(projectId)) {
                 showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.REMOVED_PROJECT]);
                 return;
             }
 
-            removeMenu.removedProject = removedProject;
-            removeMenu.removedProjectId = removedProjectId;
+            removeMenu.project = project;
+            removeMenu.setAttribute('data-project-id', projectId);
             removeMenu.setAttribute('data-project-action', action);
 
             menuCover.classList.add('shown');
@@ -138,9 +140,9 @@ const removeHandler = (e) => {
         return;
     }
 
-    const removedProject = removeMenu.removedProject;
-    const removedProjectId = removeMenu.removedProjectId;
-    if (!isHTMLElement(removedProject) || !isValid(removeConfirm)) {
+    const removedProject = removeMenu.project;
+    const removedProjectId = removeMenu.getAttribute('data-project-id');
+    if (!isHTMLElement(removedProject) || !isValid(removedProjectId)) {
         showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.PROJECT_MENU_SHOWING_REMOVED]);
         return;
     }
@@ -158,16 +160,19 @@ const removeHandler = (e) => {
         return;
     }
 
-    currentGroupName.textContent = '';
-    currentGroupIcon.src = '';
-    currentGroupIcon.alt = '';
-
     renderGroup(STANDARD_GROUPS.ALL);
     renderProjectsCount(projectListLength);
     removedProject.remove();
 
+    currentGroupName.textContent = '';
+    currentGroupIcon.src = '';
+    currentGroupIcon.alt = '';
+
     removeMenu.removedProject = null;
-    removeMenu.removedProjectId = null;
+    removeMenu.setAttribute('data-project-id', null);
+    removeMenu.setAttribute('data-project-action', null);
+    removeHeading.textContent = '';
+    removeMessage.textContent = '';
 };
 
 const submitHandler = (e) => {

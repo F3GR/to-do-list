@@ -31,6 +31,7 @@ export const ERR_APPLY_EVENTS = new Enum({
     TASK_MENU_RENDERING: 'One or more menu components couldn\'t be found',
     DEFAULT_ACTION: 'Task action isn\'t valid',
     TASK_MENU_SHOWING: 'One or more menu components couldn\'t be found',
+    TASK_MENU_SHOWING_REMOVED: 'Removed task and/or its id and/or project id couldn\'t be found',
     TASK_MENU_ADD: 'Current project and/or its id couldn\'t be found',
     TASK_ID: 'Task id couldn\'t be found',
     NO_TASK_MENU: 'Task menu couldn\'t be found',
