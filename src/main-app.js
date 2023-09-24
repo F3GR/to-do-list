@@ -12,6 +12,7 @@ import { localStorageController } from './controller-local-storage.js';
 import { renderProject } from './project/dom.js';
 import { renderFilterOptionsMenu } from './view-options/dom.js';
 import { renderGroup } from './group/dom.js';
+import { renderProjectsCount } from './totals/dom-projects-count.js';
 
 import { STANDARD_GROUPS } from './utils.js';
 import { projectExample, taskExample1, taskExample2 } from './examples.js';
@@ -50,9 +51,11 @@ class Application {
             
             console.log('Before forEach:', projectsList);
             projectsList.forEach((project) => renderProject(project));
+            renderProjectsCount(projectsList.length);
     
             const savedGroupId = localStorageController.getCurrentGroupIdentifier();
             renderGroup(savedGroupId);
+
         } catch (e) {
             return e;
         }
@@ -70,12 +73,13 @@ class Application {
 
             const newProject = newProjectsList[newProjectsList.length - 1];
             console.log(`New project: ${newProject}`);
+            const projectsListLength = newProjectsList.length;
     
             localStorageController.setProjectsList(newProjectsList);
             localStorageController.addTaskList(newProject.id);
             console.log(`After (project List): ${localStorage.getItem(`TrackIt: projects-list`)}`);
             console.log(`After (new task List): ${localStorage.getItem(`TrackIt: ${newProject.id}`)}`);
-            return newProject;
+            return { newProject, projectsListLength };
         } catch (e) {
             return e;
         }
@@ -111,11 +115,12 @@ class Application {
             console.log(`Before deleting a project (project List): ${localStorage.getItem(`TrackIt: projects-list`)}`);
             const { editedProjectsList, removedId } = projectsController.remove(projectsList, projectId);
             console.log(`Removed task List: ${localStorage.getItem(`TrackIt: ${removedId}`)}`);
+            const projectsListLength = editedProjectsList.length;
     
             localStorageController.removeTaskList(removedId);
             localStorageController.setProjectsList(editedProjectsList);
             console.log(`After: ${localStorage.getItem(`TrackIt: projects-list`)}`);
-            return true;
+            return projectsListLength;
         } catch (e) {
             return e;
         }

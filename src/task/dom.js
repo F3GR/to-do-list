@@ -77,6 +77,9 @@ export function renderTask(taskObj) {
         alt: 'Task overdue status icon',
         class: 'overdue'
     }, taskOverDueBox);
+    if (status === '2') {
+        taskOverDueIcon.classList.add('shown');
+    }
 
     const taskDueDateBox = createElementWithAttributes('div', {class: 'task-due-date', }, task);
 

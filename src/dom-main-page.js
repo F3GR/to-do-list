@@ -1,29 +1,27 @@
-import { Enum, createElementWithAttributes } from './utils.js';
-import { ACTIONS_PROJECTS } from './utils.js';
-import { ACTIONS_TASKS } from './utils.js';
 import { assets } from './assets.js';
-import { isHTMLElement } from './utils.js';
-import { showErrorModal } from './utils.js';
+import { Enum,createElementWithAttributes, isHTMLElement, showErrorModal, isNodeList, ACTIONS_PROJECTS, ACTIONS_TASKS } from './utils.js';
 
 const ERR_HEADINGS = new Enum ({
     CONTENT: 'Error (webpage content)',
     MAIN_PAGE: 'Error (rendering main page)',
     MENU_TEMPLATE: 'Error (rendering menu template)',
     ERROR_MODAL: 'Error (rendering error modal)',
+    REMOVE_MENU: 'Error (rendering remove confirmation menu)',
 });
 
 const ERR_MESSAGE = new Enum ({
     CONTENT_NOT_FOUND: 'Content element couldn\'t be found',
-    BODY_NOT_FOUND: 'Body element couldn\'t be found',
     HEADING_NOT_FOUND: 'Heading element couldn\'t be found',
     PARA_NOT_FOUND: 'Message element couldn\'t be found',
-    MENU_COVER_NOT_FOUND: 'Modal cover element couldn\'t be found',
+    MENU_COVER_NOT_FOUND: 'Menu cover couldn\'t be found',
+    REMOVE_BUTTONS_NOT_FOUND: 'Buttons in the remove menu couldn\'t be found',
 });
 
 export function renderMainPage() {
     renderMainPageTemplate();
     renderProjectMenuTemplate();
     renderTaskMenuTemplate();
+    renderRemoveConfirmationTemplate();
     renderErrorModal();
 };
 
@@ -553,9 +551,7 @@ function renderTaskMenuTemplate() {
     buttonCancel.textContent = 'Cancel';
 }
 
-// message === [error type, error message];
-// if the the error is not the system (app) error => error type === null 
-function renderErrorModal() {
+function renderRemoveConfirmationTemplate() {
     const content = document.querySelector('.content');
     const menuCover = document.querySelector('.menu-cover');
     if (!isHTMLElement(content)) {
@@ -567,52 +563,130 @@ function renderErrorModal() {
         return;
     }
 
+    const removeMenu = createElementWithAttributes('div', {
+        class: 'remove-menu',
+    }, content);
+
+    const exitIcon = createElementWithAttributes('button', {
+        class: 'exit',
+        alt: 'Exit icon'
+    }, removeMenu);
+    exitIcon.src = assets.taskMenuExitIconPath;
+
+    const heading  = createElementWithAttributes('h2', {
+        class: 'remove-heading',
+    }, removeMenu);
+    heading.textContent = '';
+
+    const message  = createElementWithAttributes('p', {
+        class: 'remove-message',
+    }, removeMenu);
+    message.textContent = '';
+
+    const buttonConfirm = createElementWithAttributes('button', {
+        class: 'remove-confirm',
+    }, removeMenu);
+    buttonConfirm.textContent = 'Yes';
+
+    const buttonExit = createElementWithAttributes('button', {
+        class: 'exit',
+    }, removeMenu);
+    buttonExit.textContent = 'Cancel';
+
+    const buttons = removeMenu.querySelectorAll('button');
+    buttons.forEach(btn => btn.addEventListener('click', (e) => hideRemoveMenu(e)));
+    function hideRemoveMenu(e) {
+        if (!isNodeList(buttons)) {
+            showErrorModal([ERR_HEADINGS.REMOVE_MENU, ERR_MESSAGE.REMOVE_BUTTONS_NOT_FOUND]);
+            return;
+        }
+        if (!isHTMLElement(menuCover)) {
+            showErrorModal([ERR_HEADINGS.REMOVE_MENU, ERR_MESSAGE.MENU_COVER_NOT_FOUND]);
+            return;
+        }
+        if (!isHTMLElement(heading)) {
+            showErrorModal([ERR_HEADINGS.REMOVE_MENU, ERR_MESSAGE.HEADING_NOT_FOUND]);
+            return;
+        }
+        if (!isHTMLElement(message)) {
+            showErrorModal([ERR_HEADINGS.REMOVE_MENU, ERR_MESSAGE.PARA_NOT_FOUND]);
+            return;
+        }
+
+        removeMenu.classList.remove('shown');
+        menuCover.classList.remove('shown');
+        heading.textContent = '';
+        message.textContent = '';
+    }
+}
+
+// message === [error type, error message];
+// if the the error is not the system (app) error => error type === null 
+function renderErrorModal() {
+    const content = document.querySelector('.content');
+    if (!isHTMLElement(content)) {
+        showErrorModal([ERR_HEADINGS.CONTENT, ERR_MESSAGE.CONTENT_NOT_FOUND]);
+        return;
+    }
+
     const errorCover = createElementWithAttributes('div', {
         class: 'error-cover'
     }, content);
 
-    const modalBox = createElementWithAttributes('div', {
+    const modal = createElementWithAttributes('div', {
         class: 'error-modal',
     }, content);
 
-    const modalExitIcon = createElementWithAttributes('img', {
+    const exitIcon = createElementWithAttributes('img', {
         class: 'exit',
         alt: 'Exit icon'
-    }, modalBox);
-    modalExitIcon.src = assets.taskMenuExitIconPath;
+    }, modal);
+    exitIcon.src = assets.taskMenuExitIconPath;
 
-    const messageHeading  = createElementWithAttributes('h2', {
+    const heading  = createElementWithAttributes('h2', {
         class: 'error-heading',
-    }, modalBox);
-    messageHeading.textContent = '';
+    }, modal);
+    heading.textContent = '';
 
-    const messagePara  = createElementWithAttributes('p', {
+    const message  = createElementWithAttributes('p', {
         class: 'error-message',
-    }, modalBox);
-    messagePara.textContent = '';
+    }, modal);
+    message.textContent = '';
 
     const buttonExit = createElementWithAttributes('button', {
         class: 'exit',
-    }, modalBox);
+    }, modal);
     buttonExit.textContent = 'OK';
-    buttonExit.addEventListener('click', () => {
-        if (!isHTMLElement(menuCover)) {
-            showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.MENU_COVER_NOT_FOUND]);
-            return;
-        }
-        if (!isHTMLElement(messagePara)) {
+
+    exitIcon.addEventListener('click', () => {
+        if (!isHTMLElement(heading)) {
             showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.HEADING_NOT_FOUND]);
             return;
         }
-        if (!isHTMLElement(messagePara)) {
+        if (!isHTMLElement(message)) {
             showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.PARA_NOT_FOUND]);
             return;
         }
 
-        modalBox.classList.remove('shown');
+        modal.classList.remove('shown');
         errorCover.classList.remove('shown');
-        messageHeading.textContent = '';
-        messagePara.textContent = '';
+        heading.textContent = '';
+        message.textContent = '';
+    });
+    buttonExit.addEventListener('click', () => {
+        if (!isHTMLElement(heading)) {
+            showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.HEADING_NOT_FOUND]);
+            return;
+        }
+        if (!isHTMLElement(message)) {
+            showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.PARA_NOT_FOUND]);
+            return;
+        }
+
+        modal.classList.remove('shown');
+        errorCover.classList.remove('shown');
+        heading.textContent = '';
+        message.textContent = '';
     });
 }
 

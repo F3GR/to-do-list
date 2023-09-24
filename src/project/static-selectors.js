@@ -20,6 +20,11 @@ export function getProjectNodes() {
     const currentGroupIcon = document.querySelector('main .header img');
     const currentGroupName = document.querySelector('main .header span');
 
+    const removeMenu = document.querySelector('.remove-menu');
+    const removeConfirm = document.querySelector('.remove-confirm');
+    const removeHeading = document.querySelector('.remove-heading');
+    const removeMessage = document.querySelector('.remove-message');
+
     return projectNodes = { 
         projectsList,
         projectsBar,
@@ -31,6 +36,10 @@ export function getProjectNodes() {
         menuTitle,
         submitButton,
         currentGroupIcon,
-        currentGroupName 
+        currentGroupName,
+        removeMenu,
+        removeConfirm,
+        removeHeading,
+        removeMessage,
     };
 };

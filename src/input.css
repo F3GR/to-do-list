@@ -8,6 +8,14 @@
   --menu-width: 30rem;
   --menu-height: 40rem;
   --black: rgb(53, 52, 52);
+
+  --main-button-size: ;
+  --main-button-task-project-option-size: ;
+  --main-heading-1-font-size: ;     /* trackIt */
+  --main-heading-2-font-size: ;     /* task */
+  --main-heading-3-font-size: ;     /* task description heads */
+  --main-paragraph-font-size: ;     /* task description heads */
+
   --z-index-error: 7;
   --z-index-error-cover: 6;
   --z-index-menu: 5;
@@ -15,6 +23,17 @@
   --z-index-aside-shown: 3;
   --z-index-view-options-shown: 2;
   --z-index-view-options: 1;
+
+  --menu-heading-3-font-size: ;
+  --menu-paragraph-font-size: ;
+  --menu-button-text-font-size: ;
+  --menu-button-option-width: ;
+  --menu-button-option-height: ;
+  --menu-button-exit-size: ;
+  --menu-width: ;
+  --menu-height: ;
+  --error-modal-width: ;
+  --error-modal-height: ;
 }
 
 * {
@@ -722,7 +741,6 @@ main .task-bar {
 }
 
 /* Page menu */
-
 .page-menu {
   grid-row-gap: 0;
   display: grid;
@@ -761,9 +779,32 @@ main .sidebar-cover {
   opacity: 50%;
 }
 
+/* Remove confirmation menu */
+.remove-menu {
+  position: absolute;
+  margin-top: calc((100dvh - var(--menu-height))/2);
+  margin-bottom: calc((100dvh - var(--menu-height))/2);
+  margin-left: calc((100% - var(--menu-width))/2);
+  margin-right: calc((100% - var(--menu-width))/2);
+  width: var(--menu-width);
+  height: var(--menu-width);
+  background-color: var(--white);
+  z-index: var(--z-index-error);
+  border: 0.1rem solid var(--whitesmoke);
+  border-radius: 0.5rem;
+  padding: 0 0 1rem 0;
+  display: none;
+}
+
+.remove-menu > p {
+  font-size: 1.6rem;
+}
+
+.remove-menu.shown {
+  display: grid;
+}
 
 /* Error modal */
-
 .error-modal {
   position: absolute;
   margin-top: calc((100dvh - var(--menu-height))/2);

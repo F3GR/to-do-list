@@ -3,6 +3,7 @@ import { renderTask } from '../task/dom.js';
 import { getGroupNodes } from './static-selectors.js';
 import { STANDARD_GROUPS, isHTMLElement, isNodeList, isObject, showErrorModal } from '../utils.js';
 import { ERR_HEADINGS, ERR_POPULATE } from './errors-text.js';
+import { renderTasksCount } from '../totals/dom-tasks-count.js'
 
 export function renderGroup(groupIdentifier) {
     const { mainGroupName, mainGroupIcon, taskList } = getGroupNodes();
@@ -63,6 +64,7 @@ export function renderGroup(groupIdentifier) {
 
     taskList.innerHTML = '';
     filteredSortedNewGroup.forEach((task) => renderTask(task));
+    renderTasksCount(filteredSortedNewGroup.length);
 
     if (Object.values(STANDARD_GROUPS).includes(groupIdentifier)) {
         addTaskIcon.classList.add('shown');

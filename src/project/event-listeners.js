@@ -4,9 +4,11 @@ import { renderGroup } from '../group/dom.js';
 import { getProjectNodes } from './static-selectors.js';
 import { showErrorModal, STANDARD_GROUPS, ACTIONS_PROJECTS, isHTMLElement, isValid, isObject } from '../utils.js';
 import { ERR_APPLY_EVENTS, ERR_HEADINGS } from './errors-text.js';
+import { renderProjectsCount } from '../totals/dom-projects-count.js';
 
 export function addListenersManageProjects() {
     const { projectsBar, form, exitButton, cancelButton } = getProjectNodes();
+    const { removeConfirm }  = getProjectNodes();
 
     if (!isHTMLElement(projectsBar) ||
     !isHTMLElement(form) ||
@@ -19,6 +21,7 @@ export function addListenersManageProjects() {
 
     projectsBar.addEventListener('click', (e) => openMenuHandler(e));
     form.addEventListener('submit', (e) => submitHandler(e));
+    removeConfirm.addEventListener('click', (e) => removeHandler(e));
     exitButton.addEventListener('click', (e) => exitHandler(e));
     cancelButton.addEventListener('click', (e) =>  exitHandler(e));
 };
@@ -40,24 +43,29 @@ const openMenuHandler = (e) => {
 };
 
 const openMenu = (action, target) => {
-
-
     const { 
         menuCover,
         menu,
         menuTitle,
-        submitButton 
+        submitButton,
+        removeMenu,
+        removeConfirm,
+        removeHeading,
+        removeMessage,
     } = getProjectNodes();
 
     if (!isHTMLElement(menu) || 
     !isHTMLElement(menuCover) || 
     !isHTMLElement(menuTitle) || 
-    !isHTMLElement(submitButton)
+    !isHTMLElement(submitButton) ||
+    !isHTMLElement(removeMenu) ||
+    !isHTMLElement(removeConfirm) ||
+    !isHTMLElement(removeHeading) ||
+    !isHTMLElement(removeMessage)
     ) {
         showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.PROJECT_MENU_SHOWING]);
         return;
     }
-
 
     switch (action) {
         case ACTIONS_PROJECTS.ADD_NEW:
@@ -97,28 +105,69 @@ const openMenu = (action, target) => {
             if (!isHTMLElement(removedProject) || !isValid(removedProjectId)) {
                 showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.REMOVED_PROJECT]);
                 return;
-            }   
-
-            let removedProjectIndex;
-            try {
-                removedProjectIndex = application.removeProject(removedProjectId);
-            } catch (e) {
-                showErrorModal([ERR_HEADINGS.REMOVING, e.message]);
-                return;
             }
 
-            if (!removedProject.classList.contains('current')) {
-                removedProject.remove();
-                return;
-            }
-    
-            currentGroupName.textContent = '';
-            currentGroupIcon.src = '';
-            currentGroupIcon.alt = '';
-            renderGroup(STANDARD_GROUPS.ALL);
-            removedProject.remove();
+            removeMenu.removedProject = removedProject;
+            removeMenu.removedProjectId = removedProjectId;
+            removeMenu.setAttribute('data-project-action', action);
+
+            menuCover.classList.add('shown');
+            removeMenu.classList.add('shown');
+            removeHeading.textContent = 'Remove the project';
+            removeMessage.textContent = 'Are you sure you want to delete the project? All tasks of the project will be removed as well.';
             break;
     }
+};
+
+const removeHandler = (e) => {
+    const {
+        currentGroupIcon, 
+        currentGroupName,
+        removeMenu,
+        removeConfirm,
+        removeHeading,
+        removeMessage,
+    } = getProjectNodes();
+
+    if (!isHTMLElement(removeMenu) ||
+    !isHTMLElement(removeConfirm) ||
+    !isHTMLElement(removeHeading) ||
+    !isHTMLElement(removeMessage)
+    ) {
+        showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.PROJECT_MENU_SHOWING]);
+        return;
+    }
+
+    const removedProject = removeMenu.removedProject;
+    const removedProjectId = removeMenu.removedProjectId;
+    if (!isHTMLElement(removedProject) || !isValid(removeConfirm)) {
+        showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.PROJECT_MENU_SHOWING_REMOVED]);
+        return;
+    }
+    
+    let projectListLength;
+    try {
+        projectListLength = application.removeProject(removedProjectId);
+    } catch (e) {
+        showErrorModal([ERR_HEADINGS.REMOVING, e.message]);
+        return;
+    }
+
+    if (!removedProject.classList.contains('current')) {
+        removedProject.remove();
+        return;
+    }
+
+    currentGroupName.textContent = '';
+    currentGroupIcon.src = '';
+    currentGroupIcon.alt = '';
+
+    renderGroup(STANDARD_GROUPS.ALL);
+    renderProjectsCount(projectListLength);
+    removedProject.remove();
+
+    removeMenu.removedProject = null;
+    removeMenu.removedProjectId = null;
 };
 
 const submitHandler = (e) => {
@@ -156,19 +205,21 @@ const submitForm = (action) => {
                 altText: inputIcon.dataset.altText,   
             };
 
-            let newProject;
+            let addedProject;
             try {
-                newProject = application.createNewProject(inputNewProject);
+                addedProject = application.createNewProject(inputNewProject);
             } catch (e) {
                 showErrorModal([ERR_HEADINGS.SUBMIT_ADDING, e.message]);
                 return;
             }
-            if (!isObject(newProject)) {
+            if (!isObject(addedProject)) {
                 showErrorModal(['Invalid input (project name)', 'A project with the new name already exists!']);
                 return;
             }
 
+            const { newProject, projectsListLength } = addedProject;
             renderProject(newProject);
+            renderProjectsCount(projectsListLength);
             break;
 
         case ACTIONS_PROJECTS.EDIT:
