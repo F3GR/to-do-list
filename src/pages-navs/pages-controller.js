@@ -1,25 +1,44 @@
+import { NUM_PROJECTS_PAGE, NUM_TASKS_PAGE } from '../utils';
+import { ERR_CONTROLLER } from './errors-text';
+
 const pagesController = (numTasksPerPage) => {
     return {
-        movePageForward: (currentPage, tasksList) => {
-            if (currentPage < pagesTotal(tasksList)) {
+        movePageForward: (currentPage, listArr) => {
+            if (typeof currentPage !== 'number') {
+                throw new Error(ERR_CONTROLLER.NUM);
+            }
+            if (!Array.isArray(listArr)) {
+                throw new Error(ERR_CONTROLLER.LIST);
+            }
+
+            if (currentPage < pagesController(numTasksPerPage).pagesTotal(listArr)) {
                 currentPage++;
             }
-            return getPageItems(currentPage, tasksList);
+            const newPage = pagesController(numTasksPerPage).getPageItems(currentPage, listArr);
+            return { newPageNumber: currentPage, newPage };
         },
-        movePageBackwards: (currentPage, tasksList) => {
+        movePageBackwards: (currentPage, listArr) => {
+            if (typeof currentPage !== 'number') {
+                throw new Error(ERR_CONTROLLER.NUM);
+            }
+            if (!Array.isArray(listArr)) {
+                throw new Error(ERR_CONTROLLER.LIST);
+            }
+
             if (currentPage > 1) {
                 currentPage--;
             }   
-            return getPageItems(currentPage, tasksList);
+            const newPage = pagesController(numTasksPerPage).getPageItems(currentPage, listArr);
+            return { newPageNumber: currentPage, newPage };
         },
-        getPageItems: (currentPage, tasksList) => {
+        getPageItems: (currentPage, listArr) => {
             const startIndex = (currentPage - 1) * numTasksPerPage;
             const endIndex = startIndex + numTasksPerPage;
-            return tasksList.slice(startIndex, endIndex);
+            return listArr.slice(startIndex, endIndex);
         },
-        pagesTotal: (tasksList) => Math.ceil(tasksList.length / numTasksPerPage),
+        pagesTotal: (listArr) => Math.ceil(listArr.length / numTasksPerPage),
     };
 };
 
-export const projectsPageController = pagesController(3); 
-export const tasksPageController = pagesController(6); 
+export const projectsPageController = pagesController(NUM_PROJECTS_PAGE); 
+export const tasksPageController = pagesController(NUM_TASKS_PAGE); 

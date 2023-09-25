@@ -11,6 +11,10 @@ export function renderProjectsPageNav(current, total) {
         return;
     }
 
+    if (total === 0) {
+        total = 1;
+    }
+
     const { nextPageBtn, projectsBarFooter } = getProjectsBarFooterNodes();
     if (!isHTMLElement(nextPageBtn) || !isHTMLElement(projectsBarFooter)) {
         showErrorModal([ERR_HEADINGS.PROJECTS, ERR_RENDERING.PROJECTS_BAR]);

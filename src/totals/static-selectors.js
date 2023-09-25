@@ -12,7 +12,6 @@ export function getProjectsBarHeaderNodes() {
     };
 };
 
-
 let tasksBarHeaderNodes;
 export function getTasksBarHeaderNodes() {
     if (tasksBarHeaderNodes) {

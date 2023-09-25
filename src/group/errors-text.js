@@ -16,6 +16,7 @@ export const ERR_POPULATE = new Enum({
     ADD_TASK_ICON: 'The \'Add task\' icon wasn\'t found',
     CURRENT_GROUP: 'The current group panel wasn\'t found',
     CURRENT_GROUP_ELEMENT: 'The name and/or icon element of the current group weren\'t found',
+    NO_GROUP_ID: 'The id of the selected group wasn\'t found',
 });
 
 export const ERR_EVENTS = new Enum({

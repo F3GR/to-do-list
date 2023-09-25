@@ -1,5 +1,5 @@
 import { assets } from './assets.js';
-import { Enum,createElementWithAttributes, isHTMLElement, showErrorModal, isNodeList, ACTIONS_PROJECTS, ACTIONS_TASKS } from './utils.js';
+import { Enum,createElementWithAttributes, isHTMLElement, showErrorModal, ACTIONS_PROJECTS, ACTIONS_TASKS, handleExitRemoveMenu } from './utils.js';
 
 const ERR_HEADINGS = new Enum ({
     CONTENT: 'Error (webpage content)',
@@ -62,7 +62,7 @@ function renderMainPageTemplate() {
 
     const barTypes = createElementWithAttributes('div', {class: 'bar-types'}, sidebar);
 
-    const tasksAll = createElementWithAttributes('div', {class: 'tasks-all'}, barTypes);
+    const tasksAll = createElementWithAttributes('button', {class: 'tasks-all'}, barTypes);
     tasksAll.setAttribute('data-group-id', 'all');
 
     const tasksAllImage = createElementWithAttributes('img', { 
@@ -73,7 +73,7 @@ function renderMainPageTemplate() {
     const tasksAllText = createElementWithAttributes('span', {}, tasksAll);
     tasksAllText.textContent = 'All';
 
-    const tasksToday = createElementWithAttributes('div', {class: 'tasks-today'}, barTypes);
+    const tasksToday = createElementWithAttributes('button', {class: 'tasks-today'}, barTypes);
     tasksToday.setAttribute('data-group-id', 'today');
 
     const tasksTodayImage = createElementWithAttributes('img', {
@@ -84,7 +84,7 @@ function renderMainPageTemplate() {
     const tasksTodayText = createElementWithAttributes('span', {}, tasksToday);
     tasksTodayText.textContent = 'Today';
 
-    const tasksWeek = createElementWithAttributes('div', {class: 'tasks-week'}, barTypes);
+    const tasksWeek = createElementWithAttributes('button', {class: 'tasks-week'}, barTypes);
     tasksWeek.setAttribute('data-group-id', 'week');
 
     const tasksWeekImage = createElementWithAttributes('img', {
@@ -95,7 +95,7 @@ function renderMainPageTemplate() {
     const tasksWeekText = createElementWithAttributes('span', {}, tasksWeek);
     tasksWeekText.textContent = 'Week';
 
-    const tasksCompleted = createElementWithAttributes('div', {class: 'tasks-completed'}, barTypes);
+    const tasksCompleted = createElementWithAttributes('button', {class: 'tasks-completed'}, barTypes);
     tasksCompleted.setAttribute('data-group-id', 'completed');
 
     const tasksCompletedImage = createElementWithAttributes('img', {
@@ -106,7 +106,7 @@ function renderMainPageTemplate() {
     const tasksCompletedText = createElementWithAttributes('span', {}, tasksCompleted);
     tasksCompletedText.textContent = 'Completed';
 
-    const tasksOverdue = createElementWithAttributes('div', {class: 'tasks-overdue'}, barTypes);
+    const tasksOverdue = createElementWithAttributes('button', {class: 'tasks-overdue'}, barTypes);
     tasksOverdue.setAttribute('data-group-id', 'overdue');
 
     const tasksOverdueImage = createElementWithAttributes('img', {
@@ -129,15 +129,29 @@ function renderMainPageTemplate() {
     const projectsBarHeaderText = createElementWithAttributes('span', {}, projectsBarHeader);
     projectsBarHeaderText.textContent = 'Projects';
 
-    const projectsBarHeaderAddImage = createElementWithAttributes('img', {
-        alt: 'Add new project icon',
+    const projectsBarHeaderAddImage = createElementWithAttributes('button', {
         class: 'add-new',
     }, projectsBarHeader);
-    projectsBarHeaderAddImage.src = assets.projectsBarHeaderAddImagePath;
+    projectsBarHeaderAddImage.ariaLabel = 'Add new project';
+    projectsBarHeaderAddImage.style.backgroundImage = `url(${assets.projectsBarHeaderAddImagePath})`;
 
     projectsBarHeaderAddImage.setAttribute('data-project-action', ACTIONS_PROJECTS.ADD_NEW);
 
     const projectsList = createElementWithAttributes('ul', {class: 'projects-list'}, barProjects);
+
+    const projectsBarNavBox = createElementWithAttributes('div', {class: 'projects-nav'}, barProjects);
+
+    const previousProjectsPageIcon = createElementWithAttributes('button', {
+        class: 'projects-previous-page'
+    }, projectsBarNavBox);
+    previousProjectsPageIcon.ariaLabel = 'Previous projects page';
+    previousProjectsPageIcon.style.backgroundImage = `url(${assets.previousPageIconPath})`;
+
+    const nextProjectsPageIcon = createElementWithAttributes('button', {
+        class: 'projects-next-page'
+    }, projectsBarNavBox);
+    nextProjectsPageIcon.ariaLabel = 'Next projects page';
+    nextProjectsPageIcon.style.backgroundImage = `url(${assets.nextPageIconPath})`;
 
     const barFooter = createElementWithAttributes('div', {class: 'bar-footer'}, sidebar);
 
@@ -178,39 +192,21 @@ function renderMainPageTemplate() {
 
     addNewTaskIcon.setAttribute('data-task-action', ACTIONS_TASKS.ADD_NEW);
 
-    const taskList = createElementWithAttributes('ul', {class: 'task-list'}, main);
+    const tasksList = createElementWithAttributes('ul', {class: 'task-list'}, main);
 
     const pageMenuBox = createElementWithAttributes('div', {class: 'page-menu', }, main);
 
-    const firstPageIcon = createElementWithAttributes('img', {
-        alt: 'First page icon',
-        class: 'first-page'
+    const previousTasksPageIcon = createElementWithAttributes('button', {
+        class: 'tasks-previous-page'
     }, pageMenuBox);
-    firstPageIcon.src = assets.firstPageIconPath;
+    previousTasksPageIcon.ariaLabel = 'Previous tasks page';
+    previousTasksPageIcon.style.backgroundImage = `url(${assets.previousPageIconPath})`;
 
-    const previousPageIcon = createElementWithAttributes('img', {
-        alt: 'Previous page icon',
-        class: 'previous-page'
+    const nextTasksPageIcon = createElementWithAttributes('button', {
+        class: 'tasks-next-page'
     }, pageMenuBox);
-    previousPageIcon.src = assets.previousPageIconPath;
-
-    const inputPage = createElementWithAttributes('input', {
-        type: 'number',
-        min: "1",
-        max: "99", 
-    }, pageMenuBox);
-
-    const nextPageIcon = createElementWithAttributes('img', {
-        alt: 'Next page icon',
-        class: 'next-page'
-    }, pageMenuBox);
-    nextPageIcon.src = assets.nextPageIconPath;
-
-    const lastPageIcon = createElementWithAttributes('img', {
-        alt: 'Last page icon',
-        class: 'last-page'
-    }, pageMenuBox);
-    lastPageIcon.src = assets.lastPageIconPath;
+    nextTasksPageIcon.ariaLabel = 'Next tasks page';
+    nextTasksPageIcon.style.backgroundImage = `url(${assets.nextPageIconPath})`;
 }
 
 function renderProjectMenuTemplate() {
@@ -593,31 +589,8 @@ function renderRemoveConfirmationTemplate() {
     }, removeMenu);
     buttonExit.textContent = 'Cancel';
 
-    const buttons = removeMenu.querySelectorAll('button');
-    buttons.forEach(btn => btn.addEventListener('click', (e) => hideRemoveMenu(e)));
-    function hideRemoveMenu(e) {
-        if (!isNodeList(buttons)) {
-            showErrorModal([ERR_HEADINGS.REMOVE_MENU, ERR_MESSAGE.REMOVE_BUTTONS_NOT_FOUND]);
-            return;
-        }
-        if (!isHTMLElement(menuCover)) {
-            showErrorModal([ERR_HEADINGS.REMOVE_MENU, ERR_MESSAGE.MENU_COVER_NOT_FOUND]);
-            return;
-        }
-        if (!isHTMLElement(heading)) {
-            showErrorModal([ERR_HEADINGS.REMOVE_MENU, ERR_MESSAGE.HEADING_NOT_FOUND]);
-            return;
-        }
-        if (!isHTMLElement(message)) {
-            showErrorModal([ERR_HEADINGS.REMOVE_MENU, ERR_MESSAGE.PARA_NOT_FOUND]);
-            return;
-        }
-
-        removeMenu.classList.remove('shown');
-        menuCover.classList.remove('shown');
-        heading.textContent = '';
-        message.textContent = '';
-    }
+    const buttons = removeMenu.querySelectorAll('.exit');
+    buttons.forEach(btn => btn.addEventListener('click', (e) => handleExitRemoveMenu(e)));
 }
 
 // message === [error type, error message];

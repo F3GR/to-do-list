@@ -7,7 +7,7 @@ export const ERR_HEADINGS = new Enum({
 
 export const ERR_RENDERING = new Enum({
     PROJECTS_VALUES: 'Current project count isn\'t a valid number',
-    PROJECTS_BAR: 'Projects bar heading and/or \'Add new task\' icon couldn\'t be found',
-    TASKS_VALUES: 'Current task amount isn\'t valid number',
-    TASKS_BAR: 'Tasks bar heading could\'t be found',
+    PROJECTS_BAR: 'Projects bar and/or its components couldn\'t be found',
+    TASKS_VALUES: 'Current task count isn\'t a valid number',
+    TASKS_BAR: 'Tasks list heading could\'t be found',
 });

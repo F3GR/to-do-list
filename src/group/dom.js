@@ -1,11 +1,10 @@
-import { application } from '../main-app.js';
+
 import { renderTask } from '../task/dom.js';
 import { getGroupNodes } from './static-selectors.js';
 import { STANDARD_GROUPS, isHTMLElement, isNodeList, isObject, showErrorModal } from '../utils.js';
 import { ERR_HEADINGS, ERR_POPULATE } from './errors-text.js';
-import { renderTasksCount } from '../totals/dom-tasks-count.js'
 
-export function renderGroup(groupIdentifier) {
+export function renderGroup(newGroup, groupIdentifier) {
     const { mainGroupName, mainGroupIcon, taskList } = getGroupNodes();
     const allGroups = document.querySelectorAll('.bar-types > *, .projects-list > li.project');
     const selectedGroup = document.querySelector(`.bar-types > *[data-group-id="${groupIdentifier}"], 
@@ -38,33 +37,8 @@ export function renderGroup(groupIdentifier) {
         return;
     }
     
-    let newGroup;
-    try {
-        newGroup = application.getTasksGroup(groupIdentifier);
-    } catch(e) {
-        showErrorModal([ERR_HEADINGS.POPULATE, e.message]);
-        return;
-    }
-
-    let currentViewState;
-    try {
-        currentViewState = application.getViewState();
-    } catch(e) {
-        showErrorModal([ERR_HEADINGS.POPULATE, e.message]);
-        return;
-    }
-
-    let filteredSortedNewGroup;
-    try {
-        filteredSortedNewGroup = application.applyViewOptions(currentViewState, newGroup);
-    } catch(e) {
-        showErrorModal([ERR_HEADINGS.POPULATE, e.message]);
-        return;
-    }
-
     taskList.innerHTML = '';
-    filteredSortedNewGroup.forEach((task) => renderTask(task));
-    renderTasksCount(filteredSortedNewGroup.length);
+    newGroup.forEach((task) => renderTask(task));
 
     if (Object.values(STANDARD_GROUPS).includes(groupIdentifier)) {
         addTaskIcon.classList.add('shown');

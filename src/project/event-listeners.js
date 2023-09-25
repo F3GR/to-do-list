@@ -2,16 +2,23 @@ import { application } from '../main-app.js';
 import { renderProject } from './dom.js';
 import { renderGroup } from '../group/dom.js';
 import { getProjectNodes } from './static-selectors.js';
-import { showErrorModal, STANDARD_GROUPS, ACTIONS_PROJECTS, isHTMLElement, isValid, isObject } from '../utils.js';
+import { showErrorModal, STANDARD_GROUPS, ACTIONS_PROJECTS, isHTMLElement, isValid, isObject, handleExitRemoveMenu } from '../utils.js';
 import { ERR_APPLY_EVENTS, ERR_HEADINGS } from './errors-text.js';
-import { renderProjectsCount } from '../totals/dom-projects-count.js';
 
 export function addListenersManageProjects() {
-    const { projectsBar, form, exitButton, cancelButton } = getProjectNodes();
-    const { removeConfirm }  = getProjectNodes();
+    const { 
+        projectsBar, 
+        form, 
+        exitButton, 
+        cancelButton, 
+        removeMenu, 
+        removeConfirm,
+    } = getProjectNodes();
 
     if (!isHTMLElement(projectsBar) ||
     !isHTMLElement(form) ||
+    !isHTMLElement(removeMenu) ||
+    !isHTMLElement(removeConfirm) ||
     !isHTMLElement(exitButton) ||
     !isHTMLElement(cancelButton)
     ) {
@@ -21,11 +28,20 @@ export function addListenersManageProjects() {
 
     projectsBar.addEventListener('click', (e) => openMenuHandler(e));
     form.addEventListener('submit', (e) => submitHandler(e));
+
     removeConfirm.addEventListener('click', (e) => {
-        if (!document.querySelector('.remove-menu').getAttribute('data-task-id')) {
+        if (!isHTMLElement(removeMenu)) {
+            showErrorModal([ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.PROJECT_MENU_RENDERING]);
+            return;
+        }
+        
+        const projectAction = removeMenu.getAttribute('data-project-action');
+        if (projectAction && projectAction !== 'null') {
             removeHandler(e);
+            handleExitRemoveMenu(e);
         }
     });
+
     exitButton.addEventListener('click', (e) => exitHandler(e));
     cancelButton.addEventListener('click', (e) =>  exitHandler(e));
 };
@@ -126,15 +142,15 @@ const removeHandler = (e) => {
         currentGroupIcon, 
         currentGroupName,
         removeMenu,
-        removeConfirm,
         removeHeading,
         removeMessage,
     } = getProjectNodes();
 
     if (!isHTMLElement(removeMenu) ||
-    !isHTMLElement(removeConfirm) ||
     !isHTMLElement(removeHeading) ||
-    !isHTMLElement(removeMessage)
+    !isHTMLElement(removeMessage) ||
+    !isHTMLElement(currentGroupIcon) ||
+    !isHTMLElement(currentGroupName)
     ) {
         showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.PROJECT_MENU_SHOWING]);
         return;
@@ -142,7 +158,7 @@ const removeHandler = (e) => {
 
     const removedProject = removeMenu.project;
     const removedProjectId = removeMenu.getAttribute('data-project-id');
-    if (!isHTMLElement(removedProject) || !isValid(removedProjectId)) {
+    if (!isHTMLElement(removedProject) || !isValid(removedProjectId) || removedProjectId === 'null') {
         showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.PROJECT_MENU_SHOWING_REMOVED]);
         return;
     }
@@ -161,14 +177,13 @@ const removeHandler = (e) => {
     }
 
     renderGroup(STANDARD_GROUPS.ALL);
-    renderProjectsCount(projectListLength);
     removedProject.remove();
 
     currentGroupName.textContent = '';
     currentGroupIcon.src = '';
     currentGroupIcon.alt = '';
 
-    removeMenu.removedProject = null;
+    removeMenu.project = null;
     removeMenu.setAttribute('data-project-id', null);
     removeMenu.setAttribute('data-project-action', null);
     removeHeading.textContent = '';
@@ -222,9 +237,7 @@ const submitForm = (action) => {
                 return;
             }
 
-            const { newProject, projectsListLength } = addedProject;
-            renderProject(newProject);
-            renderProjectsCount(projectsListLength);
+            renderProject(addedProject);
             break;
 
         case ACTIONS_PROJECTS.EDIT:

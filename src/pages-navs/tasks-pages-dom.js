@@ -10,6 +10,10 @@ export function renderTasksPageNav(current, total) {
         showErrorModal([ERR_HEADINGS.TASKS, ERR_RENDERING.TASKS_VALUES]);
         return;
     }
+    
+    if (total === 0) {
+        total = 1;
+    }
 
     const { nextPageBtn, tasksBarFooter } = getTasksBarFooterNodes();
     if (!isHTMLElement(nextPageBtn) || !isHTMLElement(tasksBarFooter)) {

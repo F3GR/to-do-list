@@ -23,7 +23,6 @@ export function showErrorModal(message) {
     const messagePara = errorModal.querySelector('.error-message');
     const errorCover = document.querySelector('.error-cover');
 
-
     if (isValid(message[0])) {
       messageHeading.textContent = message[0];
     } else {
@@ -35,6 +34,40 @@ export function showErrorModal(message) {
     messagePara.textContent = message[1];
 }
 
+export function handleExitRemoveMenu(e) {
+  const menuCover = document.querySelector('.menu-cover');
+  const removeMenu = document.querySelector('.remove-menu');
+  const removeHeading = document.querySelector('.remove-heading');
+  const removeMessage = document.querySelector('.remove-message');
+
+  if (!isHTMLElement(menuCover) ||
+  !isHTMLElement(removeMenu) ||
+  !isHTMLElement(removeHeading) ||
+  !isHTMLElement(removeMessage)
+  ) {
+      showErrorModal(['Error (exiting the remove confirmation menu)', 'One or more menu components couldn\'t be found']);
+      return;
+  }
+
+  removeMenu.classList.remove('shown');
+  menuCover.classList.remove('shown');
+  removeHeading.textContent = '';
+  removeMessage.textContent = '';
+
+  removeMenu.project = null;
+  removeMenu.task = null;
+  removeMenu.setAttribute('data-project-id', null);
+  removeMenu.setAttribute('data-task-id', null);
+  removeMenu.setAttribute('data-task-action', null);
+  removeMenu.setAttribute('data-project-action', null);
+}
+
+export const removeCurrentStatus = (element) => element.removeAttribute('data-value');
+
+export const DEFAULT_PAGE = 1;
+export const DEFAULT_GROUP = 'all';
+export const NUM_PROJECTS_PAGE = 3;
+export const NUM_TASKS_PAGE = 6;
 
 export function isNodeList(element) {
   return element instanceof NodeList;
@@ -68,9 +101,6 @@ export function checkIfCurrent(element) {
   return false;
 }
 
-export const removeCurrentStatus = (element) => element.removeAttribute('data-value');
-
-
 export function noDuplicateName(list, name, id) {
   const n = list.length;
   let i = 0;
@@ -98,7 +128,6 @@ export function noDuplicateTitle(list, title, id) {
   }
   return true;
 }
-
 
 export function findIndex(list, id) {
   let index;

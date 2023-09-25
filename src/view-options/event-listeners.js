@@ -73,12 +73,12 @@ export function addListenersViewOptions() {
     viewBox.addEventListener('change', (e) => {
         const filterOrSortOption = e.target.closest('input[type="checkbox"], select');
         if (filterOrSortOption) {
-            handleViewOptionsChange(queries);
+            updateTaskListView(queries);
         }
     });
 }
 
-const handleViewOptionsChange = (queries) => {
+const updateTaskListView = (queries) => {
     
     let newState = { 
         flagIncludeHigh: null, 

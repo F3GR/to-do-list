@@ -1,6 +1,7 @@
 import { renderGroup } from './dom.js';
-import { isHTMLElement, showErrorModal } from '../utils.js';
-import { ERR_HEADINGS } from './errors-text.js';
+import { isHTMLElement, isValid, showErrorModal } from '../utils.js';
+import { ERR_HEADINGS, ERR_POPULATE } from './errors-text.js';
+import { application } from '../main-app.js';
 
 export function addListenersSidebar() {
     const sidebarIcon = document.querySelector('header > img.sidebar-icon');
@@ -15,7 +16,7 @@ export function addListenersSidebar() {
         !isHTMLElement(standardGroups) ||
         !isHTMLElement(projectGroups)
         ) {
-        showErrorModal([ERR_HEADINGS.EVENTS_RENDERING, ERR_EVENTS.SIDEBAR_ELEMENTS]);
+        showErrorModal([ERR_HEADINGS.POPULATE, ERR_EVENTS.SIDEBAR_ELEMENTS]);
         return;
     }
 
@@ -33,7 +34,36 @@ const handleGroupSelection = (e) => {
 
     if (selectedGroup && !selectedGroup.classList.contains('current')) {
         const groupIdentifier = selectedGroup.getAttribute('data-group-id');
-        renderGroup(groupIdentifier);
+        if (!isValid(groupIdentifier)) {
+            showErrorModal([ERR_HEADINGS.POPULATE, ERR_POPULATE.NO_GROUP_ID]);
+            return;
+        }
+
+        let newGroup;
+        try {
+            newGroup = application.getTasksGroup(groupIdentifier);
+        } catch(e) {
+            showErrorModal([ERR_HEADINGS.POPULATE, e.message]);
+            return;
+        }
+    
+        let currentViewState;
+        try {
+            currentViewState = application.getViewState();
+        } catch(e) {
+            showErrorModal([ERR_HEADINGS.POPULATE, e.message]);
+            return;
+        }
+    
+        let filteredSortedFirstPage;
+        try {
+            filteredSortedFirstPage = application.applyViewOptions(currentViewState, newGroup);
+        } catch(e) {
+            showErrorModal([ERR_HEADINGS.POPULATE, e.message]);
+            return;
+        }
+
+        renderGroup(filteredSortedFirstPage, groupIdentifier);
     }
 }
 

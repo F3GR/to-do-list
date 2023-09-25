@@ -21,7 +21,6 @@ export const tasksController = {
             throw new Error(ERR_CONTROLLER.TASK_DATA);
         }
 
-
         if (!noDuplicateTitle(tasksList, title)) {
             return -1;
         }
