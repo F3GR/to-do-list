@@ -38,6 +38,11 @@
     --tab-index-sidebar-view-options-small: 1;
 }
 
+*:focus {
+  outline: 0.2rem solid var(--text-color);
+  border-radius: var(--element-panels-border-radius);
+}
+
 header .sidebar-icon:hover,
 header .sidebar-icon:focus {
     cursor: var(--interactive-pointer-style);
@@ -90,6 +95,24 @@ header .sidebar-icon:focus {
     transform: scale(var(--scale-size-hover-big-icons));
   }
 
+  .project {
+    transition: transform var(--click-animation-duration);
+  }
+  
+  .project:active {
+    transform: scale(1);
+  }
+
+  .project:hover,
+  .project:focus {
+    cursor: pointer;
+    transform: scale(var(--scale-size-hover-panels));
+  }
+
+  .project:active {
+    transform: scale(1);
+  }
+
   .project .edit:hover,
   .project .edit:focus,
   .project .remove:hover,
@@ -111,15 +134,21 @@ header .sidebar-icon:focus {
     transition: transform var(--click-animation-duration);
   }
 
-  
-  .project {
+  .projects-nav button {
+    position: relative;
     transition: transform var(--click-animation-duration);
   }
-  
-  .project:active {
-    transform: scale(0.95);
+
+  .projects-nav button:hover,
+  .projects-nav button:focus {
+    cursor: pointer;
+    transform: scale(var(--scale-size-hover-small-icons));
   }
-  
+
+  .projects-nav button:active {
+    transform: scale(1);
+  }
+
   .view-options-bar > div > div > label:hover,
   .view-options-bar > div > div > label:focus {
     cursor: var(--interactive-pointer-style-big-icons);
@@ -156,30 +185,22 @@ header .sidebar-icon:focus {
   transform: scale(1);
 }
 
-main .filter-options-box > *:not(span):hover,
-main .filter-options-box > *:not(span):focus {
-  cursor: pointer;
-  transform: scale(var(--scale-size-hover-big-icons));
-  position: relative;
-  transition: transform var(--click-animation-duration);
-}
-
-main .filter-options-box > *:not(span, select):active{
-  transform: scale(1);
-}
-
 .task[data-task-status='0'] label.status-checkbox svg {
   animation: fillCheckbox 0.5s forwards;
 }
 
 @keyframes fillCheckbox {
   from {
+    stroke: var(--selected-color);
     stroke-dashoffset: 100;
     stroke-opacity: 0;
+    stroke-width: 3;
   }
   to {
+    stroke: var(--selected-color);
     stroke-dashoffset: 0;
     stroke-opacity: 1;
+    stroke-width: 3;
   }
 }
 

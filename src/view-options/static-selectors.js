@@ -1,5 +1,4 @@
 let viewOptionsNodes;
-
 export function getViewOptionsNodes() {
     if (viewOptionsNodes) {
         return viewOptionsNodes;
@@ -44,9 +43,7 @@ export function getViewOptionsNodes() {
     };
 };
 
-
 let mainNodes;
-
 export function getMainNodes() {
     if (mainNodes) {
         return mainNodes;

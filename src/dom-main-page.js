@@ -1,3 +1,4 @@
+import { is } from 'date-fns/locale';
 import { assets } from './assets.js';
 import { Enum,createElementWithAttributes, isHTMLElement, showErrorModal, ACTIONS_PROJECTS, ACTIONS_TASKS, handleExitRemoveMenu, STANDARD_GROUPS, DEFAULT_GROUP } from './utils.js';
 
@@ -10,7 +11,8 @@ const ERR_HEADINGS = new Enum ({
 });
 
 const ERR_MESSAGE = new Enum ({
-    CONTENT_NOT_FOUND: 'Content element couldn\'t be found',
+    CONTENT_NOT_FOUND: 'One or more main elements couldn\'t be found',
+    BUTTON_EXIT_NOT_FOUND: 'Exit button couldn\'t be found',
     HEADING_NOT_FOUND: 'Heading element couldn\'t be found',
     PARA_NOT_FOUND: 'Message element couldn\'t be found',
     MENU_COVER_NOT_FOUND: 'Menu cover couldn\'t be found',
@@ -18,205 +20,148 @@ const ERR_MESSAGE = new Enum ({
 });
 
 export function renderMainPage() {
-    renderMainPageTemplate();
+    renderErrorModal();
+    renderRemoveConfirmationTemplate();
     renderProjectMenuTemplate();
     renderTaskMenuTemplate();
-    renderRemoveConfirmationTemplate();
-    renderErrorModal();
+    renderMainPageFrame();
+    renderFilterOptionsMenu();
+    renderMainPageTemplate();
 };
 
-function renderMainPageTemplate() {
+// message === [error type, error message];
+// if the the error is not the system (app) error => error type === null 
+function renderErrorModal() {
     const content = document.querySelector('.content');
     if (!isHTMLElement(content)) {
-        showErrorModal([ERR_HEADINGS.MAIN_PAGE, ERR_MESSAGE.CONTENT_NOT_FOUND]);
+        showErrorModal([ERR_HEADINGS.CONTENT, ERR_MESSAGE.CONTENT_NOT_FOUND]);
         return;
     }
 
-    const header = createElementWithAttributes('header', {}, content);
+    const errorCover = createElementWithAttributes('div', {
+        class: 'error-cover'
+    }, content);
 
-    const sidebarIcon = createElementWithAttributes('button', {
-        class: 'sidebar-icon'
-    }, header);
-    sidebarIcon.ariaLabel = 'Sidebar menu';
-    sidebarIcon.style.backgroundImage = `url(${assets.sidebarIconPath})`;
+    const modal = createElementWithAttributes('div', {
+        class: 'error-modal',
+    }, content);
 
-    const heading = createElementWithAttributes('div', {class: 'heading'}, header);
+    const titleBox = createElementWithAttributes('div', {
+        class: 'title',
+    }, modal);
 
-    const logoIcon = createElementWithAttributes('img', { 
-        class: 'logo',
-        alt: 'TrackIt logo'}, heading);
-    logoIcon.src = assets.logoIconPath;
+    const heading  = createElementWithAttributes('h3', {
+        class: 'error-heading',
+    }, titleBox);
+    heading.textContent = '';
 
-    const headingText = createElementWithAttributes('h1', {}, heading);
-    headingText.textContent = 'TrackIt';
+    const exitIcon = createElementWithAttributes('button', {
+        class: 'exit',
+    }, titleBox);
+    exitIcon.ariaLabel = 'Exit the error modal';
+    exitIcon.style.backgroundImage = `url(${assets.taskMenuExitIconPath})`;
 
-    const emptyDiv = createElementWithAttributes('div', {class: 'empty'}, header);
+    const message  = createElementWithAttributes('p', {
+        class: 'error-message',
+    }, modal);
+    message.textContent = '';
 
-    const viewOptionsIcon = createElementWithAttributes('button', { 
-        class: 'options'
-    }, header);
-    viewOptionsIcon.ariaLabel = 'View Options';
-    viewOptionsIcon.style.backgroundImage = `url(${assets.viewOptionsIconPath})`;
+    const buttonExit = createElementWithAttributes('button', {
+        class: 'exit-ok',
+    }, modal);
+    buttonExit.textContent = 'OK';
 
-    const sidebar = createElementWithAttributes('aside', {}, content);
+    modal.addEventListener('resize', () => {
+        if (!isHTMLElement(buttonExit)) {
+            showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.BUTTON_EXIT_NOT_FOUND]);
+            return;
+        }
+        buttonExit.focus();
+    });
 
-    const barTypes = createElementWithAttributes('div', {class: 'bar-types'}, sidebar);
+    exitIcon.addEventListener('click', () => {
+        if (!isHTMLElement(heading)) {
+            showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.HEADING_NOT_FOUND]);
+            return;
+        }
+        if (!isHTMLElement(message)) {
+            showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.PARA_NOT_FOUND]);
+            return;
+        }
 
-    const tasksAll = createElementWithAttributes('button', {class: 'tasks-all'}, barTypes);
-    tasksAll.setAttribute('data-group-id', STANDARD_GROUPS.ALL);
+        modal.classList.remove('shown');
+        errorCover.classList.remove('shown');
+        heading.textContent = '';
+        message.textContent = '';
+    });
+    buttonExit.addEventListener('click', () => {
+        if (!isHTMLElement(heading)) {
+            showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.HEADING_NOT_FOUND]);
+            return;
+        }
+        if (!isHTMLElement(message)) {
+            showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.PARA_NOT_FOUND]);
+            return;
+        }
 
-    const imageTasksAll = createElementWithAttributes('img', {
-        alt: 'All tasks',
-        src: assets.tasksAllImagePath,
-    }, tasksAll);
+        modal.classList.remove('shown');
+        errorCover.classList.remove('shown');
+        heading.textContent = '';
+        message.textContent = '';
+    });
+}
 
-    const tasksAllText = createElementWithAttributes('span', {}, tasksAll);
-    tasksAllText.textContent = 'All';
+function renderRemoveConfirmationTemplate() {
+    const content = document.querySelector('.content');
+    if (!isHTMLElement(content)) {
+        showErrorModal([ERR_HEADINGS.CONTENT, ERR_MESSAGE.CONTENT_NOT_FOUND]);
+        return;
+    }
 
-    const tasksToday = createElementWithAttributes('button', {class: 'tasks-today'}, barTypes);
-    tasksToday.setAttribute('data-group-id', STANDARD_GROUPS.TODAY);
+    const menuCover = createElementWithAttributes('div', {
+        class: 'menu-cover'
+    }, content);
 
-    const imagetasksToday = createElementWithAttributes('img', {
-        alt: 'Tasks today',
-        src: assets.tasksTodayImagePath,
-    }, tasksToday);
+    const removeMenu = createElementWithAttributes('div', {
+        class: 'remove-menu',
+    }, content);
 
-    const tasksTodayText = createElementWithAttributes('span', {}, tasksToday);
-    tasksTodayText.textContent = 'Today';
+    const titleBox = createElementWithAttributes('div', {
+        class: 'title',
+    }, removeMenu);
 
-    const tasksWeek = createElementWithAttributes('button', {class: 'tasks-week'}, barTypes);
-    tasksWeek.setAttribute('data-group-id', STANDARD_GROUPS.WEEK);
+    const heading  = createElementWithAttributes('h3', {
+        class: 'remove-heading',
+    }, titleBox);
+    heading.textContent = '';
 
-    const imageTasksWeekImage = createElementWithAttributes('img', {
-        alt: 'Tasks this week',
-        src: assets.tasksWeekImagePath,
-    }, tasksWeek);
+    const projectMenuExitIcon = createElementWithAttributes('button', {
+        class: 'exit',
+    }, titleBox);
+    projectMenuExitIcon.ariaLabel = 'Exit confirmation menu';
+    projectMenuExitIcon.style.backgroundImage = `url(${assets.projectMenuExitIconPath})`;
 
-    const tasksWeekText = createElementWithAttributes('span', {}, tasksWeek);
-    tasksWeekText.textContent = 'Week';
+    const message  = createElementWithAttributes('p', {
+        class: 'remove-message',
+    }, removeMenu);
+    message.textContent = '';
 
-    const tasksCompleted = createElementWithAttributes('button', {class: 'tasks-completed'}, barTypes);
-    tasksCompleted.setAttribute('data-group-id', STANDARD_GROUPS.COMPLETED);
+    const buttonBox = createElementWithAttributes('div', {
+        class: 'button-box',
+    }, removeMenu);
 
-    const imageTasksCompletedImage = createElementWithAttributes('img', {
-        alt: 'Tasks completed',
-        src: assets.tasksCompletedImagePath,
-    }, tasksCompleted);
+    const buttonConfirm = createElementWithAttributes('button', {
+        class: 'remove-confirm',
+    }, buttonBox);
+    buttonConfirm.textContent = 'Yes';
 
-    const tasksCompletedText = createElementWithAttributes('span', {}, tasksCompleted);
-    tasksCompletedText.textContent = 'Completed';
+    const buttonExit = createElementWithAttributes('button', {
+        class: 'exit',
+    }, buttonBox);
+    buttonExit.textContent = 'Cancel';
 
-    const tasksOverdue = createElementWithAttributes('button', {class: 'tasks-overdue'}, barTypes);
-    tasksOverdue.setAttribute('data-group-id', STANDARD_GROUPS.OVERDUE);
-
-    const imageTasksOverdueImage = createElementWithAttributes('img', {
-        alt: 'Tasks overdue',
-        src: assets.tasksOverdueImagePath,
-    }, tasksOverdue);
-
-    const tasksOverdueText = createElementWithAttributes('span', {}, tasksOverdue);
-    tasksOverdueText.textContent = 'Overdue';
-
-    const barProjects = createElementWithAttributes('div', {class: 'bar-projects'}, sidebar);
-
-    const projectsBarHeader = createElementWithAttributes('div', {class: 'header'}, barProjects);
-
-    const projectsBarHeaderImage = createElementWithAttributes('img', {
-        alt: 'Projects icon'
-    }, projectsBarHeader);
-    projectsBarHeaderImage.src = assets.projectsBarHeaderImagePath;
-
-    const projectsBarHeaderText = createElementWithAttributes('span', {}, projectsBarHeader);
-    projectsBarHeaderText.textContent = 'Projects';
-
-    const emptyDivProjectsBar = createElementWithAttributes('div', {}, projectsBarHeader);
-
-    const projectsBarHeaderAddImage = createElementWithAttributes('button', {
-        class: 'add-new',
-    }, projectsBarHeader);
-    projectsBarHeaderAddImage.ariaLabel = 'Add new project';
-    projectsBarHeaderAddImage.style.backgroundImage = `url(${assets.projectsBarHeaderAddImagePath})`;
-
-    projectsBarHeaderAddImage.setAttribute('data-project-action', ACTIONS_PROJECTS.ADD_NEW);
-
-    const projectsList = createElementWithAttributes('ul', {class: 'projects-list'}, barProjects);
-
-    const projectsBarNavBox = createElementWithAttributes('div', {class: 'projects-nav'}, barProjects);
-
-    const previousProjectsPageIcon = createElementWithAttributes('button', {
-        class: 'projects-previous-page'
-    }, projectsBarNavBox);
-    previousProjectsPageIcon.ariaLabel = 'Previous projects page';
-    previousProjectsPageIcon.style.backgroundImage = `url(${assets.previousPageIconPath})`;
-
-    const projectsPagesNav = createElementWithAttributes('span', {
-        class: 'projects-pages-nums',
-    }, projectsBarNavBox);
-
-    const nextProjectsPageIcon = createElementWithAttributes('button', {
-        class: 'projects-next-page'
-    }, projectsBarNavBox);
-    nextProjectsPageIcon.ariaLabel = 'Next projects page';
-    nextProjectsPageIcon.style.backgroundImage = `url(${assets.nextPageIconPath})`;
-
-    const barFooter = createElementWithAttributes('div', {class: 'bar-footer'}, sidebar);
-
-    const footerLink = createElementWithAttributes('a', {
-        href: 'https://github.com/F3GR'
-    }, barFooter);
-    const footerText = createElementWithAttributes('span', {}, footerLink);
-    footerText.textContent = 'F3GR, 2023';
-
-    const main = createElementWithAttributes('main', {}, content);
-
-    const sidebarCover = createElementWithAttributes('div', {
-        class: 'sidebar-cover'
-    }, main);
-
-    const mainHeadBox = createElementWithAttributes('div', {class: 'header'}, main);
-
-    const mainHeadImage = createElementWithAttributes('img', { 
-        alt: 'All tasks icon'
-    }, mainHeadBox);
-    mainHeadImage.src = assets.mainHeadImagePath;
-
-    const mainHeadText = createElementWithAttributes('h2', {}, mainHeadBox);
-    mainHeadText.textContent = `${DEFAULT_GROUP.charAt(0).toUpperCase()}${DEFAULT_GROUP.slice(1)}`;
-
-    const mainTaskBar = createElementWithAttributes('div', {class: 'task-bar'}, main);
-
-    const mainTaskNumber = createElementWithAttributes('div', {class: 'task-number'}, mainTaskBar);
-    
-    const taskBarText = createElementWithAttributes('span', {}, mainTaskNumber);
-    taskBarText.textContent = 'Tasks';
-
-    const addNewTaskIcon = createElementWithAttributes('button', { 
-        class: 'add-new',
-    }, mainTaskBar);
-    addNewTaskIcon.ariaLabel = 'Add new task';
-    addNewTaskIcon.style.backgroundImage = `url(${assets.addNewTaskIconPath})`;
-
-    addNewTaskIcon.setAttribute('data-task-action', ACTIONS_TASKS.ADD_NEW);
-
-    const tasksList = createElementWithAttributes('ul', {class: 'task-list'}, main);
-
-    const taskPageMenuBox = createElementWithAttributes('div', {class: 'page-menu', }, main);
-
-    const previousTasksPageIcon = createElementWithAttributes('button', {
-        class: 'tasks-previous-page'
-    }, taskPageMenuBox);
-    previousTasksPageIcon.ariaLabel = 'Previous tasks page';
-    previousTasksPageIcon.style.backgroundImage = `url(${assets.previousPageIconPath})`;
-
-    const tasksPagesNav = createElementWithAttributes('span', {
-        class: 'tasks-pages-nums',
-    }, taskPageMenuBox);
-
-    const nextTasksPageIcon = createElementWithAttributes('button', {
-        class: 'tasks-next-page'
-    }, taskPageMenuBox);
-    nextTasksPageIcon.ariaLabel = 'Next tasks page';
-    nextTasksPageIcon.style.backgroundImage = `url(${assets.nextPageIconPath})`;
+    const buttons = removeMenu.querySelectorAll('.exit');
+    buttons.forEach(btn => btn.addEventListener('click', (e) => handleExitRemoveMenu(e)));
 }
 
 function renderProjectMenuTemplate() {
@@ -225,10 +170,6 @@ function renderProjectMenuTemplate() {
         showErrorModal([ERR_HEADINGS.MENU_TEMPLATE, ERR_MESSAGE.CONTENT_NOT_FOUND]);
         return;
     }
-
-    const menuCover = createElementWithAttributes('div', {
-        class: 'menu-cover'
-    }, content);
 
     const projectMenu = createElementWithAttributes('div', {
         class: 'project-menu'
@@ -624,132 +565,416 @@ function renderTaskMenuTemplate() {
     buttonCancel.textContent = 'Cancel';
 }
 
-function renderRemoveConfirmationTemplate() {
-    const content = document.querySelector('.content');
-    const menuCover = document.querySelector('.menu-cover');
-    if (!isHTMLElement(content)) {
-        showErrorModal([ERR_HEADINGS.CONTENT, ERR_MESSAGE.CONTENT_NOT_FOUND]);
-        return;
-    }
-    if (!isHTMLElement(menuCover)) {
-        showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.MENU_COVER_NOT_FOUND]);
-        return;
-    }
-
-    const removeMenu = createElementWithAttributes('div', {
-        class: 'remove-menu',
-    }, content);
-
-    const titleBox = createElementWithAttributes('div', {
-        class: 'title',
-    }, removeMenu);
-
-    const heading  = createElementWithAttributes('h3', {
-        class: 'remove-heading',
-    }, titleBox);
-    heading.textContent = '';
-
-    const projectMenuExitIcon = createElementWithAttributes('button', {
-        class: 'exit',
-    }, titleBox);
-    projectMenuExitIcon.ariaLabel = 'Exit confirmation menu';
-    projectMenuExitIcon.style.backgroundImage = `url(${assets.projectMenuExitIconPath})`;
-
-    const message  = createElementWithAttributes('p', {
-        class: 'remove-message',
-    }, removeMenu);
-    message.textContent = '';
-
-    const buttonBox = createElementWithAttributes('div', {
-        class: 'button-box',
-    }, removeMenu);
-
-    const buttonConfirm = createElementWithAttributes('button', {
-        class: 'remove-confirm',
-    }, buttonBox);
-    buttonConfirm.textContent = 'Yes';
-
-    const buttonExit = createElementWithAttributes('button', {
-        class: 'exit',
-    }, buttonBox);
-    buttonExit.textContent = 'Cancel';
-
-    const buttons = removeMenu.querySelectorAll('.exit');
-    buttons.forEach(btn => btn.addEventListener('click', (e) => handleExitRemoveMenu(e)));
-}
-
-// message === [error type, error message];
-// if the the error is not the system (app) error => error type === null 
-function renderErrorModal() {
+function renderMainPageFrame() {
     const content = document.querySelector('.content');
     if (!isHTMLElement(content)) {
-        showErrorModal([ERR_HEADINGS.CONTENT, ERR_MESSAGE.CONTENT_NOT_FOUND]);
+        showErrorModal([ERR_HEADINGS.MAIN_PAGE, ERR_MESSAGE.CONTENT_NOT_FOUND]);
         return;
     }
 
-    const errorCover = createElementWithAttributes('div', {
-        class: 'error-cover'
-    }, content);
-
-    const modal = createElementWithAttributes('div', {
-        class: 'error-modal',
-    }, content);
-
-    const titleBox = createElementWithAttributes('div', {
-        class: 'title',
-    }, modal);
-
-    const heading  = createElementWithAttributes('h3', {
-        class: 'error-heading',
-    }, titleBox);
-    heading.textContent = '';
-
-    const exitIcon = createElementWithAttributes('button', {
-        class: 'exit',
-    }, titleBox);
-    exitIcon.ariaLabel = 'Exit the error modal';
-    exitIcon.style.backgroundImage = `url(${assets.taskMenuExitIconPath})`;
-
-    const message  = createElementWithAttributes('p', {
-        class: 'error-message',
-    }, modal);
-    message.textContent = '';
-
-    const buttonExit = createElementWithAttributes('button', {
-        class: 'exit-ok',
-    }, modal);
-    buttonExit.textContent = 'OK';
-
-    exitIcon.addEventListener('click', () => {
-        if (!isHTMLElement(heading)) {
-            showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.HEADING_NOT_FOUND]);
-            return;
-        }
-        if (!isHTMLElement(message)) {
-            showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.PARA_NOT_FOUND]);
-            return;
-        }
-
-        modal.classList.remove('shown');
-        errorCover.classList.remove('shown');
-        heading.textContent = '';
-        message.textContent = '';
-    });
-    buttonExit.addEventListener('click', () => {
-        if (!isHTMLElement(heading)) {
-            showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.HEADING_NOT_FOUND]);
-            return;
-        }
-        if (!isHTMLElement(message)) {
-            showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.PARA_NOT_FOUND]);
-            return;
-        }
-
-        modal.classList.remove('shown');
-        errorCover.classList.remove('shown');
-        heading.textContent = '';
-        message.textContent = '';
-    });
+    const header = createElementWithAttributes('header', {}, content);
+    const sidebar = createElementWithAttributes('aside', {}, content);
+    const main = createElementWithAttributes('main', {}, content);
+    const barTypes = createElementWithAttributes('div', {class: 'bar-types'}, sidebar);
+    const barProjects = createElementWithAttributes('div', {class: 'bar-projects'}, sidebar);
+    const projectsBarHeader = createElementWithAttributes('div', {class: 'header'}, barProjects);
+    const projectsList = createElementWithAttributes('ul', {class: 'projects-list'}, barProjects);
+    const barFooter = createElementWithAttributes('div', {class: 'bar-footer'}, sidebar);
+    const mainHeadBox = createElementWithAttributes('div', {class: 'header'}, main);
+    const mainTaskBar = createElementWithAttributes('div', {class: 'task-bar'}, main);
+    const tasksList = createElementWithAttributes('ul', {class: 'task-list'}, main);
 }
+
+function renderFilterOptionsMenu() {
+    const main = document.querySelector('main');
+    if (!isHTMLElement(main)) {
+        showErrorModal([ERR_HEADINGS.RENDERING, ERR_RENDERING.MAIN_PANEL]);
+        return;
+    }
+
+    const viewOptionsBox = createElementWithAttributes('div', {
+        class: 'view-options-bar'
+    }, main);
+
+    const priorityContainer = createElementWithAttributes('div', {
+        class: 'priority-main-box'
+    }, viewOptionsBox);
+
+    const priorityOptionsText = createElementWithAttributes('div', {
+        class: 'priority-header'
+    }, priorityContainer);
+    priorityOptionsText.textContent = 'Priority:';
+
+    const priorityBorderContainer = createElementWithAttributes('div', {
+        class: 'priority-border-box'
+    }, priorityContainer);
+
+    const labelPriorityHigh = createElementWithAttributes('label', {
+        for: 'view-priority-high'
+    }, priorityBorderContainer);
+
+    const inputPriorityHigh = createElementWithAttributes('input', {
+        id: 'view-priority-high',
+        type: 'checkbox'
+    }, labelPriorityHigh);
+
+    const indicatorPriorityHigh = createElementWithAttributes('div', {
+        class: 'radio-button priority-high'
+    }, labelPriorityHigh);
+
+    const btnPriorityHigh = createElementWithAttributes('button', {
+        class: 'priority-high'
+    }, labelPriorityHigh);
+    btnPriorityHigh.textContent = 'High';
+
+    const labelPriorityMedium = createElementWithAttributes('label', {
+        for: 'view-priority-medium'
+    }, priorityBorderContainer);
+
+    const inputPriorityMedium = createElementWithAttributes('input', {
+        id: 'view-priority-medium',
+        type: 'checkbox'
+    }, labelPriorityMedium);
+
+    const indicatorPriorityMedium = createElementWithAttributes('div', {
+        class: 'radio-button priority-medium'
+    }, labelPriorityMedium);
+
+    const btnPriorityMedium = createElementWithAttributes('button', {
+        class: 'priority-medium'}, labelPriorityMedium);
+    btnPriorityMedium.textContent = 'Medium';
+
+    const labelPriorityNormal = createElementWithAttributes('label', {
+        for: 'view-priority-normal'
+    }, priorityBorderContainer);
+
+    const inputPriorityNormal = createElementWithAttributes('input', {
+        id: 'view-priority-normal',
+        type: 'checkbox'
+    }, labelPriorityNormal);
+
+    const indicatorPriorityNormal = createElementWithAttributes('div', {
+        class: 'radio-button priority-normal'
+    }, labelPriorityNormal);
+
+    const btnPriorityNormal = createElementWithAttributes('button', {
+        class: 'priority-normal'
+    }, labelPriorityNormal);
+    btnPriorityNormal.textContent = 'Normal';
+    
+    const statusContainer = createElementWithAttributes('div', {
+        class: 'status-main-box',
+    }, viewOptionsBox);
+
+    const textOptionsStatus = createElementWithAttributes('div', {
+        class: 'status-header'
+    }, statusContainer);
+    textOptionsStatus.textContent = 'Status:';
+
+    const statusBorderContainer = createElementWithAttributes('div', {
+        class: 'status-border-box',
+    }, statusContainer);
+
+    const labelStatusOverdue = createElementWithAttributes('label', {
+        for: 'view-status-overdue'
+    }, statusBorderContainer);
+
+    const inputStatusOverdue = createElementWithAttributes('input', {
+        id: 'view-status-overdue',
+        type: 'checkbox'
+    }, labelStatusOverdue);
+
+    const indicatorStatusOverdue = createElementWithAttributes('div', {
+        class: 'radio-button status-overdue'
+    }, labelStatusOverdue);
+
+    const btnStatusOverdue = createElementWithAttributes('button', {
+        class: 'status-overdue'
+    }, labelStatusOverdue);
+    btnStatusOverdue.textContent = 'Overdue';
+
+    const labelStatusOnGoing = createElementWithAttributes('label', {
+        for: 'view-status-ongoing'
+    }, statusBorderContainer);
+    
+    const inputStatusOnGoing = createElementWithAttributes('input', {
+        id: 'view-status-ongoing',
+        type: 'checkbox'
+    }, labelStatusOnGoing);
+
+    const indicatorStatusOnGoing = createElementWithAttributes('div', {
+        class: 'radio-button status-ongoing'
+    }, labelStatusOnGoing);
+    
+    const btnStatusOnGoing = createElementWithAttributes('button', {
+        class: 'status-ongoing'
+    }, labelStatusOnGoing);
+    btnStatusOnGoing.textContent = 'Ongoing';
+
+    const labelStatusCompleted = createElementWithAttributes('label', {
+        for: 'view-status-completed'
+    }, statusBorderContainer);
+    
+    const inputStatusCompleted = createElementWithAttributes('input', {
+        id: 'view-status-completed',
+        type: 'checkbox'
+    }, labelStatusCompleted);
+
+    const indicatorStatusCompleted = createElementWithAttributes('div', {
+        class: 'radio-button status-completed'
+    }, labelStatusCompleted);
+    
+    const btnStatusCompleted = createElementWithAttributes('button', {
+        class: 'status-completed'
+    }, labelStatusCompleted);
+    btnStatusCompleted.textContent = 'Completed';
+
+    const sortOptionsBox = createElementWithAttributes('div', {
+        class: 'sort-options-main-box',
+    }, viewOptionsBox);
+
+    const sortOptionsText = createElementWithAttributes('div', {
+        class: 'sort-header'
+    }, sortOptionsBox);
+    sortOptionsText.textContent = 'Sort by:';
+
+    const sortOptionsBorderContainer = createElementWithAttributes('div', {
+        class: 'sort-options-border-box',
+    }, sortOptionsBox);
+
+    const selectSortOptions = createElementWithAttributes('select', {
+        name: 'sort-by'
+    }, sortOptionsBorderContainer);
+
+    const sortByDate = createElementWithAttributes('option', {
+        value: 'date'
+    },selectSortOptions);
+    sortByDate.textContent = 'Date';
+
+    const sortByPriority = createElementWithAttributes('option', {
+        value: 'priority'
+    },selectSortOptions);
+    sortByPriority.textContent = 'Priority';
+
+    const sortByStatus = createElementWithAttributes('option', {
+        value: 'status'
+    },selectSortOptions);
+    sortByStatus.textContent = 'Status';
+
+    const labelSortOrder = createElementWithAttributes('label', { 
+        class: 'sort-order',
+        for: 'sort-order'
+    }, sortOptionsBorderContainer);
+
+    const checkboxSortAscendingOrder = createElementWithAttributes('input', { 
+        type: 'checkbox',
+        id: 'sort-order',
+    }, labelSortOrder);
+
+    const sortOrderIcon = createElementWithAttributes('button', { 
+        class: 'sort-arrow'
+    }, labelSortOrder);
+    sortOrderIcon.ariaLabel = 'Sort order (ascending or descending)';
+    sortOrderIcon.style.backgroundImage = `url(${assets.sortOrderIconPath})`;
+}
+
+function renderMainPageTemplate() {
+    const content = document.querySelector('.content');
+    const main = document.querySelector('main');
+    const header = document.querySelector('header');
+    const sidebar = document.querySelector('aside');
+    const barProjects = document.querySelector('.bar-projects');
+    const projectsBarHeader = document.querySelector('.bar-projects .header');
+    const mainTaskBar = document.querySelector('main .task-bar');
+    const barTypes = document.querySelector('aside .bar-types');
+    const projectsList = document.querySelector('.projects-list');
+    const barFooter = document.querySelector('aside .bar-footer');
+    const mainHeadBox = document.querySelector('main .header');
+    const tasksList = document.querySelector('.task-list');
+
+    if (!isHTMLElement(content) || 
+    !isHTMLElement(main) ||
+    !isHTMLElement(header) ||
+    !isHTMLElement(sidebar) ||
+    !isHTMLElement(tasksList) ||
+    !isHTMLElement(barProjects) ||
+    !isHTMLElement(projectsList) ||
+    !isHTMLElement(barTypes) ||
+    !isHTMLElement(barFooter) ||
+    !isHTMLElement(projectsBarHeader) ||
+    !isHTMLElement(mainHeadBox) ||
+    !isHTMLElement(mainTaskBar)
+    ) {
+        showErrorModal([ERR_HEADINGS.MAIN_PAGE, ERR_MESSAGE.CONTENT_NOT_FOUND]);
+        return;
+    }
+
+    const sidebarIcon = createElementWithAttributes('button', {
+        class: 'sidebar-icon'
+    }, header);
+    sidebarIcon.ariaLabel = 'Sidebar menu';
+    sidebarIcon.style.backgroundImage = `url(${assets.sidebarIconPath})`;
+
+    const heading = createElementWithAttributes('div', {class: 'heading'}, header);
+
+    const logoIcon = createElementWithAttributes('img', { 
+        class: 'logo',
+        alt: 'TrackIt logo'}, heading);
+    logoIcon.src = assets.logoIconPath;
+
+    const headingText = createElementWithAttributes('h1', {}, heading);
+    headingText.textContent = 'TrackIt';
+
+    const emptyDiv = createElementWithAttributes('div', {class: 'empty'}, header);
+
+    const viewOptionsIcon = createElementWithAttributes('button', { 
+        class: 'options'
+    }, header);
+    viewOptionsIcon.ariaLabel = 'View Options';
+    viewOptionsIcon.style.backgroundImage = `url(${assets.viewOptionsIconPath})`;
+
+    const tasksAll = createElementWithAttributes('button', {class: 'tasks-all'}, barTypes);
+    tasksAll.setAttribute('data-group-id', STANDARD_GROUPS.ALL);
+
+    const imageTasksAll = createElementWithAttributes('img', {
+        alt: 'All tasks',
+        src: assets.tasksAllImagePath,
+    }, tasksAll);
+
+    const tasksAllText = createElementWithAttributes('span', {}, tasksAll);
+    tasksAllText.textContent = 'All';
+
+    const tasksToday = createElementWithAttributes('button', {class: 'tasks-today'}, barTypes);
+    tasksToday.setAttribute('data-group-id', STANDARD_GROUPS.TODAY);
+
+    const imagetasksToday = createElementWithAttributes('img', {
+        alt: 'Tasks today',
+        src: assets.tasksTodayImagePath,
+    }, tasksToday);
+
+    const tasksTodayText = createElementWithAttributes('span', {}, tasksToday);
+    tasksTodayText.textContent = 'Today';
+
+    const tasksWeek = createElementWithAttributes('button', {class: 'tasks-week'}, barTypes);
+    tasksWeek.setAttribute('data-group-id', STANDARD_GROUPS.WEEK);
+
+    const imageTasksWeekImage = createElementWithAttributes('img', {
+        alt: 'Tasks this week',
+        src: assets.tasksWeekImagePath,
+    }, tasksWeek);
+
+    const tasksWeekText = createElementWithAttributes('span', {}, tasksWeek);
+    tasksWeekText.textContent = 'Week';
+
+    const tasksCompleted = createElementWithAttributes('button', {class: 'tasks-completed'}, barTypes);
+    tasksCompleted.setAttribute('data-group-id', STANDARD_GROUPS.COMPLETED);
+
+    const imageTasksCompletedImage = createElementWithAttributes('img', {
+        alt: 'Tasks completed',
+        src: assets.tasksCompletedImagePath,
+    }, tasksCompleted);
+
+    const tasksCompletedText = createElementWithAttributes('span', {}, tasksCompleted);
+    tasksCompletedText.textContent = 'Completed';
+
+    const tasksOverdue = createElementWithAttributes('button', {class: 'tasks-overdue'}, barTypes);
+    tasksOverdue.setAttribute('data-group-id', STANDARD_GROUPS.OVERDUE);
+
+    const imageTasksOverdueImage = createElementWithAttributes('img', {
+        alt: 'Tasks overdue',
+        src: assets.tasksOverdueImagePath,
+    }, tasksOverdue);
+
+    const tasksOverdueText = createElementWithAttributes('span', {}, tasksOverdue);
+    tasksOverdueText.textContent = 'Overdue';
+
+    const projectsBarHeaderImage = createElementWithAttributes('img', {
+        alt: 'Projects icon'
+    }, projectsBarHeader);
+    projectsBarHeaderImage.src = assets.projectsBarHeaderImagePath;
+
+    const projectsBarHeaderText = createElementWithAttributes('span', {}, projectsBarHeader);
+    projectsBarHeaderText.textContent = 'Projects';
+
+    const emptyDivProjectsBar = createElementWithAttributes('div', {}, projectsBarHeader);
+
+    const projectsBarHeaderAddImage = createElementWithAttributes('button', {
+        class: 'add-new',
+    }, projectsBarHeader);
+    projectsBarHeaderAddImage.ariaLabel = 'Add new project';
+    projectsBarHeaderAddImage.style.backgroundImage = `url(${assets.projectsBarHeaderAddImagePath})`;
+
+    projectsBarHeaderAddImage.setAttribute('data-project-action', ACTIONS_PROJECTS.ADD_NEW);
+
+    const projectsBarNavBox = createElementWithAttributes('div', {class: 'projects-nav'}, barProjects);
+
+    const previousProjectsPageIcon = createElementWithAttributes('button', {
+        class: 'projects-previous-page'
+    }, projectsBarNavBox);
+    previousProjectsPageIcon.ariaLabel = 'Previous projects page';
+    previousProjectsPageIcon.style.backgroundImage = `url(${assets.previousPageIconPath})`;
+
+    const projectsPagesNav = createElementWithAttributes('span', {
+        class: 'projects-pages-nums',
+    }, projectsBarNavBox);
+
+    const nextProjectsPageIcon = createElementWithAttributes('button', {
+        class: 'projects-next-page'
+    }, projectsBarNavBox);
+    nextProjectsPageIcon.ariaLabel = 'Next projects page';
+    nextProjectsPageIcon.style.backgroundImage = `url(${assets.nextPageIconPath})`;
+
+    const footerLink = createElementWithAttributes('a', {
+        href: 'https://github.com/F3GR'
+    }, barFooter);
+    const footerText = createElementWithAttributes('span', {}, footerLink);
+    footerText.textContent = 'F3GR, 2023';
+
+    const sidebarCover = createElementWithAttributes('div', {
+        class: 'sidebar-cover'
+    }, main);
+
+    const mainHeadImage = createElementWithAttributes('img', { 
+        alt: 'All tasks icon'
+    }, mainHeadBox);
+    mainHeadImage.src = assets.mainHeadImagePath;
+
+    const mainHeadText = createElementWithAttributes('h2', {}, mainHeadBox);
+    mainHeadText.textContent = `${DEFAULT_GROUP.charAt(0).toUpperCase()}${DEFAULT_GROUP.slice(1)}`;
+
+    const mainTaskNumber = createElementWithAttributes('div', {class: 'task-number'}, mainTaskBar);
+    
+    const taskBarText = createElementWithAttributes('span', {}, mainTaskNumber);
+    taskBarText.textContent = 'Tasks';
+
+    const addNewTaskIcon = createElementWithAttributes('button', { 
+        class: 'add-new',
+    }, mainTaskBar);
+    addNewTaskIcon.ariaLabel = 'Add new task';
+    addNewTaskIcon.style.backgroundImage = `url(${assets.addNewTaskIconPath})`;
+
+    addNewTaskIcon.setAttribute('data-task-action', ACTIONS_TASKS.ADD_NEW);
+
+    const taskPageMenuBox = createElementWithAttributes('div', {class: 'page-menu', }, main);
+
+    const previousTasksPageIcon = createElementWithAttributes('button', {
+        class: 'tasks-previous-page'
+    }, taskPageMenuBox);
+    previousTasksPageIcon.ariaLabel = 'Previous tasks page';
+    previousTasksPageIcon.style.backgroundImage = `url(${assets.previousPageIconPath})`;
+
+    const tasksPagesNav = createElementWithAttributes('span', {
+        class: 'tasks-pages-nums',
+    }, taskPageMenuBox);
+
+    const nextTasksPageIcon = createElementWithAttributes('button', {
+        class: 'tasks-next-page'
+    }, taskPageMenuBox);
+    nextTasksPageIcon.ariaLabel = 'Next tasks page';
+    nextTasksPageIcon.style.backgroundImage = `url(${assets.nextPageIconPath})`;
+}
+
+
+
 
 

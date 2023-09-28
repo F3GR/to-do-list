@@ -17,7 +17,10 @@ export function renderProject(project) {
         return;
     }
 
-    const nodeNewProject = createElementWithAttributes('li', { class: 'project'}, projectsList);
+    const nodeNewProject = createElementWithAttributes('li', { 
+        class: 'project',
+        tabindex: 0,
+    }, projectsList);
     nodeNewProject.setAttribute('data-group-id', `${id}`);
 
     const projectImage = createElementWithAttributes('img', {

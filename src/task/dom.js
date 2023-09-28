@@ -49,10 +49,11 @@ export function renderTask(taskObj) {
     
     const label = createElementWithAttributes('label', {
         for: 'task-status', 
-        class: 'status-checkbox'
+        class: 'status-checkbox',
+        tabindex: 0,
     }, task);
+    label.setAttribute('data-task-action', ACTIONS_TASKS.UPDATE_STATUS);
     
-
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', 'M2,10 L8,16 L18,5');
     
@@ -60,7 +61,6 @@ export function renderTask(taskObj) {
     svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
     svg.classList.add('status-checkbox');
     svg.setAttribute('viewBox', '0 0 20 20');
-    svg.setAttribute('data-task-action', ACTIONS_TASKS.UPDATE_STATUS);
 
     svg.appendChild(path);
     label.appendChild(svg);

@@ -53,8 +53,9 @@ span, div {
 }
 
 body {
-  width: 100%; /* might be changed if necessary */
-  padding: 0; /* might be changed if necessary */
+  max-width: 2560px;
+  margin: 0 auto;
+  padding: 0;
   font-size: 1.6rem;
   line-height: 1.75;
   letter-spacing: 0.05rem;

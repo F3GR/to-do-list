@@ -22,8 +22,10 @@ import iconCategoryITPath from './assets/category-it.svg';
 import iconCategoryOtherPath from './assets/category-other.svg';
 import taskMenuExitIconPath from './assets/close.svg';
 import tasksCompletedImagePath from './assets/calendar-finished.svg';
+import sortOrderIconPath from './assets/arrow-downward.svg';
 
 export const assets = {
+    sortOrderIconPath,
     sidebarIconPath,
     logoIconPath, 
     viewOptionsIconPath,

@@ -19,7 +19,27 @@ export function addListenersManageTasks() {
     }
 
     main.addEventListener('click', (e) => {
-        const reactiveTaskIcon = e.target.closest('.task, button, svg');
+        const reactiveTaskIcon = e.target.closest('.task, button, label');
+        if (isHTMLElement(reactiveTaskIcon)) {
+            const action = reactiveTaskIcon.getAttribute('data-task-action');
+
+            if (!isValid(action)) {
+                return;
+            }
+            if (!Object.values(ACTIONS_TASKS).includes(action)) {
+                showErrorModal([ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.DEFAULT_ACTION]);
+                return;
+            }
+    
+            taskAction(action, reactiveTaskIcon);
+        }
+    });
+
+    main.addEventListener('keydown', (e) => {
+        if (e.keyCode !== 32 && e.keyCode !== 13) {
+            return;
+        }
+        const reactiveTaskIcon = e.target.closest('.task, button, label');
         if (isHTMLElement(reactiveTaskIcon)) {
             const action = reactiveTaskIcon.getAttribute('data-task-action');
 

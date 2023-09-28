@@ -1,6 +1,6 @@
 import { renderMainPage } from './dom-main-page.js';
 import { renderProject } from './project/dom.js';
-import { renderFilterOptionsMenu } from './view-options/dom.js';
+import { applySavedViewState, renderFilterOptionsMenu } from './view-options/dom.js';
 import { renderGroup } from './group/dom.js';
 import { renderProjectsCount } from './totals/dom-projects-count.js';
 import { renderTasksCount } from './totals/dom-tasks-count.js';
@@ -20,9 +20,11 @@ import { groupsController } from './group/controller.js';
 import { viewController } from './view-options/controller.js';
 import { localStorageController } from './controller-local-storage.js';
 import { projectsPageController, tasksPageController } from './pages-navs/pages-controller.js';
+import { initializeFocusModules } from './mutationObservers.js';
 
 import { STANDARD_GROUPS, DEFAULT_PAGE, DEFAULT_GROUP } from './utils.js';
 import { projectExample, taskExample1, taskExample2 } from './examples.js';
+
 
 
 class Application {
@@ -36,14 +38,14 @@ class Application {
     start = () => {
         try {
             renderMainPage();
-            renderFilterOptionsMenu();
-    
+        
             addListenersSidebar();
             addListenersManageProjects();
             addListenersViewOptions();
             addListenersManageTasks();
             addListenersProjectsPagesNav();
             addListenersTasksPagesNav();
+            applySavedViewState();
             
             let { projectsList, listStored } = localStorageController.getProjectsList();
             if (!listStored) {
@@ -81,6 +83,8 @@ class Application {
             renderGroup(defaultTasksFirstPage, defaultGroupId);
             
             renderTasksPageNav(DEFAULT_PAGE, tasksPageController.pagesTotal(defaultGroup));
+
+            const focusObservers = initializeFocusModules();
 
         } catch (e) {
             return e;
