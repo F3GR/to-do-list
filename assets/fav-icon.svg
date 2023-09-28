@@ -24,8 +24,8 @@
      inkscape:deskcolor="#d1d1d1"
      showguides="true"
      inkscape:zoom="7.0121422"
-     inkscape:cx="27.666296"
-     inkscape:cy="18.254051"
+     inkscape:cx="30.946321"
+     inkscape:cy="16.970563"
      inkscape:window-width="1366"
      inkscape:window-height="673"
      inkscape:window-x="0"
@@ -33,20 +33,12 @@
      inkscape:window-maximized="1"
      inkscape:current-layer="svg1" />
   <rect
-     style="opacity:1;fill:none;fill-opacity:1;stroke:#5a5a5a;stroke-width:40;stroke-dasharray:none;stroke-opacity:1"
-     id="rect1"
-     width="399.99994"
-     height="400"
-     x="535.91589"
-     y="-895.77533"
-     ry="127.26362" />
-  <rect
-     style="fill:#ffffff;fill-opacity:1;stroke:#5a5a5a;stroke-width:40;stroke-dasharray:none;stroke-opacity:1"
+     style="fill:#ffffff;fill-opacity:1;stroke:#5a5a5a;stroke-width:20;stroke-dasharray:none;stroke-opacity:1"
      id="rect1-5"
      width="399.99994"
      height="400"
      x="220"
-     y="-427.01181"
+     y="-470"
      ry="127.26362" />
   <ellipse
      style="opacity:1;fill:#ff6600;fill-opacity:1;stroke:#000000;stroke-width:3;stroke-dasharray:none;stroke-opacity:1"
@@ -84,12 +76,17 @@
      y="-423.92355"
      rx="26.092131"
      ry="17.37928" />
-  <rect
-     style="opacity:1;fill:#00ff00;stroke-width:2.77437"
-     id="rect2"
-     width="320"
-     height="320"
-     x="578.56006"
-     y="-854.07056"
-     ry="104.95114" />
+  <circle
+     style="opacity:1;fill:#00ff00;stroke-width:2.00045"
+     id="path2"
+     cx="700"
+     cy="-680"
+     r="120" />
+  <ellipse
+     style="opacity:1;fill:none;fill-opacity:1;stroke:#5a5a5a;stroke-width:19.6645;stroke-dasharray:none;stroke-opacity:1"
+     id="path3"
+     cx="699.99994"
+     cy="-680"
+     rx="190.16771"
+     ry="190.16774" />
 </svg>
