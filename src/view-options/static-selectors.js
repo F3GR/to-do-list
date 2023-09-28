@@ -5,25 +5,40 @@ export function getViewOptionsNodes() {
         return viewOptionsNodes;
     }
     
-    const checkboxPriorityHigh = document.querySelector('#view-priority-high');
-    const checkboxPriorityMedium = document.querySelector('#view-priority-medium');
-    const checkboxPriorityNormal = document.querySelector('#view-priority-normal');
-    const checkboxStatusOnGoing = document.querySelector('#view-status-ongoing');
-    const checkboxStatusCompleted = document.querySelector('#view-status-completed');
-    const checkboxStatusOverdue = document.querySelector('#view-status-overdue');
-    const checkboxSortAscendingOrder = document.querySelector('#sort-order');
+    const buttonPriorityHigh = document.querySelector('button.priority-high');
+    const buttonPriorityMedium = document.querySelector('button.priority-medium');
+    const buttonPriorityNormal = document.querySelector('button.priority-normal');
+    const buttonStatusOnGoing = document.querySelector('button.status-ongoing');
+    const buttonStatusCompleted = document.querySelector('button.status-completed');
+    const buttonStatusOverdue = document.querySelector('button.status-overdue');
+    const buttonSortAscendingOrder = document.querySelector('button.sort-arrow');
 
-    const viewOptionsIcon = document.querySelector('header > img.options');
+    const inputPriorityHigh = document.querySelector('input#view-priority-high');
+    const inputPriorityMedium = document.querySelector('input#view-priority-medium');
+    const inputPriorityNormal = document.querySelector('input#view-priority-normal');
+    const inputStatusOnGoing = document.querySelector('input#view-status-ongoing');
+    const inputStatusCompleted = document.querySelector('input#view-status-completed');
+    const inputStatusOverdue = document.querySelector('input#view-status-overdue');
+    const inputSortAscendingOrder = document.querySelector('input#sort-order');
+
+    const viewOptionsIcon = document.querySelector('header > .options');
     const viewBox = document.querySelector('main > .view-options-bar');
 
-    return viewOptionsNodes = { 
-        checkboxPriorityHigh,
-        checkboxPriorityMedium,
-        checkboxPriorityNormal,
-        checkboxStatusOnGoing,
-        checkboxStatusCompleted,
-        checkboxStatusOverdue,
-        checkboxSortAscendingOrder,
+    return viewOptionsNodes = {
+        buttonPriorityHigh,
+        buttonPriorityMedium,
+        buttonPriorityNormal,
+        buttonStatusOnGoing,
+        buttonStatusCompleted,
+        buttonStatusOverdue,
+        buttonSortAscendingOrder,
+        inputPriorityHigh,
+        inputPriorityMedium,
+        inputPriorityNormal,
+        inputStatusOnGoing,
+        inputStatusCompleted,
+        inputStatusOverdue,
+        inputSortAscendingOrder,
         viewOptionsIcon,
         viewBox 
     };

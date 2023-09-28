@@ -1,5 +1,5 @@
 import { assets } from './assets.js';
-import { Enum,createElementWithAttributes, isHTMLElement, showErrorModal, ACTIONS_PROJECTS, ACTIONS_TASKS, handleExitRemoveMenu } from './utils.js';
+import { Enum,createElementWithAttributes, isHTMLElement, showErrorModal, ACTIONS_PROJECTS, ACTIONS_TASKS, handleExitRemoveMenu, STANDARD_GROUPS } from './utils.js';
 
 const ERR_HEADINGS = new Enum ({
     CONTENT: 'Error (webpage content)',
@@ -34,11 +34,11 @@ function renderMainPageTemplate() {
 
     const header = createElementWithAttributes('header', {}, content);
 
-    const sidebarIcon = createElementWithAttributes('img', {
-        alt: 'Sidebar menu icon',
-        class: 'sidebar-icon hidden'
+    const sidebarIcon = createElementWithAttributes('button', {
+        class: 'sidebar-icon'
     }, header);
-    sidebarIcon.src = assets.sidebarIconPath;
+    sidebarIcon.ariaLabel = 'Sidebar menu';
+    sidebarIcon.style.backgroundImage = `url(${assets.sidebarIconPath})`;
 
     const heading = createElementWithAttributes('div', {class: 'heading'}, header);
 
@@ -52,67 +52,67 @@ function renderMainPageTemplate() {
 
     const emptyDiv = createElementWithAttributes('div', {class: 'empty'}, header);
 
-    const viewOptionsIcon = createElementWithAttributes('img', { 
-        alt: 'View Options logo',
+    const viewOptionsIcon = createElementWithAttributes('button', { 
         class: 'options'
     }, header);
-    viewOptionsIcon.src = assets.viewOptionsIconPath;
+    viewOptionsIcon.ariaLabel = 'View Options';
+    viewOptionsIcon.style.backgroundImage = `url(${assets.viewOptionsIconPath})`;
 
     const sidebar = createElementWithAttributes('aside', {}, content);
 
     const barTypes = createElementWithAttributes('div', {class: 'bar-types'}, sidebar);
 
     const tasksAll = createElementWithAttributes('button', {class: 'tasks-all'}, barTypes);
-    tasksAll.setAttribute('data-group-id', 'all');
+    tasksAll.setAttribute('data-group-id', STANDARD_GROUPS.ALL);
 
-    const tasksAllImage = createElementWithAttributes('img', { 
-        alt: 'All tasks icon'
+    const imageTasksAll = createElementWithAttributes('img', {
+        alt: 'All tasks',
+        src: assets.tasksAllImagePath,
     }, tasksAll);
-    tasksAllImage.src = assets.tasksAllImagePath;
 
     const tasksAllText = createElementWithAttributes('span', {}, tasksAll);
     tasksAllText.textContent = 'All';
 
     const tasksToday = createElementWithAttributes('button', {class: 'tasks-today'}, barTypes);
-    tasksToday.setAttribute('data-group-id', 'today');
+    tasksToday.setAttribute('data-group-id', STANDARD_GROUPS.TODAY);
 
-    const tasksTodayImage = createElementWithAttributes('img', {
-        alt: 'Today tasks icon'
+    const imagetasksToday = createElementWithAttributes('img', {
+        alt: 'Tasks today',
+        src: assets.tasksTodayImagePath,
     }, tasksToday);
-    tasksTodayImage.src = assets.tasksTodayImagePath;
 
     const tasksTodayText = createElementWithAttributes('span', {}, tasksToday);
     tasksTodayText.textContent = 'Today';
 
     const tasksWeek = createElementWithAttributes('button', {class: 'tasks-week'}, barTypes);
-    tasksWeek.setAttribute('data-group-id', 'week');
+    tasksWeek.setAttribute('data-group-id', STANDARD_GROUPS.WEEK);
 
-    const tasksWeekImage = createElementWithAttributes('img', {
-        alt: 'Week tasks icon'
+    const imageTasksWeekImage = createElementWithAttributes('img', {
+        alt: 'Tasks this week',
+        src: assets.tasksWeekImagePath,
     }, tasksWeek);
-    tasksWeekImage.src = assets.tasksWeekImagePath;
 
     const tasksWeekText = createElementWithAttributes('span', {}, tasksWeek);
     tasksWeekText.textContent = 'Week';
 
     const tasksCompleted = createElementWithAttributes('button', {class: 'tasks-completed'}, barTypes);
-    tasksCompleted.setAttribute('data-group-id', 'completed');
+    tasksCompleted.setAttribute('data-group-id', STANDARD_GROUPS.COMPLETED);
 
-    const tasksCompletedImage = createElementWithAttributes('img', {
-        alt: 'Completed tasks icon'
+    const imageTasksCompletedImage = createElementWithAttributes('img', {
+        alt: 'Tasks completed',
+        src: assets.tasksCompletedImagePath,
     }, tasksCompleted);
-    tasksCompletedImage.src = assets.tasksCompletedImagePath;
 
     const tasksCompletedText = createElementWithAttributes('span', {}, tasksCompleted);
     tasksCompletedText.textContent = 'Completed';
 
     const tasksOverdue = createElementWithAttributes('button', {class: 'tasks-overdue'}, barTypes);
-    tasksOverdue.setAttribute('data-group-id', 'overdue');
+    tasksOverdue.setAttribute('data-group-id', STANDARD_GROUPS.OVERDUE);
 
-    const tasksOverdueImage = createElementWithAttributes('img', {
-        alt: 'Overdue tasks icon'
+    const imageTasksOverdueImage = createElementWithAttributes('img', {
+        alt: 'Tasks overdue',
+        src: assets.tasksOverdueImagePath,
     }, tasksOverdue);
-    tasksOverdueImage.src = assets.tasksOverdueImagePath;
 
     const tasksOverdueText = createElementWithAttributes('span', {}, tasksOverdue);
     tasksOverdueText.textContent = 'Overdue';
@@ -128,6 +128,8 @@ function renderMainPageTemplate() {
 
     const projectsBarHeaderText = createElementWithAttributes('span', {}, projectsBarHeader);
     projectsBarHeaderText.textContent = 'Projects';
+
+    const emptyDivProjectsBar = createElementWithAttributes('div', {}, projectsBarHeader);
 
     const projectsBarHeaderAddImage = createElementWithAttributes('button', {
         class: 'add-new',
@@ -146,6 +148,10 @@ function renderMainPageTemplate() {
     }, projectsBarNavBox);
     previousProjectsPageIcon.ariaLabel = 'Previous projects page';
     previousProjectsPageIcon.style.backgroundImage = `url(${assets.previousPageIconPath})`;
+
+    const projectsPagesNav = createElementWithAttributes('span', {
+        class: 'projects-pages-nums',
+    }, projectsBarNavBox);
 
     const nextProjectsPageIcon = createElementWithAttributes('button', {
         class: 'projects-next-page'
@@ -194,17 +200,21 @@ function renderMainPageTemplate() {
 
     const tasksList = createElementWithAttributes('ul', {class: 'task-list'}, main);
 
-    const pageMenuBox = createElementWithAttributes('div', {class: 'page-menu', }, main);
+    const taskPageMenuBox = createElementWithAttributes('div', {class: 'page-menu', }, main);
 
     const previousTasksPageIcon = createElementWithAttributes('button', {
         class: 'tasks-previous-page'
-    }, pageMenuBox);
+    }, taskPageMenuBox);
     previousTasksPageIcon.ariaLabel = 'Previous tasks page';
     previousTasksPageIcon.style.backgroundImage = `url(${assets.previousPageIconPath})`;
 
+    const tasksPagesNav = createElementWithAttributes('span', {
+        class: 'tasks-pages-nums',
+    }, taskPageMenuBox);
+
     const nextTasksPageIcon = createElementWithAttributes('button', {
         class: 'tasks-next-page'
-    }, pageMenuBox);
+    }, taskPageMenuBox);
     nextTasksPageIcon.ariaLabel = 'Next tasks page';
     nextTasksPageIcon.style.backgroundImage = `url(${assets.nextPageIconPath})`;
 }
@@ -225,26 +235,32 @@ function renderProjectMenuTemplate() {
     }, content);
 
     const projectMenuTitleBox = createElementWithAttributes('div', {
-        class: 'title-box'
+        class: 'title'
     }, projectMenu);
 
     const projectMenuTitle = createElementWithAttributes('span', {
-        class: 'title'
+        class: 'title-text'
     }, projectMenuTitleBox);
     projectMenuTitle.textContent = '';
 
-    const projectMenuExitIcon = createElementWithAttributes('img', {
+    const projectMenuExitIcon = createElementWithAttributes('button', {
         class: 'exit',
-        alt: 'Exit icon'
     }, projectMenuTitleBox);
-    projectMenuExitIcon.src = assets.projectMenuExitIconPath;
+    projectMenuExitIcon.ariaLabel = 'Exit project menu';
+    projectMenuExitIcon.style.backgroundImage = `url(${assets.projectMenuExitIconPath})`;
 
     const projectMenuForm = createElementWithAttributes('form', {}, projectMenu);
+
+    const asteriskRequiredName = document.createElement('span');
+    asteriskRequiredName.textContent = '*';
+    asteriskRequiredName.classList.add('asterisk-required');
     
     const formNameLabel = createElementWithAttributes('label', {
         for: 'project-name'
     }, projectMenuForm);
-    formNameLabel.textContent = 'Name*:';
+    formNameLabel.appendChild(document.createTextNode('Name'));
+    formNameLabel.appendChild(asteriskRequiredName);
+    formNameLabel.appendChild(document.createTextNode(':'));
 
     const formName = createElementWithAttributes('input', {
         type: 'text',
@@ -253,147 +269,165 @@ function renderProjectMenuTemplate() {
         required: 'required'
     }, projectMenuForm);
 
+    const asteriskRequiredIcon = document.createElement('span');
+    asteriskRequiredIcon.textContent = '*';
+    asteriskRequiredIcon.classList.add('asterisk-required');
+
     const formIconFieldset = createElementWithAttributes('fieldset', {
     }, projectMenuForm);
     const formIconLegend = createElementWithAttributes('legend', {}, formIconFieldset);
-    formIconLegend.textContent = 'Icon*:'
+    formIconLegend.appendChild(document.createTextNode('Icon'));
+    formIconLegend.appendChild(asteriskRequiredIcon);
+    formIconLegend.appendChild(document.createTextNode(':'));
+
+    const containerIconOptions = createElementWithAttributes('div', {
+        class: 'project-options'
+    }, formIconFieldset);
+
+    const containerCategoryJob = createElementWithAttributes('div', {
+        class: 'project-icon-option'
+    }, containerIconOptions);
+    containerCategoryJob.ariaLabel = 'Category Job';
+    containerCategoryJob.style.backgroundImage = `url(${assets.iconCategoryJobPath})`;
+
+    const iconCategoryJobLabel = createElementWithAttributes('label', {
+        for: 'project-category-job'
+    }, containerCategoryJob);
 
     const inputCategoryJob = createElementWithAttributes('input', {
         id: 'project-category-job',
         type: 'radio',
         name: 'iconURL',
-        value: './originals/category-job.svg',
-    }, formIconFieldset);
+        value: './assets/category-job.svg',
+    }, containerCategoryJob);
     inputCategoryJob.ariaRequired = true;
     inputCategoryJob.setAttribute('data-alt-text', 'Category Job icon');
 
-    const iconCategoryJobLabel = createElementWithAttributes('label', {
-        for: 'project-category-job'
-    }, formIconFieldset);
+    const containerCategoryStudy = createElementWithAttributes('div', {
+        class: 'project-icon-option'
+    }, containerIconOptions);
+    containerCategoryStudy.ariaLabel = 'Category Study';
+    containerCategoryStudy.style.backgroundImage = `url(${assets.iconCategoryStudyPath})`;
 
-    const iconCategoryJob = createElementWithAttributes('img', {
-        alt: 'Category Job icon'
-    }, iconCategoryJobLabel);
-    iconCategoryJob.src = assets.iconCategoryJobPath;
+    const iconCategoryStudyLabel = createElementWithAttributes('label', {
+        for: 'project-category-study',
+    }, containerCategoryStudy);
 
     const inputCategoryStudy = createElementWithAttributes('input', {
         id: 'project-category-study',
         type: 'radio',
         name: 'iconURL',
-        value: './originals/category-study.svg',
-    }, formIconFieldset);
+        value: './assets/category-study.svg',
+    }, containerCategoryStudy);
     inputCategoryStudy.setAttribute('data-alt-text', 'Category Study icon');
 
-    const iconCategoryStudyLabel = createElementWithAttributes('label', {
-        for: 'project-category-study',
-    }, formIconFieldset);
+    const containerCategoryGift = createElementWithAttributes('div', {
+        class: 'project-icon-option'
+    }, containerIconOptions);
+    containerCategoryGift.ariaLabel = 'Category Gift';
+    containerCategoryGift.style.backgroundImage = `url(${assets.iconCategoryGiftPath})`;
 
-    const iconCategoryStudy = createElementWithAttributes('img', {
-        alt: 'Category Study icon'
-    }, iconCategoryStudyLabel);
-    iconCategoryStudy.src = assets.iconCategoryStudyPath;
+    const iconCategoryGiftLabel = createElementWithAttributes('label', {
+        for: 'project-category-gift',
+    }, containerCategoryGift);
 
     const inputCategoryGift = createElementWithAttributes('input', {
         id: 'project-category-gift',
         type: 'radio',
         name: 'iconURL',
-        value: './originals/category-gift.svg',
-    }, formIconFieldset);
+        value: './assets/category-gift.svg',
+    }, containerCategoryGift);
     inputCategoryGift.setAttribute('data-alt-text', 'Category Gift icon');
 
-    const iconCategoryGiftLabel = createElementWithAttributes('label', {
-        for: 'project-category-gift',
-    }, formIconFieldset);
+    const containerCategoryInternational = createElementWithAttributes('div', {
+        class: 'project-icon-option'
+    }, containerIconOptions);
+    containerCategoryInternational.ariaLabel = 'Category International activity';
+    containerCategoryInternational.style.backgroundImage = `url(${assets.iconCategoryInternationalPath})`;
 
-    const iconCategoryGift = createElementWithAttributes('img', {
-        alt: 'Category Gift icon'
-    }, iconCategoryGiftLabel);
-    iconCategoryGift.src = assets.iconCategoryGiftPath;
+    const iconCategoryInternationalLabel = createElementWithAttributes('label', {
+        for: 'project-category-international-activity',
+    }, containerCategoryInternational);
 
     const inputCategoryInternational = createElementWithAttributes('input', {
         id: 'project-category-international-activity',
         type: 'radio',
         name: 'iconURL',
-        value: './originals/category-international-activity.svg',
-    }, formIconFieldset);
+        value: './assets/category-international-activity.svg',
+    }, containerCategoryInternational);
     inputCategoryInternational.setAttribute('data-alt-text', 'Category International activity icon');
 
-    const iconCategoryInternationalLabel = createElementWithAttributes('label', {
-        for: 'project-category-international-activity',
-    }, formIconFieldset);
+    const containerCategoryPeople = createElementWithAttributes('div', {
+        class: 'project-icon-option'
+    }, containerIconOptions);
+    containerCategoryPeople.ariaLabel = 'Category People';
+    containerCategoryPeople.style.backgroundImage = `url(${assets.iconCategoryPeoplePath})`;
 
-    const iconCategoryInternational = createElementWithAttributes('img', {
-        alt: 'Category International activity icon'
-    }, iconCategoryInternationalLabel);
-    iconCategoryInternational.src = assets.iconCategoryInternationalPath;
+    const iconCategoryPeopleLabel = createElementWithAttributes('label', {
+        for: 'project-category-people',
+    }, containerCategoryPeople);
 
     const inputCategoryPeople = createElementWithAttributes('input', {
         id: 'project-category-people',
         type: 'radio',
         name: 'iconURL',
-        value: './originals/category-people.svg',
-    }, formIconFieldset);
+        value: './assets/category-people.svg',
+    }, containerCategoryPeople);
     inputCategoryPeople.setAttribute('data-alt-text', 'Category People icon');
 
-    const iconCategoryPeopleLabel = createElementWithAttributes('label', {
-        for: 'project-category-people',
-    }, formIconFieldset);
+    const containerCategoryScience = createElementWithAttributes('div', {
+        class: 'project-icon-option'
+    }, containerIconOptions);
+    containerCategoryScience.ariaLabel = 'Category Science';
+    containerCategoryScience.style.backgroundImage = `url(${assets.iconCategorySciencePath})`;
 
-    const iconCategoryPeople = createElementWithAttributes('img', {
-        alt: 'Category People icon'
-    }, iconCategoryPeopleLabel);
-    iconCategoryPeople.src = assets.iconCategoryPeoplePath;
+    const iconCategoryScienceLabel = createElementWithAttributes('label', {
+        for: 'project-category-science',
+    }, containerCategoryScience);
 
     const inputCategoryScience = createElementWithAttributes('input', {
         id: 'project-category-science',
         type: 'radio',
         name: 'iconURL',
-        value: './originals/category-science.svg',
-    }, formIconFieldset);
+        value: './assets/category-science.svg',
+    }, containerCategoryScience);
     inputCategoryScience.setAttribute('data-alt-text', 'Category Science icon');
 
-    const iconCategoryScienceLabel = createElementWithAttributes('label', {
-        for: 'project-category-science',
-    }, formIconFieldset);
+    const containerCategoryIT = createElementWithAttributes('div', {
+        class: 'project-icon-option'
+    }, containerIconOptions);
+    containerCategoryIT.ariaLabel = 'Category IT';
+    containerCategoryIT.style.backgroundImage = `url(${assets.iconCategoryITPath})`;
 
-    const iconCategoryScience = createElementWithAttributes('img', {
-        alt: 'Category Science icon'
-    }, iconCategoryScienceLabel);
-    iconCategoryScience.src = assets.iconCategorySciencePath;
+    const iconCategoryITLabel = createElementWithAttributes('label', {
+        for: 'project-category-it',
+    }, containerCategoryIT);
 
     const inputCategoryIT = createElementWithAttributes('input', {
         id: 'project-category-it',
         type: 'radio',
         name: 'iconURL',
-        value: './originals/category-it.svg',
-    }, formIconFieldset);
+        value: './assets/category-it.svg',
+    }, containerCategoryIT);
     inputCategoryIT.setAttribute('data-alt-text', 'Category IT icon');
 
-    const iconCategoryITLabel = createElementWithAttributes('label', {
-        for: 'project-category-it',
-    }, formIconFieldset);
+    const containerCategoryOther = createElementWithAttributes('div', {
+        class: 'project-icon-option'
+    }, containerIconOptions);
+    containerCategoryOther.ariaLabel = 'Category Other';
+    containerCategoryOther.style.backgroundImage = `url(${assets.iconCategoryOtherPath})`;
 
-    const iconCategoryIT = createElementWithAttributes('img', {
-        alt: 'Category IT icon'
-    }, iconCategoryITLabel);
-    iconCategoryIT.src = assets.iconCategoryITPath;
+    const iconCategoryOtherLabel = createElementWithAttributes('label', {
+        for: 'project-category-other',
+    }, containerCategoryOther);
 
     const inputCategoryOther = createElementWithAttributes('input', {
         id: 'project-category-other',
         type: 'radio',
         name: 'iconURL',
-        value: './originals/category-other.svg',
-    }, formIconFieldset);
+        value: './assets/category-other.svg',
+    }, containerCategoryOther);
     inputCategoryOther.setAttribute('data-alt-text', 'Category Other icon');
-
-    const iconCategoryOtherLabel = createElementWithAttributes('label', {
-        for: 'project-category-other',
-    }, formIconFieldset);
-
-    const iconCategoryOther = createElementWithAttributes('img', {
-        alt: 'Category Other icon'
-    }, iconCategoryOtherLabel);
-    iconCategoryOther.src = assets.iconCategoryOtherPath;
 
     const buttonsGrid = createElementWithAttributes('div', {
         class: 'button-box',
@@ -423,11 +457,11 @@ function renderTaskMenuTemplate() {
     }, content);
 
     const taskMenuTitleBox = createElementWithAttributes('div', {
-        class: 'title-box'
+        class: 'title'
     }, taskMenu);
 
     const taskMenuTitle = createElementWithAttributes('span', {
-        class: 'title'
+        class: 'title-text'
     }, taskMenuTitleBox);
 
     const taskMenuExitIcon = createElementWithAttributes('button', {
@@ -439,71 +473,110 @@ function renderTaskMenuTemplate() {
     const taskMenuForm = createElementWithAttributes('form', {
     }, taskMenu);
 
+    const titleBox = createElementWithAttributes('div', {
+        class: 'title-box'
+    }, taskMenuForm);
+
+    const asteriskRequiredTitle = document.createElement('span');
+    asteriskRequiredTitle.textContent = '*';
+    asteriskRequiredTitle.classList.add('asterisk-required');
+
     const formTitleLabel = createElementWithAttributes('label', {
         for: 'task-title'
-    }, taskMenuForm);
-    formTitleLabel.textContent = 'Title*:'
+    }, titleBox);
+    formTitleLabel.appendChild(document.createTextNode('Title'));
+    formTitleLabel.appendChild(asteriskRequiredTitle);
+    formTitleLabel.appendChild(document.createTextNode(':'));
 
     const formTitle = createElementWithAttributes('input', {
         type: 'text',
         id: 'task-title',
         name: 'title',
-        required: 'required'
+        required: 'required',
+    }, titleBox);
+
+    const dueDateBox = createElementWithAttributes('div', {
+        class: 'due-date-box'
     }, taskMenuForm);
+
+    const asteriskRequiredDueDate = document.createElement('span');
+    asteriskRequiredDueDate.textContent = '*';
+    asteriskRequiredDueDate.classList.add('asterisk-required');
 
     const formDueDateLabel = createElementWithAttributes('label', {
         for: 'task-dueDate'
-    }, taskMenuForm);
-    formDueDateLabel.textContent = 'Due Date*:'
+    }, dueDateBox);
+    formDueDateLabel.appendChild(document.createTextNode('Due Date'));
+    formDueDateLabel.appendChild(asteriskRequiredDueDate);
+    formDueDateLabel.appendChild(document.createTextNode(':'));
 
     const formDueDate = createElementWithAttributes('input', {
         type: 'date',
         id: 'task-dueDate',
         name: 'dueDate',
-    }, taskMenuForm);
+        required: 'required',
+    }, dueDateBox);
 
     const formPriorityFieldset = createElementWithAttributes('fieldset', {
         class: 'priority'
     }, taskMenuForm);
 
+    const asteriskRequiredPriority = document.createElement('span');
+    asteriskRequiredPriority.textContent = '*';
+    asteriskRequiredPriority.classList.add('asterisk-required');
+
     const formPriorityLegend = createElementWithAttributes('legend', {}, formPriorityFieldset);
-    formPriorityLegend.textContent = 'What is the task\'s priority?*'
+    formPriorityLegend.appendChild(document.createTextNode('What is the task\'s priority'));
+    formPriorityLegend.appendChild(asteriskRequiredPriority);
+    formPriorityLegend.appendChild(document.createTextNode('?'));
+
+    const boxRaradioPriorityHigh = createElementWithAttributes('div', {
+        class: 'priority-high-box'
+    }, formPriorityFieldset);
 
     const radioPriorityHigh = createElementWithAttributes('input', {
         id: 'priority-high',
         type: 'radio',
         name: 'priority',
-        value: '2'
-    }, formPriorityFieldset);
+        value: '2',
+    }, boxRaradioPriorityHigh);
     radioPriorityHigh.ariaRequired = true;
 
     const labelPriorityHigh = createElementWithAttributes('label', {
         for: 'priority-high'
-    }, formPriorityFieldset);
+    }, boxRaradioPriorityHigh);
     labelPriorityHigh.textContent = 'High';
+
+    const boxRaradioPriorityMedium = createElementWithAttributes('div', {
+        class: 'priority-medium-box'
+    }, formPriorityFieldset);
 
     const radioPriorityMedium = createElementWithAttributes('input', {
         id: 'priority-medium',
         type: 'radio',
         name: 'priority',
         value: '1'
-    }, formPriorityFieldset);
+    }, boxRaradioPriorityMedium);
 
     const labelPriorityMedium = createElementWithAttributes('label', {
         for: 'priority-medium'
-    }, formPriorityFieldset);
+    }, boxRaradioPriorityMedium);
     labelPriorityMedium.textContent = 'Medium';
+
+    const boxRaradioPriorityNormal = createElementWithAttributes('div', {
+        class: 'priority-normal-box'
+    }, formPriorityFieldset);
     
     const radioPriorityNormal = createElementWithAttributes('input', {
         id: 'priority-normal',
         type: 'radio',
         name: 'priority',
         value: '0'
-    }, formPriorityFieldset);
+    }, boxRaradioPriorityNormal);
 
     const labelPriorityNormal = createElementWithAttributes('label', {
         for: 'priority-normal'
-    }, formPriorityFieldset);
+    }, boxRaradioPriorityNormal);
     labelPriorityNormal.textContent = 'Normal';
 
     const descriptionBox = createElementWithAttributes('div', {

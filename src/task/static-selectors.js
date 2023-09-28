@@ -16,8 +16,8 @@ export function getTaskNodes() {
     const menu = document.querySelector('.content .task-menu');
     const menuCover = document.querySelector('.menu-cover');
 
-    const menuTitle = document.querySelector('.task-menu .title');
-    const submitButton = document.querySelector('.task-menu button.submit');
+    const menuTitle = document.querySelector('.task-menu .title .title-text');
+    const submitButton = document.querySelector('.task-menu .submit');
 
     const titleInput = document.querySelector('.task-menu #task-title');
     const dueDateInput = document.querySelector('.task-menu #task-dueDate');

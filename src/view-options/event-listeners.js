@@ -6,13 +6,13 @@ import { ERR_APPLY_EVENTS, ERR_HEADINGS } from './errors-text.js';
 
 export function addListenersViewOptions() {
     const {
-        checkboxPriorityHigh,
-        checkboxPriorityMedium,
-        checkboxPriorityNormal,
-        checkboxStatusOnGoing,
-        checkboxStatusCompleted,
-        checkboxStatusOverdue,
-        checkboxSortAscendingOrder,
+        inputPriorityHigh,
+        inputPriorityMedium,
+        inputPriorityNormal,
+        inputStatusOnGoing,
+        inputStatusCompleted,
+        inputStatusOverdue,
+        inputSortAscendingOrder,
         viewOptionsIcon,
         viewBox
     } = getViewOptionsNodes();
@@ -25,30 +25,30 @@ export function addListenersViewOptions() {
         showErrorModal([ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.TASK_LIST_PANEL]);
         return;
     }
-    if (!isHTMLElement(checkboxPriorityHigh) ||
-    !isHTMLElement(checkboxPriorityMedium) ||
-    !isHTMLElement(checkboxPriorityNormal) ||
-    !isHTMLElement(checkboxStatusOnGoing) ||
-    !isHTMLElement(checkboxStatusCompleted) ||
-    !isHTMLElement(checkboxStatusOverdue) ||
-    !isHTMLElement(checkboxSortAscendingOrder) ||
+    if (!isHTMLElement(inputPriorityHigh) ||
+    !isHTMLElement(inputPriorityMedium) ||
+    !isHTMLElement(inputPriorityNormal) ||
+    !isHTMLElement(inputStatusOnGoing) ||
+    !isHTMLElement(inputStatusCompleted) ||
+    !isHTMLElement(inputStatusOverdue) ||
+    !isHTMLElement(inputSortAscendingOrder) ||
     !isHTMLElement(selectSortOptions)
     ) {
         showErrorModal([ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.OPTIONS_NODES]);
         return;
     }
 
-    if (!isBoolean(checkboxPriorityHigh.checked) ||
-    !isBoolean(checkboxPriorityMedium.checked) ||
-    !isBoolean(checkboxPriorityNormal.checked) ||
-    !isBoolean(checkboxStatusOnGoing.checked) ||
-    !isBoolean(checkboxStatusCompleted.checked) ||
-    !isBoolean(checkboxStatusOverdue.checked)
+    if (!isBoolean(inputPriorityHigh.checked) ||
+    !isBoolean(inputPriorityMedium.checked) ||
+    !isBoolean(inputPriorityNormal.checked) ||
+    !isBoolean(inputStatusOnGoing.checked) ||
+    !isBoolean(inputStatusCompleted.checked) ||
+    !isBoolean(inputStatusOverdue.checked)
     ) {
         showErrorModal(ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.FILTER_VALUES);
         return;
     }
-    if (!isBoolean(checkboxSortAscendingOrder.checked)) {
+    if (!isBoolean(inputSortAscendingOrder.checked)) {
         showErrorModal(ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.SORT_ORDER_VALUE);
         return;
     }
@@ -59,27 +59,35 @@ export function addListenersViewOptions() {
 
     const queries = { 
         taskList,
-        checkboxPriorityHigh,
-        checkboxPriorityMedium,
-        checkboxPriorityNormal,
-        checkboxStatusOverdue,
-        checkboxStatusOnGoing,
-        checkboxStatusCompleted,
+        inputPriorityHigh,
+        inputPriorityMedium,
+        inputPriorityNormal,
+        inputStatusOverdue,
+        inputStatusOnGoing,
+        inputStatusCompleted,
         selectSortOptions,
-        checkboxSortAscendingOrder 
+        inputSortAscendingOrder 
     };
 
     viewOptionsIcon.addEventListener('click', () => viewBox.classList.toggle('shown'));
     viewBox.addEventListener('change', (e) => {
-        const filterOrSortOption = e.target.closest('input[type="checkbox"], select');
-        if (filterOrSortOption) {
+        const SortOption = e.target.closest('select');
+        if (SortOption) {
             updateTaskListView(queries);
+        }
+    });
+    viewBox.addEventListener('click', (e) => {
+        if (e.target.tagName === 'LABEL' || e.target.tagName === 'BUTTON') {
+            const filterOption = e.target.closest('label').firstElementChild;
+            if (filterOption) {
+                filterOption.checked = !(filterOption.checked);
+                updateTaskListView(queries);
+            }
         }
     });
 }
 
-const updateTaskListView = (queries) => {
-    
+const updateTaskListView = (queries) => {  
     let newState = { 
         flagIncludeHigh: null, 
         flagIncludeMedium: null,
@@ -93,24 +101,24 @@ const updateTaskListView = (queries) => {
 
     const { 
         taskList,
-        checkboxPriorityHigh,
-        checkboxPriorityMedium,
-        checkboxPriorityNormal,
-        checkboxStatusOverdue,
-        checkboxStatusOnGoing,
-        checkboxStatusCompleted,
+        inputPriorityHigh,
+        inputPriorityMedium,
+        inputPriorityNormal,
+        inputStatusOverdue,
+        inputStatusOnGoing,
+        inputStatusCompleted,
         selectSortOptions,
-        checkboxSortAscendingOrder 
+        inputSortAscendingOrder 
     } = queries;
 
-    newState.flagIncludeHigh = checkboxPriorityHigh.checked;
-    newState.flagIncludeMedium = checkboxPriorityMedium.checked;
-    newState.flagIncludeNormal = checkboxPriorityNormal.checked;
-    newState.flagIncludeOverdue = checkboxStatusOverdue.checked;
-    newState.flagIncludeOnGoing = checkboxStatusOnGoing.checked;
-    newState.flagIncludeCompleted = checkboxStatusCompleted.checked;
+    newState.flagIncludeHigh = inputPriorityHigh.checked;
+    newState.flagIncludeMedium = inputPriorityMedium.checked;
+    newState.flagIncludeNormal = inputPriorityNormal.checked;
+    newState.flagIncludeOverdue = inputStatusOverdue.checked;
+    newState.flagIncludeOnGoing = inputStatusOnGoing.checked;
+    newState.flagIncludeCompleted = inputStatusCompleted.checked;
     newState.sortBy = selectSortOptions.value;
-    newState.ascendingOrder = checkboxSortAscendingOrder.checked;
+    newState.ascendingOrder = inputSortAscendingOrder.checked;
 
     let tasksWithUpdatedView;
     try {

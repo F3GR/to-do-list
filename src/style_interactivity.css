@@ -1,0 +1,282 @@
+:root {
+    --system-ui: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    --light-emerald: rgb(122, 255, 213);
+    --light-blue: rgb(159, 237, 255);
+    --white: white;
+    --whitesmoke: rgb(242, 239, 239);
+
+    --interactive-pointer-style: pointer;
+    --scale-size-hover-panels: 1.05;
+    --scale-size-hover-big-icons: 1.1;
+    --scale-size-hover-small-icons: 1.2;
+    --click-animation-duration: 0.1s;
+
+    --element-panels-border-radius: 0.5rem;
+    --main-panels-border-radius: 1rem;
+    --group-borders-color: var(--whitesmoke);
+    --task-background-color: var(--whitesmoke);
+    --task-border-color: var(--whitesmoke);
+    --project-background-color: var(--whitesmoke);
+    --project-border-color: var(--whitesmoke);
+
+    --menu-border-color: var(--whitesmoke);
+    --selected-color: rgb(36, 255, 20);
+    --text-color: rgb(90, 90, 90);
+    --borders-color: rgb(90, 90, 90);
+
+    --main-heading-1-font-size: ;     /* trackIt */
+    --main-heading-2-font-size: ;     /* task */
+    --main-heading-3-font-size: ;     /* task description heads */
+    --main-paragraph-font-size: ;     /* task description heads */
+
+    --menu-heading-3-font-size: ;
+    --menu-paragraph-font-size: ;
+    --menu-button-text-font-size: ;
+
+    --tab-index-menu: 2;
+    --tab-index-error: 3;
+    --tab-index-sidebar-view-options-small: 1;
+}
+
+header .sidebar-icon:hover,
+header .sidebar-icon:focus {
+    cursor: var(--interactive-pointer-style);
+    transform: scale(var(--scale-size-hover-big-icons));
+    transition: transform var(--click-animation-duration);
+  }
+
+  header .sidebar-icon:active {
+    transform: scale(1);
+  }
+
+
+  header .options:hover,
+  header .options:focus {
+    cursor: var(--interactive-pointer-style);
+    transform: scale(var(--scale-size-hover-big-icons));
+    transition: transform var(--click-animation-duration);
+  }
+  
+  header .options:active {
+    transform: scale(1);
+  }
+
+  .bar-types > *:hover,
+  .bar-types > *:focus {
+    cursor: pointer;
+    transform: scale(var(--scale-size-hover-panels));
+    position: relative;
+    transition: transform var(--click-animation-duration);
+  }
+  
+  .bar-types > *:active {
+    transform: scale(1);
+  }
+
+  .bar-footer:hover,
+  .bar-footer:focus {
+    cursor: pointer;
+    transform: scale(var(--scale-size-hover-panels));
+    transition: transform var(--click-animation-duration);
+  }
+  
+  .bar-footer:active {
+    transform: scale(1);
+  }
+
+  .bar-projects .header .add-new:hover,
+  .bar-projects .header .add-new:focus {
+    cursor: pointer;
+    transform: scale(var(--scale-size-hover-big-icons));
+  }
+
+  .project .edit:hover,
+  .project .edit:focus,
+  .project .remove:hover,
+  .project .remove:focus {
+    cursor: pointer;
+    transform: scale(var(--scale-size-hover-small-icons));
+  }
+  
+  .bar-projects .header .add-new:active,
+  .project .edit:active,
+  .project .remove:active {
+    transform: scale(1);
+  }
+
+  .bar-projects .header .add-new,
+  .project .edit,
+  .project .remove {
+    position: relative;
+    transition: transform var(--click-animation-duration);
+  }
+
+  
+  .project {
+    transition: transform var(--click-animation-duration);
+  }
+  
+  .project:active {
+    transform: scale(0.95);
+  }
+  
+  .view-options-bar > div > div > label:hover,
+  .view-options-bar > div > div > label:focus {
+    cursor: var(--interactive-pointer-style-big-icons);
+    transform: scale(var(--scale-size-hover-big-icons));
+    transition: transform var(--click-animation-duration);
+  }
+
+  .view-options-bar > div > div > label:active {
+    transform: scale(1);
+  }
+
+.view-options-bar > div > div > label > .radio-button::after {
+    content: '';
+    width: var(--sidebar-icon-width);
+    height: var(--sidebar-icon-height);
+    background-color: #00ff00;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: transform var(--click-animation-duration);
+}
+
+.view-options-bar > div > div > label > .radio-button:checked + 
+.view-options-bar > div > div > label > .radio-button::after {
+    display: block;
+    transform: scale(1);
+}
+
+.sort-order:hover,
+.sort-order:focus {
+  transform: scale(var(--scale-size-hover-big-icons));
+}
+
+.sort-order:active {
+  transform: scale(1);
+}
+
+main .filter-options-box > *:not(span):hover,
+main .filter-options-box > *:not(span):focus {
+  cursor: pointer;
+  transform: scale(var(--scale-size-hover-big-icons));
+  position: relative;
+  transition: transform var(--click-animation-duration);
+}
+
+main .filter-options-box > *:not(span, select):active{
+  transform: scale(1);
+}
+
+.task[data-task-status='0'] label.status-checkbox svg {
+  animation: fillCheckbox 0.5s forwards;
+}
+
+@keyframes fillCheckbox {
+  from {
+    stroke-dashoffset: 100;
+    stroke-opacity: 0;
+  }
+  to {
+    stroke-dashoffset: 0;
+    stroke-opacity: 1;
+  }
+}
+
+.task label.status-checkbox:hover,
+.task label.status-checkbox:focus,
+.task .remove:hover,
+.task .remove:focus,
+.task .edit:hover,
+.task .edit:focus,
+.task .unfold:hover,
+.task .unfold:focus {
+  cursor: pointer;
+  transform: scale(var(--scale-size-hover-small-icons));
+  position: relative;
+  transition: transform var(--click-animation-duration);
+}
+
+.task label.status-checkbox:active,
+.task .remove:active,
+.task .edit:active,
+.task .unfold:active {
+  transform: scale(1);
+}
+
+.task-bar .add-new:hover,
+.task-bar .add-new:focus {
+  cursor: pointer;
+  transform: scale(var(--scale-size-hover-big-icons));
+  position: relative;
+  transition: transform var(--click-animation-duration);
+}
+
+.task-bar .add-new:active {
+  transform: scale(1);
+}
+
+  /* Page menu */
+
+.page-menu button:hover,
+.page-menu button:focus  {
+  cursor: pointer;
+  transform: scale(var(--scale-size-hover-big-icons));
+  position: relative;
+  transition: transform var(--click-animation-duration);
+}
+
+.page-menu button:active {
+  transform: scale(1);
+}
+
+  /* Remove confirmation menu */
+  /* Error modal */
+  /* Project menu */
+
+  .content .project-menu .exit {
+    transition: transform var(--click-animation-duration);
+  }
+
+  .content .project-menu .exit:hover,
+  .content .project-menu .exit:focus {
+    transform: scale(var(--scale-size-hover-big-icons));
+  }
+  
+  .content .project-menu .exit:active {
+    transform: scale(1);
+  }
+
+  .project-menu fieldset > .project-options > * {
+    transition: transform var(--click-animation-duration);
+  }
+
+  .project-options .project-icon-option.selected {
+    background-color: var(--selected-color);
+    border: 1px solid var(--whitesmoke);
+    transition: transform var(--click-animation-duration);
+  }
+
+  .project-menu fieldset > .project-options > *:hover,
+  .project-menu fieldset > .project-options > *:focus {
+    transform: scale(var(--scale-size-hover-big-icons));
+  }
+
+  .project-menu fieldset > .project-options > *:active {
+    transform: scale(1);
+  }
+
+  .project-menu .button-box > * {
+    transition: transform var(--click-animation-duration);
+  }
+
+  .project-menu .button-box > *:hover,
+  .project-menu .button-box > *:focus {
+    transform: scale(var(--scale-size-hover-big-icons));
+  }
+
+  .project-menu .button-box > *:active {
+    transform: scale(1);
+  }
+
+  /* Task menu */

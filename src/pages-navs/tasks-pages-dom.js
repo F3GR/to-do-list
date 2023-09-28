@@ -15,19 +15,14 @@ export function renderTasksPageNav(current, total) {
         total = 1;
     }
 
-    const { nextPageBtn, tasksBarFooter } = getTasksBarFooterNodes();
+    const { nextPageBtn, tasksBarFooter, tasksPageNav } = getTasksBarFooterNodes();
     if (!isHTMLElement(nextPageBtn) || !isHTMLElement(tasksBarFooter)) {
         showErrorModal([ERR_HEADINGS.TASKS, ERR_RENDERING.TASKS_BAR]);
         return;
     }
-
-    const oldTasksPageNav = document.querySelector('.tasks-pages-nums');
-    if (isHTMLElement(oldTasksPageNav)) {
-        oldTasksPageNav.remove();
+    if (!isHTMLElement(tasksPageNav)) {
+        showErrorModal([ERR_HEADINGS.TASKS, ERR_RENDERING.TASKS_NAV]);
+        return;
     }
-
-    const tasksPageNav = document.createElement('span');
     tasksPageNav.textContent = `${current} / ${total}`;
-    tasksPageNav.classList.add('tasks-pages-nums');
-    tasksBarFooter.insertBefore(tasksPageNav, nextPageBtn);
 }

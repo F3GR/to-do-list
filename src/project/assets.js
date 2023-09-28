@@ -1,5 +1,5 @@
-import newProjectEditImagePath from '../originals/edit.svg';
-import newProjectDeleteImagePath from '../originals/delete.svg';
+import newProjectEditImagePath from '../assets/edit.svg';
+import newProjectDeleteImagePath from '../assets/delete.svg';
 
 
 export const assets = {

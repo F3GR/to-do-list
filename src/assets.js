@@ -1,29 +1,27 @@
-import sidebarIconPath from './originals/menu.svg';
-import logoIconPath from './originals/fav-icon.svg';
-import viewOptionsIconPath from './originals/view-options.svg';
-import tasksAllImagePath from './originals/calendar-all.svg';
-import tasksTodayImagePath from './originals/calendar-today.svg';
-import tasksWeekImagePath from './originals/calendar-week.svg';
-import tasksOverdueImagePath from './originals/calendar-overdue.svg';
-import projectsBarHeaderImagePath from './originals/projects.svg';
-import projectsBarHeaderAddImagePath from './originals/add-new.svg';
-import mainHeadImagePath from './originals/calendar-all.svg';
-import addNewTaskIconPath from './originals/add-new.svg';
-import firstPageIconPath from './originals/first-page.svg';
-import previousPageIconPath from './originals/previous-page.svg';
-import nextPageIconPath from './originals/next-page.svg';
-import lastPageIconPath from './originals/last-page.svg';
-import projectMenuExitIconPath from './originals/close.svg';
-import iconCategoryJobPath from './originals/category-job.svg';
-import iconCategoryStudyPath from './originals/category-study.svg';
-import iconCategoryGiftPath from './originals/category-gift.svg';
-import iconCategoryInternationalPath from './originals/category-international-activity.svg';
-import iconCategoryPeoplePath from './originals/category-people.svg';
-import iconCategorySciencePath from './originals/category-science.svg';
-import iconCategoryITPath from './originals/category-it.svg';
-import iconCategoryOtherPath from './originals/category-other.svg';
-import taskMenuExitIconPath from './originals/close.svg';
-import tasksCompletedImagePath from './originals/calendar-finished.svg';
+import sidebarIconPath from './assets/menu.svg';
+import logoIconPath from './assets/fav-icon.svg';
+import viewOptionsIconPath from './assets/view-options.svg';
+import tasksAllImagePath from './assets/calendar-all.svg';
+import tasksTodayImagePath from './assets/calendar-today.svg';
+import tasksWeekImagePath from './assets/calendar-week.svg';
+import tasksOverdueImagePath from './assets/calendar-overdue.svg';
+import projectsBarHeaderImagePath from './assets/projects.svg';
+import projectsBarHeaderAddImagePath from './assets/add-new.svg';
+import mainHeadImagePath from './assets/calendar-all.svg';
+import addNewTaskIconPath from './assets/add-new.svg';
+import previousPageIconPath from './assets/previous-page.svg';
+import nextPageIconPath from './assets/next-page.svg';
+import projectMenuExitIconPath from './assets/close.svg';
+import iconCategoryJobPath from './assets/category-job.svg';
+import iconCategoryStudyPath from './assets/category-study.svg';
+import iconCategoryGiftPath from './assets/category-gift.svg';
+import iconCategoryInternationalPath from './assets/category-international-activity.svg';
+import iconCategoryPeoplePath from './assets/category-people.svg';
+import iconCategorySciencePath from './assets/category-science.svg';
+import iconCategoryITPath from './assets/category-it.svg';
+import iconCategoryOtherPath from './assets/category-other.svg';
+import taskMenuExitIconPath from './assets/close.svg';
+import tasksCompletedImagePath from './assets/calendar-finished.svg';
 
 export const assets = {
     sidebarIconPath,
@@ -37,10 +35,8 @@ export const assets = {
     projectsBarHeaderAddImagePath,
     mainHeadImagePath,
     addNewTaskIconPath,
-    firstPageIconPath,
     previousPageIconPath,
     nextPageIconPath,
-    lastPageIconPath,
     projectMenuExitIconPath,
     iconCategoryJobPath,
     iconCategoryStudyPath,

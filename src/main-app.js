@@ -324,28 +324,28 @@ class Application {
         const { projectsList } = localStorageController.getProjectsList();
         const { newPageNumber, newPage } = projectsPageController.movePageForward(projectsPageNumber, projectsList);
         renderProjectsPageNav(newPageNumber, projectsPageController.pagesTotal(projectsList));
-        return newPage;
+        return { newPage, newPageNumber };
     }
 
     moveProjectsPageBackwards = (projectsPageNumber) => {
         const { projectsList } = localStorageController.getProjectsList();
         const { newPageNumber, newPage }  = projectsPageController.movePageBackwards(projectsPageNumber, projectsList);
         renderProjectsPageNav(newPageNumber, projectsPageController.pagesTotal(projectsList));
-        return newPage;
+        return { newPage, newPageNumber };
     }
 
     moveTasksPageForward = (tasksPageNumber) => {
         const currentGroup = application.getTasksGroup(localStorageController.getCurrentGroupIdentifier());
         const { newPageNumber, newPage } = tasksPageController.movePageForward(tasksPageNumber, currentGroup);
         renderTasksPageNav(newPageNumber, tasksPageController.pagesTotal(currentGroup));
-        return newPage;
+        return { newPage, newPageNumber };
     }
     
     moveTasksPageBackwards = (tasksPageNumber) => {
         const currentGroup = application.getTasksGroup(localStorageController.getCurrentGroupIdentifier());
         const { newPageNumber, newPage } = tasksPageController.movePageBackwards(tasksPageNumber, currentGroup);
         renderTasksPageNav(newPageNumber, tasksPageController.pagesTotal(currentGroup));
-        return newPage;
+        return { newPage, newPageNumber };
     }
 }
 

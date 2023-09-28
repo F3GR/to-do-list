@@ -7,11 +7,13 @@ export function getProjectsBarFooterNodes() {
     const projectsList = document.querySelector('.projects-list');
     const projectsBarFooter = document.querySelector('.projects-nav');
     const prevPageBtn = document.querySelector('.projects-previous-page');
+    const projectsPageNav = document.querySelector('.projects-pages-nums');
     const nextPageBtn = projectsBarFooter.querySelector('.projects-next-page');
 
     return projectsBarFooterNodes = {
         projectsList,
         prevPageBtn,
+        projectsPageNav,
         nextPageBtn,
         projectsBarFooter,
     };
@@ -26,11 +28,13 @@ export function getTasksBarFooterNodes() {
     const tasksList = document.querySelector('.task-list');
     const tasksBarFooter = document.querySelector('main > .page-menu');
     const prevPageBtn = document.querySelector('.tasks-previous-page');
+    const tasksPageNav = document.querySelector('.tasks-pages-nums');
     const nextPageBtn = tasksBarFooter.querySelector('.tasks-next-page');
     
     return tasksBarFooterNodes = {
         tasksList,
         prevPageBtn,
+        tasksPageNav,
         nextPageBtn,
         tasksBarFooter,
     };

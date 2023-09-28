@@ -38,8 +38,12 @@ export function addListenersProjectsPagesNav() {
             return;
         }
 
+        if (currentProjectsPageNumber === prevProjectsPage.newPageNumber) {
+            return;
+        }
+
         projectsList.innerHTML = '';
-        prevProjectsPage.forEach(project => renderProject(project));
+        prevProjectsPage.newPage.forEach(project => renderProject(project));
     });
 
     nextPageBtn.addEventListener('click', (e) => {
@@ -73,7 +77,11 @@ export function addListenersProjectsPagesNav() {
             return;
         }
 
+        if (currentProjectsPageNumber === nextProjectsPage.newPageNumber) {
+            return;
+        }
+
         projectsList.innerHTML = '';
-        nextProjectsPage.forEach(project => renderProject(project));
+        nextProjectsPage.newPage.forEach(project => renderProject(project));
     });
 }   

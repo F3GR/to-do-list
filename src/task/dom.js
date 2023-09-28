@@ -28,9 +28,10 @@ export function renderTask(taskObj) {
         !title || 
         !dueDate || 
         !status || 
-        !priority) {
-            showErrorModal([ERR_HEADINGS.RENDERING, ERR_RENDERING.TASK_VALUES]);
-            return;
+        !priority
+    ) {
+        showErrorModal([ERR_HEADINGS.RENDERING, ERR_RENDERING.TASK_VALUES]);
+        return;
     }
 
     
@@ -103,8 +104,8 @@ export function renderTask(taskObj) {
     const taskUnfoldIcon = createElementWithAttributes('button', {
         class: 'unfold'
     }, task);
-    taskUnfoldIcon.ariaLabel = 'Unfold or fold task\'s details panel';
-    taskUnfoldIcon.style.backgroundImage = assets.taskUnfoldIconPath;
+    taskUnfoldIcon.ariaLabel = 'Unfold the task\'s details panel';
+    taskUnfoldIcon.style.backgroundImage = `url(${assets.taskUnfoldIconPath})`;
     taskUnfoldIcon.setAttribute('data-task-action', ACTIONS_TASKS.UNFOLD);
 
     const taskUnfoldedPanel = createElementWithAttributes('div', {

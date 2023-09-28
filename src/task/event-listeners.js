@@ -3,6 +3,7 @@ import { renderTask } from './dom.js';
 import { ACTIONS_TASKS, isHTMLElement, isNodeList, isObject, isValid, showErrorModal, handleExitRemoveMenu } from '../utils.js';
 import { getTaskNodes } from './static-selectors.js';
 import { ERR_APPLY_EVENTS, ERR_HEADINGS } from './errors-text.js';
+import { assets } from './assets.js';
 
 export function addListenersManageTasks() {
     const { main, form, exitButton, cancelButton, removeConfirm, removeMenu } = getTaskNodes();
@@ -168,11 +169,15 @@ const taskAction = (action, target) => {
             if (!unfoldedTaskPanel.classList.contains('unfolded')) {
                 unfoldedTaskPanel.classList.add('unfolded');
                 taskInfoPanel.classList.add('shown');
-                target.setAttribute('src', '../src/originals/unfold.svg');
+
+                unfoldedTaskPanel.querySelector('.unfold').ariaLabel = 'Fold the task\'s details panel';
+                target.style.backgroundImage = `url(${assets.taskFoldIconPath})`;
             } else {
                 unfoldedTaskPanel.classList.remove('unfolded');
                 taskInfoPanel.classList.remove('shown');
-                target.setAttribute('src', '../src/originals/fold.svg');
+                
+                unfoldedTaskPanel.querySelector('.unfold').ariaLabel = 'Unfold the task\'s details panel';
+                target.style.backgroundImage = `url(${assets.taskUnfoldIconPath})`;
             }
             break;
     }

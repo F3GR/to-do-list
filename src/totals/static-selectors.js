@@ -4,10 +4,10 @@ export function getProjectsBarHeaderNodes() {
         return projectsBarHeaderNodes;
     }
 
-    const addNewIcon = document.querySelector('.bar-projects > .header > .add-new');
+    const emptyDiv = document.querySelector('.bar-projects > .header > div');
     const projectsBarHeader = document.querySelector('.bar-projects > .header');
     return projectsBarHeaderNodes = {
-        addNewIcon,
+        emptyDiv,
         projectsBarHeader,
     };
 };

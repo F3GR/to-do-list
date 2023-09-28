@@ -1,10 +1,10 @@
 import { renderGroup } from './dom.js';
 import { isHTMLElement, isValid, showErrorModal } from '../utils.js';
-import { ERR_HEADINGS, ERR_POPULATE } from './errors-text.js';
+import { ERR_HEADINGS, ERR_POPULATE, ERR_EVENTS } from './errors-text.js';
 import { application } from '../main-app.js';
 
 export function addListenersSidebar() {
-    const sidebarIcon = document.querySelector('header > img.sidebar-icon');
+    const sidebarIcon = document.querySelector('header > .sidebar-icon');
     const sidebar = document.querySelector('aside');
     const sidebarCover = document.querySelector('main .sidebar-cover');
     const standardGroups = document.querySelector('.bar-types');

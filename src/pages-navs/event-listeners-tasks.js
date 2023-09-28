@@ -38,8 +38,12 @@ export function addListenersTasksPagesNav() {
             return;
         }
 
+        if (currentTasksPageNumber === prevTasksPage.newPageNumber) {
+            return;
+        }
+
         tasksList.innerHTML = '';
-        prevTasksPage.forEach(task => renderTask(task));
+        prevTasksPage.newPage.forEach(task => renderTask(task));
     });
 
     nextPageBtn.addEventListener('click', (e) => {
@@ -72,8 +76,12 @@ export function addListenersTasksPagesNav() {
             showErrorModal([ERR_HEADINGS.TASKS_EVENT, e.message]);
             return;
         }
+
+        if (currentTasksPageNumber === nextTasksPage.newPageNumber) {
+            return;
+        }
         
         tasksList.innerHTML = '';
-        nextTasksPage.forEach(task => renderTask(task));
+        nextTasksPage.newPage.forEach(task => renderTask(task));
     });
 }   

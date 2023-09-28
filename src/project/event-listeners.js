@@ -2,7 +2,7 @@ import { application } from '../main-app.js';
 import { renderProject } from './dom.js';
 import { renderGroup } from '../group/dom.js';
 import { getProjectNodes } from './static-selectors.js';
-import { showErrorModal, STANDARD_GROUPS, ACTIONS_PROJECTS, isHTMLElement, isValid, isObject, handleExitRemoveMenu } from '../utils.js';
+import { showErrorModal, STANDARD_GROUPS, ACTIONS_PROJECTS, isHTMLElement, isValid, isObject, handleExitRemoveMenu, isNodeList } from '../utils.js';
 import { ERR_APPLY_EVENTS, ERR_HEADINGS } from './errors-text.js';
 
 export function addListenersManageProjects() {
@@ -13,6 +13,8 @@ export function addListenersManageProjects() {
         cancelButton, 
         removeMenu, 
         removeConfirm,
+        optionsIconsContainer,
+        allOptions
     } = getProjectNodes();
 
     if (!isHTMLElement(projectsBar) ||
@@ -20,11 +22,23 @@ export function addListenersManageProjects() {
     !isHTMLElement(removeMenu) ||
     !isHTMLElement(removeConfirm) ||
     !isHTMLElement(exitButton) ||
-    !isHTMLElement(cancelButton)
+    !isHTMLElement(cancelButton) ||
+    !isHTMLElement(optionsIconsContainer) ||
+    !isNodeList(allOptions)
     ) {
         showErrorModal([ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.PROJECT_MENU_RENDERING]);
         return;
     }
+
+    optionsIconsContainer.addEventListener('click', (e) => {
+        if (e.target.tagName === 'DIV' && e.target.classList.contains('project-icon-option')) {
+            allOptions.forEach(optionNode => optionNode.classList.remove('selected'));
+            
+            const inputSelected = e.target.querySelector('input');
+            inputSelected.checked = true;
+            e.target.classList.add('selected');
+        }
+    });
 
     projectsBar.addEventListener('click', (e) => openMenuHandler(e));
     form.addEventListener('submit', (e) => submitHandler(e));
@@ -176,7 +190,15 @@ const removeHandler = (e) => {
         return;
     }
 
-    renderGroup(STANDARD_GROUPS.ALL);
+    let defaultProjectsList;
+    try {
+        defaultProjectsList = application.getTasksGroup(STANDARD_GROUPS.ALL);
+    } catch (e) {
+        showErrorModal([ERR_HEADINGS.REMOVING, e.message]);
+        return;
+    }
+
+    renderGroup(defaultProjectsList, STANDARD_GROUPS.ALL);
     removedProject.remove();
 
     currentGroupName.textContent = '';

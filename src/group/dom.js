@@ -40,7 +40,7 @@ export function renderGroup(newGroup, groupIdentifier) {
     taskList.innerHTML = '';
     newGroup.forEach((task) => renderTask(task));
 
-    if (Object.values(STANDARD_GROUPS).includes(groupIdentifier)) {
+    if (!Object.values(STANDARD_GROUPS).includes(groupIdentifier)) {
         addTaskIcon.classList.add('shown');
     } else {
         addTaskIcon.classList.remove('shown');

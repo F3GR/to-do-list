@@ -15,19 +15,14 @@ export function renderProjectsPageNav(current, total) {
         total = 1;
     }
 
-    const { nextPageBtn, projectsBarFooter } = getProjectsBarFooterNodes();
+    const { nextPageBtn, projectsBarFooter, projectsPageNav } = getProjectsBarFooterNodes();
     if (!isHTMLElement(nextPageBtn) || !isHTMLElement(projectsBarFooter)) {
         showErrorModal([ERR_HEADINGS.PROJECTS, ERR_RENDERING.PROJECTS_BAR]);
         return;
     }
-
-    const oldProjectsPageNav = document.querySelector('.projects-pages-nums');
-    if (isHTMLElement(oldProjectsPageNav)) {
-        oldProjectsPageNav.remove();
+    if (!isHTMLElement(projectsPageNav)) {
+        showErrorModal([ERR_HEADINGS.PROJECTS, ERR_RENDERING.PROJECTS_NAV]);
+        return;
     }
-
-    const projectsPageNav = document.createElement('span');
     projectsPageNav.textContent = `${current} / ${total}`;
-    projectsPageNav.classList.add('projects-pages-nums');
-    projectsBarFooter.insertBefore(projectsPageNav, nextPageBtn);
 }

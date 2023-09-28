@@ -8,8 +8,8 @@ export function renderProjectsCount(projectsCount) {
         return;
     }
 
-    const { addNewIcon, projectsBarHeader } = getProjectsBarHeaderNodes();
-    if (!isHTMLElement(addNewIcon) || !isHTMLElement(projectsBarHeader)) {
+    const { emptyDiv, projectsBarHeader } = getProjectsBarHeaderNodes();
+    if (!isHTMLElement(emptyDiv) || !isHTMLElement(projectsBarHeader)) {
         showErrorModal([ERR_HEADINGS.PROJECTS, ERR_RENDERING.PROJECTS_BAR]);
         return;
     }
@@ -22,5 +22,5 @@ export function renderProjectsCount(projectsCount) {
     const projectsNumber = document.createElement('span');
     projectsNumber.textContent = `(${projectsCount})`;
     projectsNumber.classList.add('projects-total');
-    projectsBarHeader.insertBefore(projectsNumber, addNewIcon);
+    projectsBarHeader.insertBefore(projectsNumber, emptyDiv);
 }
