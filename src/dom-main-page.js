@@ -1,5 +1,5 @@
 import { assets } from './assets.js';
-import { Enum,createElementWithAttributes, isHTMLElement, showErrorModal, ACTIONS_PROJECTS, ACTIONS_TASKS, handleExitRemoveMenu, STANDARD_GROUPS } from './utils.js';
+import { Enum,createElementWithAttributes, isHTMLElement, showErrorModal, ACTIONS_PROJECTS, ACTIONS_TASKS, handleExitRemoveMenu, STANDARD_GROUPS, DEFAULT_GROUP } from './utils.js';
 
 const ERR_HEADINGS = new Enum ({
     CONTENT: 'Error (webpage content)',
@@ -165,7 +165,7 @@ function renderMainPageTemplate() {
         href: 'https://github.com/F3GR'
     }, barFooter);
     const footerText = createElementWithAttributes('span', {}, footerLink);
-    footerText.textContent = '\u00A9 F3GR, 2023';
+    footerText.textContent = 'F3GR, 2023';
 
     const main = createElementWithAttributes('main', {}, content);
 
@@ -180,8 +180,8 @@ function renderMainPageTemplate() {
     }, mainHeadBox);
     mainHeadImage.src = assets.mainHeadImagePath;
 
-    const mainHeadText = createElementWithAttributes('span', {}, mainHeadBox);
-    mainHeadText.textContent = "All";
+    const mainHeadText = createElementWithAttributes('h2', {}, mainHeadBox);
+    mainHeadText.textContent = `${DEFAULT_GROUP.charAt(0).toUpperCase()}${DEFAULT_GROUP.slice(1)}`;
 
     const mainTaskBar = createElementWithAttributes('div', {class: 'task-bar'}, main);
 
@@ -238,7 +238,7 @@ function renderProjectMenuTemplate() {
         class: 'title'
     }, projectMenu);
 
-    const projectMenuTitle = createElementWithAttributes('span', {
+    const projectMenuTitle = createElementWithAttributes('h3', {
         class: 'title-text'
     }, projectMenuTitleBox);
     projectMenuTitle.textContent = '';
@@ -266,7 +266,9 @@ function renderProjectMenuTemplate() {
         type: 'text',
         id: 'project-name',
         name: 'name',
-        required: 'required'
+        required: 'required',
+        minlength: 1,
+        maxlength: 100,
     }, projectMenuForm);
 
     const asteriskRequiredIcon = document.createElement('span');
@@ -460,7 +462,7 @@ function renderTaskMenuTemplate() {
         class: 'title'
     }, taskMenu);
 
-    const taskMenuTitle = createElementWithAttributes('span', {
+    const taskMenuTitle = createElementWithAttributes('h3', {
         class: 'title-text'
     }, taskMenuTitleBox);
 
@@ -493,6 +495,8 @@ function renderTaskMenuTemplate() {
         id: 'task-title',
         name: 'title',
         required: 'required',
+        minlength: 1,
+        maxlength: 100,
     }, titleBox);
 
     const dueDateBox = createElementWithAttributes('div', {
@@ -636,30 +640,38 @@ function renderRemoveConfirmationTemplate() {
         class: 'remove-menu',
     }, content);
 
-    const exitIcon = createElementWithAttributes('button', {
-        class: 'exit',
-        alt: 'Exit icon'
+    const titleBox = createElementWithAttributes('div', {
+        class: 'title',
     }, removeMenu);
-    exitIcon.src = assets.taskMenuExitIconPath;
 
-    const heading  = createElementWithAttributes('h2', {
+    const heading  = createElementWithAttributes('h3', {
         class: 'remove-heading',
-    }, removeMenu);
+    }, titleBox);
     heading.textContent = '';
+
+    const projectMenuExitIcon = createElementWithAttributes('button', {
+        class: 'exit',
+    }, titleBox);
+    projectMenuExitIcon.ariaLabel = 'Exit confirmation menu';
+    projectMenuExitIcon.style.backgroundImage = `url(${assets.projectMenuExitIconPath})`;
 
     const message  = createElementWithAttributes('p', {
         class: 'remove-message',
     }, removeMenu);
     message.textContent = '';
 
+    const buttonBox = createElementWithAttributes('div', {
+        class: 'button-box',
+    }, removeMenu);
+
     const buttonConfirm = createElementWithAttributes('button', {
         class: 'remove-confirm',
-    }, removeMenu);
+    }, buttonBox);
     buttonConfirm.textContent = 'Yes';
 
     const buttonExit = createElementWithAttributes('button', {
         class: 'exit',
-    }, removeMenu);
+    }, buttonBox);
     buttonExit.textContent = 'Cancel';
 
     const buttons = removeMenu.querySelectorAll('.exit');
@@ -683,16 +695,20 @@ function renderErrorModal() {
         class: 'error-modal',
     }, content);
 
-    const exitIcon = createElementWithAttributes('img', {
-        class: 'exit',
-        alt: 'Exit icon'
+    const titleBox = createElementWithAttributes('div', {
+        class: 'title',
     }, modal);
-    exitIcon.src = assets.taskMenuExitIconPath;
 
-    const heading  = createElementWithAttributes('h2', {
+    const heading  = createElementWithAttributes('h3', {
         class: 'error-heading',
-    }, modal);
+    }, titleBox);
     heading.textContent = '';
+
+    const exitIcon = createElementWithAttributes('button', {
+        class: 'exit',
+    }, titleBox);
+    exitIcon.ariaLabel = 'Exit the error modal';
+    exitIcon.style.backgroundImage = `url(${assets.taskMenuExitIconPath})`;
 
     const message  = createElementWithAttributes('p', {
         class: 'error-message',
@@ -700,7 +716,7 @@ function renderErrorModal() {
     message.textContent = '';
 
     const buttonExit = createElementWithAttributes('button', {
-        class: 'exit',
+        class: 'exit-ok',
     }, modal);
     buttonExit.textContent = 'OK';
 
