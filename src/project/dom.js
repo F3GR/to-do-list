@@ -2,18 +2,18 @@ import { createElementWithAttributes } from '../utils.js';
 import { showErrorModal, ACTIONS_PROJECTS, isHTMLElement, isValid } from '../utils.js';
 import { getProjectNodes } from './static-selectors.js';
 import { assets } from './assets.js';
-import { ERR_HEADINGS, ERR_RENDERING } from './errors-text.js';
+import { ERR_RENDERING } from './errors-text.js';
 
 export function renderProject(project) {
     const { projectsList } = getProjectNodes();
     const { id, name, iconURL, altText } = project;
     
     if (!isHTMLElement(projectsList)) {
-        showErrorModal([ERR_HEADINGS.RENDERING, ERR_RENDERING.PROJECT_LIST_PANEL]);
+        showErrorModal(ERR_RENDERING.PROJECT_LIST_PANEL);
         return;
     }
     if (!isValid(id) || !isValid(name) || !isValid(iconURL) || !isValid(altText)) {
-        showErrorModal([ERR_HEADINGS.RENDERING, ERR_RENDERING.PROJECT_VALUES]);
+        showErrorModal(ERR_RENDERING.PROJECT_VALUES);
         return;
     }
 

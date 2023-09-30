@@ -1,16 +1,16 @@
 import { isHTMLElement, showErrorModal } from '../utils.js';
 import { getProjectsBarHeaderNodes } from './static-selectors.js';
-import { ERR_RENDERING, ERR_HEADINGS } from './errors-text.js';
+import { ERR_RENDERING } from './errors-text.js';
 
 export function renderProjectsCount(projectsCount) {
     if (typeof projectsCount !== 'number' || projectsCount === NaN) {
-        showErrorModal([ERR_HEADINGS.PROJECTS, ERR_RENDERING.PROJECTS_VALUES]);
+        showErrorModal(ERR_RENDERING.PROJECTS_VALUES);
         return;
     }
 
     const { emptyDiv, projectsBarHeader } = getProjectsBarHeaderNodes();
     if (!isHTMLElement(emptyDiv) || !isHTMLElement(projectsBarHeader)) {
-        showErrorModal([ERR_HEADINGS.PROJECTS, ERR_RENDERING.PROJECTS_BAR]);
+        showErrorModal(ERR_RENDERING.PROJECTS_BAR);
         return;
     }
 

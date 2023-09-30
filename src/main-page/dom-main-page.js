@@ -1,22 +1,18 @@
 import { is } from 'date-fns/locale';
 import { assets } from './assets.js';
-import { Enum,createElementWithAttributes, isHTMLElement, showErrorModal, ACTIONS_PROJECTS, ACTIONS_TASKS, handleExitRemoveMenu, STANDARD_GROUPS, DEFAULT_GROUP } from './utils.js';
+import { Enum,createElementWithAttributes, isHTMLElement, showErrorModal, ACTIONS_PROJECTS, ACTIONS_TASKS, handleExitRemoveMenu, STANDARD_GROUPS, DEFAULT_GROUP } from '../utils.js';
 
-const ERR_HEADINGS = new Enum ({
-    CONTENT: 'Error (webpage content)',
-    MAIN_PAGE: 'Error (rendering main page)',
-    MENU_TEMPLATE: 'Error (rendering menu template)',
-    ERROR_MODAL: 'Error (rendering error modal)',
-    REMOVE_MENU: 'Error (rendering remove confirmation menu)',
-});
-
-const ERR_MESSAGE = new Enum ({
-    CONTENT_NOT_FOUND: 'One or more main elements couldn\'t be found',
-    BUTTON_EXIT_NOT_FOUND: 'Exit button couldn\'t be found',
-    HEADING_NOT_FOUND: 'Heading element couldn\'t be found',
-    PARA_NOT_FOUND: 'Message element couldn\'t be found',
-    MENU_COVER_NOT_FOUND: 'Menu cover couldn\'t be found',
-    REMOVE_BUTTONS_NOT_FOUND: 'Buttons in the remove menu couldn\'t be found',
+const ERR = new Enum ({
+    ERROR_MODAL_CONTENT_NOT_FOUND: ['Application error', 'The content couldn\'t be found', 'Process: rendering the error modal template'],
+    ERROR_MODAL_BUTTON_EXIT_NOT_FOUND: ['Application error', 'The Exit button couldn\'t be found', 'Process: applying events on the error modal'],
+    ERROR_MODAL_HEADING_NOT_FOUND: ['Application error', 'The Heading couldn\'t be found', 'Process: applying events on the error modal'],
+    ERROR_MODAL_PARA_NOT_FOUND: ['Application error', 'The Message couldn\'t be found', 'Process: applying events on the error modal'],
+    REMOVE_MENU_CONTENT_NOT_FOUND: ['Application error', 'The content couldn\'t be found', 'Process: rendering the remove confirmation menu template'],
+    PROJECT_MENU_TEMPLATE_CONTENT_NOT_FOUND: ['Application error', 'The content couldn\'t be found', 'Process: rendering the projects menu template'],
+    TASK_MENU_TEMPLATE_CONTENT_NOT_FOUND: ['Application error', 'The content couldn\'t be found', 'Process: rendering the tasks menu template'],
+    MAIN_PAGE_CONTENT_NOT_FOUND: ['Application error', 'The content couldn\'t be found', 'Process: rendering the main page'],
+    FILTER_OPTIONS_MAIN_NOT_FOUND: ['Application error', 'The main panel couldn\'t be found', 'Process: rendering the filter options menu template'],
+    CONTENT_CONTENT_NOT_FOUND: ['Application error', 'One or more core elements of the main page couldn\'t be found', 'Process: rendering the content of the main page'],
 });
 
 export function renderMainPage() {
@@ -25,16 +21,14 @@ export function renderMainPage() {
     renderProjectMenuTemplate();
     renderTaskMenuTemplate();
     renderMainPageFrame();
-    renderFilterOptionsMenu();
     renderMainPageTemplate();
 };
 
-// message === [error type, error message];
-// if the the error is not the system (app) error => error type === null 
+// message === [error type, error message, process when error occurred]; 
 function renderErrorModal() {
     const content = document.querySelector('.content');
     if (!isHTMLElement(content)) {
-        showErrorModal([ERR_HEADINGS.CONTENT, ERR_MESSAGE.CONTENT_NOT_FOUND]);
+        showErrorModal(ERR.ERROR_MODAL_CONTENT_NOT_FOUND);
         return;
     }
 
@@ -66,26 +60,27 @@ function renderErrorModal() {
     }, modal);
     message.textContent = '';
 
+    const process  = createElementWithAttributes('span', {
+        class: 'error-process',
+    }, modal);
+    process.textContent = '';
+
+    const buttonBox = createElementWithAttributes('div', {
+        class: 'button-box',
+    }, modal);
+
     const buttonExit = createElementWithAttributes('button', {
         class: 'exit-ok',
-    }, modal);
+    }, buttonBox);
     buttonExit.textContent = 'OK';
-
-    modal.addEventListener('resize', () => {
-        if (!isHTMLElement(buttonExit)) {
-            showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.BUTTON_EXIT_NOT_FOUND]);
-            return;
-        }
-        buttonExit.focus();
-    });
 
     exitIcon.addEventListener('click', () => {
         if (!isHTMLElement(heading)) {
-            showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.HEADING_NOT_FOUND]);
+            showErrorModal(ERR.ERROR_MODAL_HEADING_NOT_FOUND);
             return;
         }
         if (!isHTMLElement(message)) {
-            showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.PARA_NOT_FOUND]);
+            showErrorModal(ERR.ERROR_MODAL_PARA_NOT_FOUND);
             return;
         }
 
@@ -96,11 +91,11 @@ function renderErrorModal() {
     });
     buttonExit.addEventListener('click', () => {
         if (!isHTMLElement(heading)) {
-            showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.HEADING_NOT_FOUND]);
+            showErrorModal(ERR.ERROR_MODAL_HEADING_NOT_FOUND);
             return;
         }
         if (!isHTMLElement(message)) {
-            showErrorModal([ERR_HEADINGS.ERROR_MODAL, ERR_MESSAGE.PARA_NOT_FOUND]);
+            showErrorModal(ERR.ERROR_MODAL_PARA_NOT_FOUND);
             return;
         }
 
@@ -114,7 +109,7 @@ function renderErrorModal() {
 function renderRemoveConfirmationTemplate() {
     const content = document.querySelector('.content');
     if (!isHTMLElement(content)) {
-        showErrorModal([ERR_HEADINGS.CONTENT, ERR_MESSAGE.CONTENT_NOT_FOUND]);
+        showErrorModal(ERR.REMOVE_MENU_CONTENT_NOT_FOUND);
         return;
     }
 
@@ -167,7 +162,7 @@ function renderRemoveConfirmationTemplate() {
 function renderProjectMenuTemplate() {
     const content = document.querySelector('.content');
     if (!isHTMLElement(content)) {
-        showErrorModal([ERR_HEADINGS.MENU_TEMPLATE, ERR_MESSAGE.CONTENT_NOT_FOUND]);
+        showErrorModal(ERR.PROJECT_MENU_TEMPLATE_CONTENT_NOT_FOUND);
         return;
     }
 
@@ -192,13 +187,17 @@ function renderProjectMenuTemplate() {
 
     const projectMenuForm = createElementWithAttributes('form', {}, projectMenu);
 
+    const projectNameBox = createElementWithAttributes('div', {
+        class: 'title-box'
+    }, projectMenuForm);
+
     const asteriskRequiredName = document.createElement('span');
     asteriskRequiredName.textContent = '*';
     asteriskRequiredName.classList.add('asterisk-required');
     
     const formNameLabel = createElementWithAttributes('label', {
         for: 'project-name'
-    }, projectMenuForm);
+    }, projectNameBox);
     formNameLabel.appendChild(document.createTextNode('Name'));
     formNameLabel.appendChild(asteriskRequiredName);
     formNameLabel.appendChild(document.createTextNode(':'));
@@ -210,7 +209,7 @@ function renderProjectMenuTemplate() {
         required: 'required',
         minlength: 1,
         maxlength: 100,
-    }, projectMenuForm);
+    }, projectNameBox);
 
     const asteriskRequiredIcon = document.createElement('span');
     asteriskRequiredIcon.textContent = '*';
@@ -228,7 +227,8 @@ function renderProjectMenuTemplate() {
     }, formIconFieldset);
 
     const containerCategoryJob = createElementWithAttributes('div', {
-        class: 'project-icon-option'
+        class: 'project-icon-option',
+        tabindex: 0,
     }, containerIconOptions);
     containerCategoryJob.ariaLabel = 'Category Job';
     containerCategoryJob.style.backgroundImage = `url(${assets.iconCategoryJobPath})`;
@@ -247,7 +247,8 @@ function renderProjectMenuTemplate() {
     inputCategoryJob.setAttribute('data-alt-text', 'Category Job icon');
 
     const containerCategoryStudy = createElementWithAttributes('div', {
-        class: 'project-icon-option'
+        class: 'project-icon-option',
+        tabindex: 0,
     }, containerIconOptions);
     containerCategoryStudy.ariaLabel = 'Category Study';
     containerCategoryStudy.style.backgroundImage = `url(${assets.iconCategoryStudyPath})`;
@@ -265,7 +266,8 @@ function renderProjectMenuTemplate() {
     inputCategoryStudy.setAttribute('data-alt-text', 'Category Study icon');
 
     const containerCategoryGift = createElementWithAttributes('div', {
-        class: 'project-icon-option'
+        class: 'project-icon-option',
+        tabindex: 0,
     }, containerIconOptions);
     containerCategoryGift.ariaLabel = 'Category Gift';
     containerCategoryGift.style.backgroundImage = `url(${assets.iconCategoryGiftPath})`;
@@ -283,7 +285,8 @@ function renderProjectMenuTemplate() {
     inputCategoryGift.setAttribute('data-alt-text', 'Category Gift icon');
 
     const containerCategoryInternational = createElementWithAttributes('div', {
-        class: 'project-icon-option'
+        class: 'project-icon-option',
+        tabindex: 0,
     }, containerIconOptions);
     containerCategoryInternational.ariaLabel = 'Category International activity';
     containerCategoryInternational.style.backgroundImage = `url(${assets.iconCategoryInternationalPath})`;
@@ -301,7 +304,8 @@ function renderProjectMenuTemplate() {
     inputCategoryInternational.setAttribute('data-alt-text', 'Category International activity icon');
 
     const containerCategoryPeople = createElementWithAttributes('div', {
-        class: 'project-icon-option'
+        class: 'project-icon-option',
+        tabindex: 0,
     }, containerIconOptions);
     containerCategoryPeople.ariaLabel = 'Category People';
     containerCategoryPeople.style.backgroundImage = `url(${assets.iconCategoryPeoplePath})`;
@@ -319,7 +323,8 @@ function renderProjectMenuTemplate() {
     inputCategoryPeople.setAttribute('data-alt-text', 'Category People icon');
 
     const containerCategoryScience = createElementWithAttributes('div', {
-        class: 'project-icon-option'
+        class: 'project-icon-option',
+        tabindex: 0,
     }, containerIconOptions);
     containerCategoryScience.ariaLabel = 'Category Science';
     containerCategoryScience.style.backgroundImage = `url(${assets.iconCategorySciencePath})`;
@@ -337,7 +342,8 @@ function renderProjectMenuTemplate() {
     inputCategoryScience.setAttribute('data-alt-text', 'Category Science icon');
 
     const containerCategoryIT = createElementWithAttributes('div', {
-        class: 'project-icon-option'
+        class: 'project-icon-option',
+        tabindex: 0,
     }, containerIconOptions);
     containerCategoryIT.ariaLabel = 'Category IT';
     containerCategoryIT.style.backgroundImage = `url(${assets.iconCategoryITPath})`;
@@ -355,7 +361,8 @@ function renderProjectMenuTemplate() {
     inputCategoryIT.setAttribute('data-alt-text', 'Category IT icon');
 
     const containerCategoryOther = createElementWithAttributes('div', {
-        class: 'project-icon-option'
+        class: 'project-icon-option',
+        tabindex: 0,
     }, containerIconOptions);
     containerCategoryOther.ariaLabel = 'Category Other';
     containerCategoryOther.style.backgroundImage = `url(${assets.iconCategoryOtherPath})`;
@@ -391,7 +398,7 @@ function renderProjectMenuTemplate() {
 function renderTaskMenuTemplate() {
     const content = document.querySelector('.content');
     if (!isHTMLElement(content)) {
-        showErrorModal([ERR_HEADINGS.MENU_TEMPLATE, ERR_MESSAGE.CONTENT_NOT_FOUND]);
+        showErrorModal(ERR.TASK_MENU_TEMPLATE_CONTENT_NOT_FOUND);
         return;
     }
 
@@ -547,7 +554,7 @@ function renderTaskMenuTemplate() {
     const notesTextarea = createElementWithAttributes('textarea', {
         id: 'task-notes',
         name: 'notes',
-        maxlength: '100'
+        maxlength: '200'
     }, notesBox);
 
     const buttonsGrid = createElementWithAttributes('div', {
@@ -568,7 +575,7 @@ function renderTaskMenuTemplate() {
 function renderMainPageFrame() {
     const content = document.querySelector('.content');
     if (!isHTMLElement(content)) {
-        showErrorModal([ERR_HEADINGS.MAIN_PAGE, ERR_MESSAGE.CONTENT_NOT_FOUND]);
+        showErrorModal(ERR.MAIN_PAGE_CONTENT_NOT_FOUND);
         return;
     }
 
@@ -580,6 +587,7 @@ function renderMainPageFrame() {
     const projectsBarHeader = createElementWithAttributes('div', {class: 'header'}, barProjects);
     const projectsList = createElementWithAttributes('ul', {class: 'projects-list'}, barProjects);
     const barFooter = createElementWithAttributes('div', {class: 'bar-footer'}, sidebar);
+    renderFilterOptionsMenu();
     const mainHeadBox = createElementWithAttributes('div', {class: 'header'}, main);
     const mainTaskBar = createElementWithAttributes('div', {class: 'task-bar'}, main);
     const tasksList = createElementWithAttributes('ul', {class: 'task-list'}, main);
@@ -588,7 +596,7 @@ function renderMainPageFrame() {
 function renderFilterOptionsMenu() {
     const main = document.querySelector('main');
     if (!isHTMLElement(main)) {
-        showErrorModal([ERR_HEADINGS.RENDERING, ERR_RENDERING.MAIN_PANEL]);
+        showErrorModal(ERR.FILTER_OPTIONS_MAIN_NOT_FOUND);
         return;
     }
 
@@ -609,59 +617,63 @@ function renderFilterOptionsMenu() {
         class: 'priority-border-box'
     }, priorityContainer);
 
-    const labelPriorityHigh = createElementWithAttributes('label', {
-        for: 'view-priority-high'
+    const priorityHighBox = createElementWithAttributes('div', {
+        class: 'priority-high-box option-button',
+        tabindex: 0,
     }, priorityBorderContainer);
 
     const inputPriorityHigh = createElementWithAttributes('input', {
         id: 'view-priority-high',
         type: 'checkbox'
-    }, labelPriorityHigh);
+    }, priorityHighBox);
 
     const indicatorPriorityHigh = createElementWithAttributes('div', {
         class: 'radio-button priority-high'
-    }, labelPriorityHigh);
+    }, priorityHighBox);
 
-    const btnPriorityHigh = createElementWithAttributes('button', {
-        class: 'priority-high'
-    }, labelPriorityHigh);
-    btnPriorityHigh.textContent = 'High';
+    const labelPriorityHigh = createElementWithAttributes('label', {
+        for: 'view-priority-high'
+    }, priorityHighBox);
+    labelPriorityHigh.textContent = 'High';
 
-    const labelPriorityMedium = createElementWithAttributes('label', {
-        for: 'view-priority-medium'
+    const priorityMediumBox = createElementWithAttributes('div', {
+        class: 'priority-medium-box option-button',
+        tabindex: 0,
     }, priorityBorderContainer);
-
+    
     const inputPriorityMedium = createElementWithAttributes('input', {
         id: 'view-priority-medium',
         type: 'checkbox'
-    }, labelPriorityMedium);
+    }, priorityMediumBox);
 
     const indicatorPriorityMedium = createElementWithAttributes('div', {
         class: 'radio-button priority-medium'
-    }, labelPriorityMedium);
+    }, priorityMediumBox);
 
-    const btnPriorityMedium = createElementWithAttributes('button', {
-        class: 'priority-medium'}, labelPriorityMedium);
-    btnPriorityMedium.textContent = 'Medium';
+    const labelPriorityMedium = createElementWithAttributes('label', {
+        for: 'view-priority-medium'
+    }, priorityMediumBox);
+    labelPriorityMedium.textContent = 'Medium';
 
-    const labelPriorityNormal = createElementWithAttributes('label', {
-        for: 'view-priority-normal'
+    const priorityNormalBox = createElementWithAttributes('div', {
+        class: 'priority-normal-box option-button',
+        tabindex: 0,
     }, priorityBorderContainer);
 
     const inputPriorityNormal = createElementWithAttributes('input', {
         id: 'view-priority-normal',
         type: 'checkbox'
-    }, labelPriorityNormal);
+    }, priorityNormalBox);
 
     const indicatorPriorityNormal = createElementWithAttributes('div', {
         class: 'radio-button priority-normal'
-    }, labelPriorityNormal);
+    }, priorityNormalBox);
 
-    const btnPriorityNormal = createElementWithAttributes('button', {
-        class: 'priority-normal'
-    }, labelPriorityNormal);
-    btnPriorityNormal.textContent = 'Normal';
-    
+    const labelPriorityNormal = createElementWithAttributes('label', {
+        for: 'view-priority-normal'
+    }, priorityNormalBox);
+    labelPriorityNormal.textContent = 'Normal';
+
     const statusContainer = createElementWithAttributes('div', {
         class: 'status-main-box',
     }, viewOptionsBox);
@@ -675,60 +687,63 @@ function renderFilterOptionsMenu() {
         class: 'status-border-box',
     }, statusContainer);
 
-    const labelStatusOverdue = createElementWithAttributes('label', {
-        for: 'view-status-overdue'
+    const statusOverdueBox = createElementWithAttributes('div', {
+        class: 'status-overdue-box option-button',
+        tabindex: 0,
     }, statusBorderContainer);
 
     const inputStatusOverdue = createElementWithAttributes('input', {
         id: 'view-status-overdue',
         type: 'checkbox'
-    }, labelStatusOverdue);
+    }, statusOverdueBox);
 
     const indicatorStatusOverdue = createElementWithAttributes('div', {
         class: 'radio-button status-overdue'
-    }, labelStatusOverdue);
+    }, statusOverdueBox);
 
-    const btnStatusOverdue = createElementWithAttributes('button', {
-        class: 'status-overdue'
-    }, labelStatusOverdue);
-    btnStatusOverdue.textContent = 'Overdue';
+    const labelStatusOverdue = createElementWithAttributes('label', {
+        for: 'view-status-overdue'
+    }, statusOverdueBox);
+    labelStatusOverdue.textContent = 'Overdue';
 
-    const labelStatusOnGoing = createElementWithAttributes('label', {
-        for: 'view-status-ongoing'
+    const statusOnGoingBox = createElementWithAttributes('div', {
+        class: 'status-ongoing-box option-button',
+        tabindex: 0,
     }, statusBorderContainer);
     
     const inputStatusOnGoing = createElementWithAttributes('input', {
         id: 'view-status-ongoing',
         type: 'checkbox'
-    }, labelStatusOnGoing);
+    }, statusOnGoingBox);
 
     const indicatorStatusOnGoing = createElementWithAttributes('div', {
         class: 'radio-button status-ongoing'
-    }, labelStatusOnGoing);
-    
-    const btnStatusOnGoing = createElementWithAttributes('button', {
-        class: 'status-ongoing'
-    }, labelStatusOnGoing);
-    btnStatusOnGoing.textContent = 'Ongoing';
+    }, statusOnGoingBox);
 
-    const labelStatusCompleted = createElementWithAttributes('label', {
-        for: 'view-status-completed'
-    }, statusBorderContainer);
+    const labelStatusOnGoing = createElementWithAttributes('label', {
+        for: 'view-status-ongoing'
+    }, statusOnGoingBox);
+    labelStatusOnGoing.textContent = 'Ongoing';
     
+    const statusCompletedBox = createElementWithAttributes('div', {
+        class: 'status-completed-box option-button',
+        tabindex: 0,
+    }, statusBorderContainer);
+
     const inputStatusCompleted = createElementWithAttributes('input', {
         id: 'view-status-completed',
         type: 'checkbox'
-    }, labelStatusCompleted);
+    }, statusCompletedBox);
 
     const indicatorStatusCompleted = createElementWithAttributes('div', {
         class: 'radio-button status-completed'
-    }, labelStatusCompleted);
-    
-    const btnStatusCompleted = createElementWithAttributes('button', {
-        class: 'status-completed'
-    }, labelStatusCompleted);
-    btnStatusCompleted.textContent = 'Completed';
+    }, statusCompletedBox);
 
+    const labelStatusCompleted = createElementWithAttributes('label', {
+        for: 'view-status-completed'
+    }, statusCompletedBox);
+    labelStatusCompleted.textContent = 'Completed';
+    
     const sortOptionsBox = createElementWithAttributes('div', {
         class: 'sort-options-main-box',
     }, viewOptionsBox);
@@ -742,9 +757,13 @@ function renderFilterOptionsMenu() {
         class: 'sort-options-border-box',
     }, sortOptionsBox);
 
+    const selectSortOptionsCustom = createElementWithAttributes('div', {
+        class: 'custom-select',
+    }, sortOptionsBorderContainer);
+
     const selectSortOptions = createElementWithAttributes('select', {
         name: 'sort-by'
-    }, sortOptionsBorderContainer);
+    }, selectSortOptionsCustom);
 
     const sortByDate = createElementWithAttributes('option', {
         value: 'date'
@@ -761,21 +780,124 @@ function renderFilterOptionsMenu() {
     },selectSortOptions);
     sortByStatus.textContent = 'Status';
 
-    const labelSortOrder = createElementWithAttributes('label', { 
-        class: 'sort-order',
-        for: 'sort-order'
+    const sortOrderBox = createElementWithAttributes('div', { 
+        class: 'sort-arrow option-button',
+        tabindex: 0,
     }, sortOptionsBorderContainer);
+    sortOrderBox.style.backgroundImage = `url(${assets.sortOrderIconPath})`;
 
     const checkboxSortAscendingOrder = createElementWithAttributes('input', { 
         type: 'checkbox',
         id: 'sort-order',
-    }, labelSortOrder);
+    }, sortOrderBox);
 
-    const sortOrderIcon = createElementWithAttributes('button', { 
-        class: 'sort-arrow'
-    }, labelSortOrder);
-    sortOrderIcon.ariaLabel = 'Sort order (ascending or descending)';
-    sortOrderIcon.style.backgroundImage = `url(${assets.sortOrderIconPath})`;
+    const labelSortOrder = createElementWithAttributes('label', { 
+        class: 'sort-order',
+        for: 'sort-order'
+    }, sortOrderBox);
+
+    renderCustomDropDownMenu();
+}
+
+function renderCustomDropDownMenu() {
+    let x, i, j, l, ll, selElmnt, a, b, c;
+    /* Look for any elements with the class "custom-select": */
+    x = document.getElementsByClassName("custom-select");
+    l = x.length;
+    for (i = 0; i < l; i++) {
+      selElmnt = x[i].getElementsByTagName("select")[0];
+      ll = selElmnt.length;
+      /* For each element, create a new DIV that will act as the selected item: */
+      a = document.createElement("DIV");
+      a.setAttribute("class", "select-selected");
+      a.setAttribute("tabindex", 0); // Make the select box focusable
+      a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
+      x[i].appendChild(a);
+      /* For each element, create a new DIV that will contain the option list: */
+      b = document.createElement("DIV");
+      b.setAttribute("class", "select-items select-hide");
+      for (j = 0; j < ll; j++) {
+        /* For each option in the original select element,
+        create a new DIV that will act as an option item: */
+        c = document.createElement("DIV");
+        c.innerHTML = selElmnt.options[j].innerHTML;
+        // Set the 'value' attribute for the custom option
+        c.setAttribute("value", selElmnt.options[j].value);
+        c.setAttribute("tabindex", 0); // Make the option focusable
+        c.addEventListener("click", function (e) {
+          /* When an item is clicked, update the original select box,
+          and the selected item: */
+          let y, i, k, s, h, sl, yl;
+          s = this.parentNode.parentNode.getElementsByTagName("select")[0];
+          sl = s.length;
+          h = this.parentNode.previousSibling;
+          for (i = 0; i < sl; i++) {
+            if (s.options[i].innerHTML == this.innerHTML) {
+              s.selectedIndex = i;
+              h.innerHTML = this.innerHTML;
+              y = this.parentNode.getElementsByClassName("same-as-selected");
+              yl = y.length;
+              for (k = 0; k < yl; k++) {
+                y[k].removeAttribute("class");
+              }
+              this.setAttribute("class", "same-as-selected");
+              break;
+            }
+          }
+          h.click();
+        });
+  
+        // Attach event listeners for 'keydown' ('Enter' and 'Space') events
+        c.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault(); // Prevent the default behavior (e.g., scrolling)
+            this.click(); // Trigger the click event when 'Enter' or 'Space' is pressed
+            closeAllSelect(this);
+          }
+        });
+  
+        b.appendChild(c);
+      }
+      x[i].appendChild(b);
+      a.addEventListener("click", function (e) {
+        /* When the select box is clicked, close any other select boxes,
+        and open/close the current select box: */
+        e.stopPropagation();
+        closeAllSelect(this);
+        this.nextSibling.classList.toggle("select-hide");
+        this.classList.toggle("select-arrow-active");
+      });
+  
+      // Add a focus event listener to open the menu on 'Enter' or 'Space' keydown
+      a.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          this.click();
+          closeAllSelect(this);
+        }
+      });
+    }
+    function closeAllSelect(elmnt) {
+      /* A function that will close all select boxes in the document,
+      except the current select box: */
+      let x, y, i, xl, yl, arrNo = [];
+      x = document.getElementsByClassName("select-items");
+      y = document.getElementsByClassName("select-selected");
+      xl = x.length;
+      yl = y.length;
+      for (i = 0; i < yl; i++) {
+        if (elmnt == y[i]) {
+          arrNo.push(i);
+        } else {
+          y[i].classList.remove("select-arrow-active");
+        }
+      }
+      for (i = 0; i < xl; i++) {
+        if (arrNo.indexOf(i) === -1) {
+          x[i].classList.add("select-hide");
+        }
+      }
+    }
 }
 
 function renderMainPageTemplate() {
@@ -805,7 +927,7 @@ function renderMainPageTemplate() {
     !isHTMLElement(mainHeadBox) ||
     !isHTMLElement(mainTaskBar)
     ) {
-        showErrorModal([ERR_HEADINGS.MAIN_PAGE, ERR_MESSAGE.CONTENT_NOT_FOUND]);
+        showErrorModal(ERR.CONTENT_CONTENT_NOT_FOUND);
         return;
     }
 

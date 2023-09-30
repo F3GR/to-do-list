@@ -22,7 +22,9 @@ export function getViewOptionsNodes() {
 
     const viewOptionsIcon = document.querySelector('header > .options');
     const viewBox = document.querySelector('main > .view-options-bar');
-
+    const customSelectBox = document.querySelector('.view-options-bar .select-items');
+    const toggleBoxes = document.querySelectorAll('.view-options-bar .priority-border-box, .view-options-bar .status-border-box, .view-options-bar .sort-arrow');
+    
     return viewOptionsNodes = {
         buttonPriorityHigh,
         buttonPriorityMedium,
@@ -39,7 +41,9 @@ export function getViewOptionsNodes() {
         inputStatusOverdue,
         inputSortAscendingOrder,
         viewOptionsIcon,
-        viewBox 
+        viewBox,
+        toggleBoxes, 
+        customSelectBox
     };
 };
 

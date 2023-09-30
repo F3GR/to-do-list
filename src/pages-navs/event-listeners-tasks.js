@@ -1,7 +1,7 @@
 import { application } from '../main-app';
 import { getTasksBarFooterNodes } from './static-selectors';
 import { isHTMLElement, showErrorModal } from '../utils';
-import { ERR_EVENT, ERR_HEADINGS } from './errors-text';
+import { ERR_EVENTS } from './errors-text';
 import { renderTask } from '../task/dom';
 
 export function addListenersTasksPagesNav() {
@@ -9,17 +9,17 @@ export function addListenersTasksPagesNav() {
 
     prevPageBtn.addEventListener('click', (e) => {
         if (!isHTMLElement(prevPageBtn) || !isHTMLElement(nextPageBtn)) {
-            showErrorModal([ERR_HEADINGS.TASKS_EVENT, ERR_EVENT.TASKS_BAR]);
+            showErrorModal(ERR_EVENTS.TASKS_BAR);
             return;
         }
         if (!isHTMLElement(tasksList)) {
-            showErrorModal([ERR_HEADINGS.TASKS_EVENT, ERR_EVENT.TASKS_LIST]);
+            showErrorModal(ERR_EVENTS.TASKS_LIST);
             return;
         }
 
         const currentTasksPageNav = document.querySelector('.tasks-pages-nums');
         if (!isHTMLElement(currentTasksPageNav)) {
-            showErrorModal([ERR_HEADINGS.TASKS_EVENT, ERR_EVENT.TASKS_NAV]);
+            showErrorModal(ERR_EVENTS.TASKS_NAV);
             return;
         }
 
@@ -34,7 +34,7 @@ export function addListenersTasksPagesNav() {
         try {
             prevTasksPage = application.moveTasksPageBackwards(currentTasksPageNumber);
         } catch (e) {
-            showErrorModal([ERR_HEADINGS.TASKS_EVENT, e.message]);
+            showErrorModal([ERR_EVENTS.PREV_TASKS_PAGE[0], e.message, ERR_EVENTS.PREV_TASKS_PAGE[2]]);
             return;
         }
 
@@ -48,17 +48,17 @@ export function addListenersTasksPagesNav() {
 
     nextPageBtn.addEventListener('click', (e) => {
         if (!isHTMLElement(prevPageBtn) || !isHTMLElement(nextPageBtn)) {
-            showErrorModal([ERR_HEADINGS.TASKS_EVENT, ERR_EVENT.TASKS_BAR]);
+            showErrorModal(ERR_EVENTS.TASKS_BAR);
             return;
         }
         if (!isHTMLElement(tasksList)) {
-            showErrorModal([ERR_HEADINGS.TASKS_EVENT, ERR_EVENT.TASKS_LIST]);
+            showErrorModal(ERR_EVENTS.TASKS_LIST);
             return;
         }
 
         const currentTasksPageNav = document.querySelector('.tasks-pages-nums');
         if (!isHTMLElement(currentTasksPageNav)) {
-            showErrorModal([ERR_HEADINGS.TASKS_EVENT, ERR_EVENT.TASKS_NAV]);
+            showErrorModal(ERR_EVENTS.TASKS_NAV);
             return;
         }
 
@@ -73,7 +73,7 @@ export function addListenersTasksPagesNav() {
         try {
             nextTasksPage = application.moveTasksPageForward(currentTasksPageNumber);
         } catch (e) {
-            showErrorModal([ERR_HEADINGS.TASKS_EVENT, e.message]);
+            showErrorModal([ERR_EVENTS.NEXT_TASKS_PAGE[0], e.message, ERR_EVENTS.NEXT_TASKS_PAGE[2]]);
             return;
         }
 

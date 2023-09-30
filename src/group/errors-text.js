@@ -5,20 +5,16 @@ export const ERR_CONTROLLER = new Enum({
     DEFAULT_ID: 'The default group id isn\'t valid',
 });
 
-export const ERR_HEADINGS = new Enum({
-    POPULATE: 'Error (populating a new group)',
-    EVENTS_RENDERING: 'Error (applying events on sidebar)',
-});
-
-export const ERR_POPULATE = new Enum({
-    CURRENT_GROUP_MAIN: 'The elements of the current group weren\'t found in the main panel',
-    ALL_GROUP: 'The \'All group\' panel wasn\'t found',
-    ADD_TASK_ICON: 'The \'Add task\' icon wasn\'t found',
-    CURRENT_GROUP: 'The current group panel wasn\'t found',
-    CURRENT_GROUP_ELEMENT: 'The name and/or icon element of the current group weren\'t found',
-    NO_GROUP_ID: 'The id of the selected group wasn\'t found',
+export const ERR_RENDERING = new Enum({
+    CURRENT_GROUP_MAIN: ['Application error', 'The elements of the current group weren\'t found in the main panel', 'Process: rendering the new group'],
+    ALL_GROUP: ['Application error', 'The \'All group\' panel wasn\'t found', 'Process: rendering the new group'],
+    ADD_TASK_ICON: ['Application error', 'The \'Add task\' icon wasn\'t found', 'Process: rendering the new group'],
+    CURRENT_GROUP: ['Application error', 'The current group panel wasn\'t found', 'Process: rendering the new group'],
+    CURRENT_GROUP_ELEMENT: ['Application error', 'The name and/or icon element of the current group weren\'t found', 'Process: rendering the new group'],
 });
 
 export const ERR_EVENTS = new Enum({
-    SIDEBAR_ELEMENTS: 'One or more elements of the sidebar weren\'t found',
+    NO_GROUP_ID: ['Application error', 'The id of the selected group wasn\'t found', 'Process: applying events on the sidebar'],
+    SIDEBAR_ELEMENTS: ['Application error', 'One or more elements of the sidebar weren\'t found', 'Process: applying events on the sidebar'],
+    NEW_GROUP: ['Application error', null, 'Process: selecting the new group'],
 });

@@ -1,15 +1,11 @@
 :root {
-    --system-ui: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    /*--system-ui: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     --light-emerald: rgb(122, 255, 213);
     --light-blue: rgb(159, 237, 255);
     --white: white;
     --whitesmoke: rgb(242, 239, 239);
 
-    --interactive-pointer-style: pointer;
-    --scale-size-hover-panels: 1.05;
-    --scale-size-hover-big-icons: 1.1;
-    --scale-size-hover-small-icons: 1.2;
-    --click-animation-duration: 0.1s;
+
 
     --element-panels-border-radius: 0.5rem;
     --main-panels-border-radius: 1rem;
@@ -17,10 +13,21 @@
     --task-background-color: var(--whitesmoke);
     --task-border-color: var(--whitesmoke);
     --project-background-color: var(--whitesmoke);
-    --project-border-color: var(--whitesmoke);
+    --project-border-color: var(--whitesmoke);*/
+
+    --black: rgb(0, 0, 0);
+
+    --interactive-pointer-style: pointer;
+    --scale-size-hover-panels: 1.05;
+    --scale-size-hover-big-icons: 1.1;
+    --scale-size-hover-small-icons: 1.2;
+    --click-animation-duration: 0.1s;
 
     --menu-border-color: var(--whitesmoke);
-    --selected-color: rgb(36, 255, 20);
+
+    --selected-background-color: rgb(0, 255, 0);
+    --selected-border-color: var(--white);
+
     --text-color: rgb(90, 90, 90);
     --borders-color: rgb(90, 90, 90);
 
@@ -33,68 +40,71 @@
     --menu-paragraph-font-size: ;
     --menu-button-text-font-size: ;
 
-    --tab-index-menu: 2;
-    --tab-index-error: 3;
-    --tab-index-sidebar-view-options-small: 1;
+    --element-panels-border-radius: 0.5rem;
+    --main-panels-border-radius: 1rem;
 }
 
-*:focus {
-  outline: 0.2rem solid var(--text-color);
+button {
+  cursor: var(--interactive-pointer-style);
+  position: relative;
+  will-change: transform;
+  transition: transform var(--click-animation-duration) ease;
+}
+
+button:focus {
+  outline: 0.2rem ridge var(--black);
+  border: 0.1rem solid var(--selected-border-color);
+  border-radius: var(--element-panels-border-radius);
+  transform: scale(var(--scale-size-hover-panels));
+}
+
+input:focus {
+  outline: 0.2rem ridge var(--black);
+  border: 0.1rem solid var(--selected-border-color);
   border-radius: var(--element-panels-border-radius);
 }
 
-header .sidebar-icon:hover,
-header .sidebar-icon:focus {
-    cursor: var(--interactive-pointer-style);
-    transform: scale(var(--scale-size-hover-big-icons));
-    transition: transform var(--click-animation-duration);
-  }
+button:hover {
+  transform: scale(var(--scale-size-hover-panels));
+}
 
-  header .sidebar-icon:active {
-    transform: scale(1);
-  }
+button:active {
+  transform: scale(1);
+}
 
+.error-modal,
+.project-menu,
+.task-menu,
+.remove-menu {
+  opacity: 0%;
+  transition: opacity .4s ease;
+}
 
-  header .options:hover,
-  header .options:focus {
-    cursor: var(--interactive-pointer-style);
-    transform: scale(var(--scale-size-hover-big-icons));
-    transition: transform var(--click-animation-duration);
+.error-modal.shown,
+.project-menu.shown,
+.task-menu.shown,
+.remove-menu.shown {
+  opacity: 100%;
+  visibility: visible;
+}
+
+  /* Sidebar */
+
+  .bar-types > *.current,
+  aside .projects-list > .project.current {
+    background-color: var(--selected-background-color);
   }
   
-  header .options:active {
-    transform: scale(1);
+  .bar-types > *.current *,
+  aside .projects-list > .project.current * {
+    color: var(--white);
   }
 
-  .bar-types > *:hover,
-  .bar-types > *:focus {
-    cursor: pointer;
-    transform: scale(var(--scale-size-hover-panels));
-    position: relative;
-    transition: transform var(--click-animation-duration);
+  .bar-types > *.current,
+  .projects-list > *.current {
+    border: 0.1rem solid var(--selected-border-color);
   }
   
-  .bar-types > *:active {
-    transform: scale(1);
-  }
-
-  .bar-footer:hover,
-  .bar-footer:focus {
-    cursor: pointer;
-    transform: scale(var(--scale-size-hover-panels));
-    transition: transform var(--click-animation-duration);
-  }
-  
-  .bar-footer:active {
-    transform: scale(1);
-  }
-
-  .bar-projects .header .add-new:hover,
-  .bar-projects .header .add-new:focus {
-    cursor: pointer;
-    transform: scale(var(--scale-size-hover-big-icons));
-  }
-
   .project {
     transition: transform var(--click-animation-duration);
   }
@@ -113,77 +123,135 @@ header .sidebar-icon:focus {
     transform: scale(1);
   }
 
-  .project .edit:hover,
-  .project .edit:focus,
-  .project .remove:hover,
-  .project .remove:focus {
+
+  /* View options */
+  .priority-border-box *,
+  .status-border-box *,
+  .sort-options-border-box > * {
     cursor: pointer;
-    transform: scale(var(--scale-size-hover-small-icons));
-  }
-  
-  .bar-projects .header .add-new:active,
-  .project .edit:active,
-  .project .remove:active {
-    transform: scale(1);
   }
 
-  .bar-projects .header .add-new,
-  .project .edit,
-  .project .remove {
-    position: relative;
-    transition: transform var(--click-animation-duration);
-  }
-
-  .projects-nav button {
-    position: relative;
-    transition: transform var(--click-animation-duration);
-  }
-
-  .projects-nav button:hover,
-  .projects-nav button:focus {
-    cursor: pointer;
-    transform: scale(var(--scale-size-hover-small-icons));
-  }
-
-  .projects-nav button:active {
-    transform: scale(1);
-  }
-
-  .view-options-bar > div > div > label:hover,
-  .view-options-bar > div > div > label:focus {
-    cursor: var(--interactive-pointer-style-big-icons);
+   .priority-border-box .option-button:hover,
+   .status-border-box .option-button:hover,
+   .priority-border-box .option-button:focus,
+   .status-border-box .option-button:focus {
     transform: scale(var(--scale-size-hover-big-icons));
     transition: transform var(--click-animation-duration);
   }
 
-  .view-options-bar > div > div > label:active {
+   .priority-border-box .option-button:active,
+   .status-border-box .option-button:active {
     transform: scale(1);
   }
 
-.view-options-bar > div > div > label > .radio-button::after {
+ .priority-border-box .option-button > .radio-button::after,
+ .status-border-box .option-button > .radio-button::after {
     content: '';
-    width: var(--sidebar-icon-width);
-    height: var(--sidebar-icon-height);
-    background-color: #00ff00;
+    width: 100%;
+    height: 100%;
+    background-color: var(--selected-background-color);
     border-radius: 50%;
     transform: scale(0);
-    transition: transform var(--click-animation-duration);
+    transition: transform 0.3s ease;
+    transform-origin: center center;
 }
 
-.view-options-bar > div > div > label > .radio-button:checked + 
-.view-options-bar > div > div > label > .radio-button::after {
+ .priority-border-box .option-button > input:checked + .radio-button::after,
+ .status-border-box .option-button > input:checked + .radio-button::after {
     display: block;
     transform: scale(1);
 }
 
-.sort-order:hover,
-.sort-order:focus {
-  transform: scale(var(--scale-size-hover-big-icons));
+.sort-options-border-box .sort-arrow {
+  transition: transform 0.4s ease;
 }
 
-.sort-order:active {
-  transform: scale(1);
+.sort-options-border-box .sort-arrow.enabled {
+  transform: rotate(180deg);
 }
+
+
+/* Custom dropdown menu */
+
+/*the container must be positioned relative:*/
+.custom-select {
+  position: relative;
+  font-family: Arial;
+}
+
+.custom-select select {
+  display: none; /*hide original SELECT element:*/
+}
+
+.select-selected {
+  background-color: var(--selected-border-color);
+}
+
+.select-selected:hover {
+  background-color: var(--selected-background-color);
+  color: var(--selected-border-color);
+}
+
+.select-selected:hover:after {
+  background: url(./assets/fold-select-hover.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 2rem;
+  height: 2rem;
+}
+
+/*style the arrow inside the select element:*/
+.select-selected:after {
+  position: absolute;
+  content: "";
+  right: 0.5rem;
+  background: url(./assets/fold-select.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 2rem;
+  height: 2rem;
+  transition: transform 0.3s ease-in;
+}
+
+/*point the arrow upwards when the select box is open (active):*/
+.select-selected.select-arrow-active:after {
+  transform: rotate(180deg);
+}
+
+
+/*style the items (options), including the selected item:*/
+.select-items div,.select-selected {
+  padding: 0.2rem 0.5rem;
+  border: 0.1rem solid var(--borders-color);
+  background-color: var(--selected-border-color);
+  cursor: pointer;
+  border-radius: var(--element-panels-border-radius);
+}
+
+.select-items div {
+	border-top-style:none;
+}
+
+/*style items (options):*/
+.select-items {
+  border-radius: var(--element-panels-border-radius);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 99;
+}
+
+.select-hide {
+  display: none;
+}
+
+.select-items div:hover {
+  background-color: var(--selected-background-color);
+  color: var(--selected-border-color);
+}
+
+/* Task panel */
 
 .task[data-task-status='0'] label.status-checkbox svg {
   animation: fillCheckbox 0.5s forwards;
@@ -191,13 +259,13 @@ header .sidebar-icon:focus {
 
 @keyframes fillCheckbox {
   from {
-    stroke: var(--selected-color);
+    stroke: var(--selected-background-color);
     stroke-dashoffset: 100;
     stroke-opacity: 0;
     stroke-width: 3;
   }
   to {
-    stroke: var(--selected-color);
+    stroke: var(--selected-background-color);
     stroke-dashoffset: 0;
     stroke-opacity: 1;
     stroke-width: 3;
@@ -205,81 +273,97 @@ header .sidebar-icon:focus {
 }
 
 .task label.status-checkbox:hover,
-.task label.status-checkbox:focus,
-.task .remove:hover,
-.task .remove:focus,
-.task .edit:hover,
-.task .edit:focus,
-.task .unfold:hover,
-.task .unfold:focus {
+.task label.status-checkbox:focus {
   cursor: pointer;
   transform: scale(var(--scale-size-hover-small-icons));
   position: relative;
   transition: transform var(--click-animation-duration);
 }
 
-.task label.status-checkbox:active,
-.task .remove:active,
-.task .edit:active,
-.task .unfold:active {
+.task label.status-checkbox:active {
   transform: scale(1);
 }
 
-.task-bar .add-new:hover,
-.task-bar .add-new:focus {
-  cursor: pointer;
-  transform: scale(var(--scale-size-hover-big-icons));
-  position: relative;
-  transition: transform var(--click-animation-duration);
-}
-
-.task-bar .add-new:active {
-  transform: scale(1);
-}
-
-  /* Page menu */
-
-.page-menu button:hover,
-.page-menu button:focus  {
-  cursor: pointer;
-  transform: scale(var(--scale-size-hover-big-icons));
-  position: relative;
-  transition: transform var(--click-animation-duration);
-}
-
-.page-menu button:active {
-  transform: scale(1);
-}
+  /* Task page menu */
 
   /* Remove confirmation menu */
-  /* Error modal */
-  /* Project menu */
 
-  .content .project-menu .exit {
-    transition: transform var(--click-animation-duration);
+  /* Error modal */
+
+  .error-modal .title .exit:focus {
+    transition: transform var(--click-animation-duration) ease;
   }
 
-  .content .project-menu .exit:hover,
-  .content .project-menu .exit:focus {
+  .error-modal .title .exit:focus {
+    outline: 0.2rem ridge var(--black);
+    border: 0.1rem solid var(--selected-border-color);
+    border-radius: var(--element-panels-border-radius);
     transform: scale(var(--scale-size-hover-big-icons));
   }
   
-  .content .project-menu .exit:active {
+  .error-modal .title .exit:hover {
+    transform: scale(var(--scale-size-hover-big-icons));
+  }
+
+  .error-modal .title .exit:active {
+    transform: scale(1);
+  }
+
+  .error-modal .button-box .exit-ok:focus {
+    outline: 0.2rem ridge var(--black);
+    border: 0.1rem solid var(--selected-border-color);
+    border-radius: var(--element-panels-border-radius);
+    transform: scale(var(--scale-size-hover-panels));
+    transition: transform var(--click-animation-duration) ease;
+  }
+  
+  .error-modal .button-box .exit-ok:hover {
+    transform: scale(var(--scale-size-hover-panels));
+  }
+
+  .error-modal .button-box .exit-ok:active {
+    transform: scale(1);
+  }
+
+  /* Project menu */
+
+  .project-menu .title .exit:focus {
+    transition: transform var(--click-animation-duration) ease;
+  }
+
+  .project-menu .title .exit:focus {
+    outline: 0.2rem ridge var(--black);
+    border: 0.1rem solid var(--selected-border-color);
+    border-radius: var(--element-panels-border-radius);
+    transform: scale(var(--scale-size-hover-big-icons));
+  }
+  
+  .project-menu .title .exit:hover {
+    transform: scale(var(--scale-size-hover-big-icons));
+  }
+
+  .project-menu .title .exit:active {
     transform: scale(1);
   }
 
   .project-menu fieldset > .project-options > * {
-    transition: transform var(--click-animation-duration);
+    cursor: pointer;
+    transition: transform var(--click-animation-duration) ease;
   }
 
   .project-options .project-icon-option.selected {
-    background-color: var(--selected-color);
-    border: 1px solid var(--whitesmoke);
-    transition: transform var(--click-animation-duration);
+    border-color: var(--selected-border-color);
+    background-color: var(--selected-background-color);
   }
 
-  .project-menu fieldset > .project-options > *:hover,
   .project-menu fieldset > .project-options > *:focus {
+    outline: 0.2rem ridge var(--black);
+    border-radius: var(--element-panels-border-radius);
+    transform: scale(var(--scale-size-hover-big-icons));
+    transition: transform var(--click-animation-duration) ease;
+  }
+
+  .project-menu fieldset > .project-options > *:hover {
     transform: scale(var(--scale-size-hover-big-icons));
   }
 
@@ -287,13 +371,16 @@ header .sidebar-icon:focus {
     transform: scale(1);
   }
 
-  .project-menu .button-box > * {
-    transition: transform var(--click-animation-duration);
-  }
-
-  .project-menu .button-box > *:hover,
   .project-menu .button-box > *:focus {
-    transform: scale(var(--scale-size-hover-big-icons));
+    outline: 0.2rem ridge var(--black);
+    border: 0.1rem solid var(--selected-border-color);
+    border-radius: var(--element-panels-border-radius);
+    transform: scale(var(--scale-size-hover-panels));
+    transition: transform var(--click-animation-duration) ease;
+  }
+  
+  .project-menu .button-box > *:hover {
+    transform: scale(var(--scale-size-hover-panels));
   }
 
   .project-menu .button-box > *:active {
@@ -301,3 +388,15 @@ header .sidebar-icon:focus {
   }
 
   /* Task menu */
+
+  .task-menu .title .exit:focus,
+  .task-menu input:focus,
+  .task-menu textarea:focus,
+  .task-menu .button-box > button:focus {
+    outline: 0.2rem ridge var(--black);
+    border: 0.1rem solid var(--selected-border-color);
+    border-radius: var(--element-panels-border-radius);
+    transition: transform var(--click-animation-duration) ease;
+  }
+
+

@@ -5,7 +5,7 @@
    width="48"
    version="1.1"
    id="svg4"
-   sodipodi:docname="arrow-downward.svg"
+   sodipodi:docname="arrow-upward.svg"
    inkscape:version="1.3 (1:1.3+202307231459+0e150ed6c4)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -24,7 +24,7 @@
      inkscape:deskcolor="#d1d1d1"
      showgrid="false"
      inkscape:zoom="7.2625757"
-     inkscape:cx="17.762293"
+     inkscape:cx="-12.392298"
      inkscape:cy="18.313062"
      inkscape:window-width="1366"
      inkscape:window-height="673"
@@ -33,9 +33,8 @@
      inkscape:window-maximized="1"
      inkscape:current-layer="svg4" />
   <path
-     d="m 447.88968,-891.53954 v 668.70757 l -227.0095,-238.84551 -50.11111,54.33635 307.12061,329.438167 310.75764,-330.697127 -46.51594,-53.07976 -234.2417,238.84788 v -668.70757 z"
+     d="m 511.52671,-891.53954 v 668.70757 l 227.0095,-238.84551 50.11111,54.33635 -307.12061,329.438167 -310.75764,-330.697127 46.51594,-53.07976 234.2417,238.84788 v -668.70757 z"
      id="path2"
-     style="stroke-width:1.12753;fill:#5a5a5a;fill-opacity:1"
-     sodipodi:nodetypes="cccccccccc"
-     inkscape:label="path2" />
+     style="fill:#5a5a5a;fill-opacity:1;stroke-width:1.12753"
+     sodipodi:nodetypes="cccccccccc" />
 </svg>

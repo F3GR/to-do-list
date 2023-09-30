@@ -2,7 +2,7 @@
 import { renderTask } from '../task/dom.js';
 import { getGroupNodes } from './static-selectors.js';
 import { STANDARD_GROUPS, isHTMLElement, isNodeList, isObject, showErrorModal } from '../utils.js';
-import { ERR_HEADINGS, ERR_POPULATE } from './errors-text.js';
+import { ERR_RENDERING } from './errors-text.js';
 
 export function renderGroup(newGroup, groupIdentifier) {
     const { mainGroupName, mainGroupIcon, taskList } = getGroupNodes();
@@ -17,23 +17,23 @@ export function renderGroup(newGroup, groupIdentifier) {
     !isHTMLElement(mainGroupIcon) || 
     !isHTMLElement(taskList)
     ) {
-        showErrorModal([ERR_HEADINGS.POPULATE, ERR_POPULATE.CURRENT_GROUP_MAIN]);
+        showErrorModal(ERR_RENDERING.CURRENT_GROUP_MAIN);
         return;
     }
     if (!isNodeList(allGroups)) {
-        showErrorModal([ERR_HEADINGS.POPULATE, ERR_POPULATE.ALL_GROUP]);
+        showErrorModal(ERR_RENDERING.ALL_GROUP);
         return;
     }
     if (!isHTMLElement(addTaskIcon)) {
-        showErrorModal([ERR_HEADINGS.POPULATE, ERR_POPULATE.ADD_TASK_ICON]);
+        showErrorModal(ERR_RENDERING.ADD_TASK_ICON);
         return;
     }
     if (!isHTMLElement(selectedGroup)) {
-        showErrorModal([ERR_HEADINGS.POPULATE, ERR_POPULATE.CURRENT_GROUP]);
+        showErrorModal(ERR_RENDERING.CURRENT_GROUP);
         return;
     }
     if (!isHTMLElement(selectedGroupName) || !isHTMLElement(selectedGroupIcon)) {
-        showErrorModal([ERR_HEADINGS.POPULATE, ERR_POPULATE.CURRENT_GROUP_ELEMENT]);
+        showErrorModal(ERR_RENDERING.CURRENT_GROUP_ELEMENT);
         return;
     }
     

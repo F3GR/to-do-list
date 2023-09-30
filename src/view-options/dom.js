@@ -2,7 +2,7 @@ import { isHTMLElement, showErrorModal } from '../utils.js';
 import { getViewOptionsNodes } from './static-selectors.js';
 import { SORTBY, isBoolean } from '../utils.js';
 import { application } from '../main-app.js';
-import { ERR_HEADINGS, ERR_RENDERING } from './errors-text.js';
+import { ERR_RENDERING } from './errors-text.js';
 
 export function applySavedViewState() {
     const viewState = application.getViewState();
@@ -36,7 +36,7 @@ export function applySavedViewState() {
     !isHTMLElement(inputSortAscendingOrder) ||
     !isHTMLElement(selectSortOptions)
     ) {
-        showErrorModal([ERR_HEADINGS.RENDERING, ERR_RENDERING.OPTIONS_NODES]);
+        showErrorModal(ERR_RENDERING.OPTIONS_NODES);
         return;
     }
 
@@ -47,15 +47,15 @@ export function applySavedViewState() {
     !isBoolean(flagIncludeCompleted) || 
     !isBoolean(flagIncludeOverdue)
     ) {
-        showErrorModal(ERR_HEADINGS.RENDERING, ERR_RENDERING.FILTER_VALUES);
+        showErrorModal(ERR_RENDERING.FILTER_VALUES);
         return;
     }
     if (!isBoolean(ascendingOrder)) {
-        showErrorModal(ERR_HEADINGS.RENDERING, ERR_RENDERING.SORT_ORDER_VALUE);
+        showErrorModal(ERR_RENDERING.SORT_ORDER_VALUE);
         return;
     }
     if (!Object.values(SORTBY).includes(sortBy)) {
-        showErrorModal(ERR_HEADINGS.RENDERING, ERR_RENDERING.SORT_OPTION_VALUE);
+        showErrorModal(ERR_RENDERING.SORT_OPTION_VALUE);
         return;
     }
 

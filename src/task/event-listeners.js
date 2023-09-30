@@ -2,7 +2,7 @@ import { application } from '../main-app.js';
 import { renderTask } from './dom.js';
 import { ACTIONS_TASKS, isHTMLElement, isNodeList, isObject, isValid, showErrorModal, handleExitRemoveMenu } from '../utils.js';
 import { getTaskNodes } from './static-selectors.js';
-import { ERR_APPLY_EVENTS, ERR_HEADINGS } from './errors-text.js';
+import { ERR_EVENTS } from './errors-text.js';
 import { assets } from './assets.js';
 
 export function addListenersManageTasks() {
@@ -14,7 +14,7 @@ export function addListenersManageTasks() {
     !isHTMLElement(removeMenu) ||
     !isHTMLElement(removeConfirm)
     ) {
-        showErrorModal([ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.TASK_MENU_RENDERING]);
+        showErrorModal(ERR_EVENTS.TASK_MENU_RENDERING);
         return;
     }
 
@@ -27,7 +27,7 @@ export function addListenersManageTasks() {
                 return;
             }
             if (!Object.values(ACTIONS_TASKS).includes(action)) {
-                showErrorModal([ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.DEFAULT_ACTION]);
+                showErrorModal(ERR_EVENTS.DEFAULT_ACTION);
                 return;
             }
     
@@ -47,7 +47,7 @@ export function addListenersManageTasks() {
                 return;
             }
             if (!Object.values(ACTIONS_TASKS).includes(action)) {
-                showErrorModal([ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.DEFAULT_ACTION]);
+                showErrorModal(ERR_EVENTS.DEFAULT_ACTION);
                 return;
             }
     
@@ -88,7 +88,7 @@ const taskAction = (action, target) => {
     !isHTMLElement(removeHeading) || 
     !isHTMLElement(removeMessage)
     ) {
-        showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.TASK_MENU_SHOWING]);
+        showErrorModal(ERR_EVENTS.TASK_MENU_SHOWING);
         return;
     }
 
@@ -106,7 +106,7 @@ const taskAction = (action, target) => {
             const currentProject = document.querySelector('.projects-list .project.current');
             const id = currentProject.getAttribute('data-group-id');
             if (!isHTMLElement(currentProject) || !isValid(id)) {
-                showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.TASK_MENU_ADD]);
+                showErrorModal(ERR_EVENTS.TASK_MENU_ADD);
                 return;
             }
     
@@ -121,21 +121,21 @@ const taskAction = (action, target) => {
 
         case ACTIONS_TASKS.UPDATE_STATUS:
             if (!isHTMLElement(task) || !isValid(projectId) || !isValid(taskId)) {
-                showErrorModal([ERR_HEADINGS.UPDATING_TASK_NODE, ERR_APPLY_EVENTS.NO_TASK_OR_IDS]);
+                showErrorModal(ERR_EVENTS.NO_TASK_OR_IDS_UPDATE);
                 return;
             }
 
             const svg = target.closest('.task').querySelector('label svg');
             const path = target.closest('.task').querySelector('label svg path');
             if (!isHTMLElement(svg) || !isHTMLElement(path)) {
-                showErrorModal([ERR_HEADINGS.UPDATING_TASK_NODE, ERR_APPLY_EVENTS.NO_TOGGLE_ICON]);
+                showErrorModal(ERR_EVENTS.NO_TOGGLE_ICON);
                 return;
             }
 
             const currentTaskStatus = task.getAttribute('data-task-status');
             const updatedTaskStatus = application.toggleTaskStatus(projectId, taskId);
             if (!isValid(updatedTaskStatus) || currentTaskStatus === updatedTaskStatus) {
-                showErrorModal([ERR_HEADINGS.UPDATING_TASK_NODE, e.message]);
+                showErrorModal([ERR_EVENTS.ACTION_UPDATE_STATUS[0], e.message, ERR_EVENTS.ACTION_UPDATE_STATUS[2]]);
                 return;
             }
 
@@ -146,7 +146,7 @@ const taskAction = (action, target) => {
 
         case ACTIONS_TASKS.EDIT:
             if (!isHTMLElement(task) || !isValid(projectId) || !isValid(taskId)) {
-                showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.NO_TASK_OR_IDS]);
+                showErrorModal(ERR_EVENTS.NO_TASK_OR_IDS_EDIT_SHOWING);
                 return;
             }
     
@@ -162,7 +162,7 @@ const taskAction = (action, target) => {
 
         case ACTIONS_TASKS.REMOVE:
             if (!isHTMLElement(task) || !isValid(projectId) || !isValid(taskId)) {
-                showErrorModal([ERR_HEADINGS.SHOWING_TASK_REMOVE, ERR_APPLY_EVENTS.NO_TASK_OR_IDS]);
+                showErrorModal(ERR_EVENTS.NO_TASK_OR_IDS_REMOVE);
                 return;
             }
 
@@ -182,7 +182,7 @@ const taskAction = (action, target) => {
             const taskInfoPanel = unfoldedTaskPanel.querySelector('.task-unfold-box');
 
             if (!isHTMLElement(unfoldedTaskPanel) || !isHTMLElement(taskInfoPanel)) {
-                showErrorModal([ERR_HEADINGS.UNFOLDING, ERR_APPLY_EVENTS.TASK_UNFOLD_NODES]);
+                showErrorModal(ERR_EVENTS.TASK_UNFOLD_NODES);
                 return;
             }
     
@@ -216,7 +216,7 @@ const removeHandler = (e) => {
     !isHTMLElement(removeHeading) ||
     !isHTMLElement(removeMessage)
     ) {
-        showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.PROJECT_MENU_SHOWING]);
+        showErrorModal(ERR_EVENTS.TASK_MENU_REMOVING);
         return;
     }
 
@@ -229,7 +229,7 @@ const removeHandler = (e) => {
     removedProjectId === 'null' ||
     removedTaskId === 'null'
     ) {
-        showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.PROJECT_MENU_SHOWING_REMOVED]);
+        showErrorModal(ERR_EVENTS.TASK_REMOVING);
         return;
     }
     
@@ -237,7 +237,7 @@ const removeHandler = (e) => {
     try {
         removedTask = application.removeTask(removedProjectId, removedTaskId);
     } catch (e) {
-        showErrorModal([ERR_HEADINGS.SUBMIT_REMOVING, e.message]);
+        showErrorModal([ERR_EVENTS.ACTION_REMOVING_TASK[0], e.message, ERR_EVENTS.ACTION_REMOVING_TASK[2]]);
         return;
     }
 
@@ -266,7 +266,7 @@ const submitHandler = (e) => {
     const projectId = menu.getAttribute('data-project-id');
 
     if (!isHTMLElement(menu)) {
-        showErrorModal([ERR_HEADINGS.SUBMITTING, ERR_APPLY_EVENTS.NO_TASK_MENU])
+        showErrorModal(ERR_EVENTS.NO_TASK_MENU_SUBMIT)
     }
     if (!isHTMLElement(titleInput) || 
     !isHTMLElement(dueDateInput) || 
@@ -274,10 +274,10 @@ const submitHandler = (e) => {
     !isHTMLElement(notesInput) ||
     !isNodeList(priorityInputs)
     ) {
-        showErrorModal([ERR_HEADINGS.SUBMITTING, ERR_APPLY_EVENTS.TASK_MENU_SHOWING])
+        showErrorModal(ERR_EVENTS.TASK_MENU_PANEL_SUBMIT)
     }
     if (!isValid(action) || !isValid(projectId)) {
-        showErrorModal([ERR_HEADINGS.SUBMITTING, ERR_APPLY_EVENTS.NO_PROJECT_ID_OR_ACTION]);
+        showErrorModal(ERR_EVENTS.NO_PROJECT_ID_OR_ACTION);
         return;
     }
 
@@ -286,7 +286,7 @@ const submitHandler = (e) => {
     !isValid(dueDateInput) || 
     !isValid(priorityInput)
     ) {
-        showErrorModal(['Invalid input (empty field(s))', 'One or more of the required fields\' values are empty!']);
+        showErrorModal(['Invalid input (empty field(s))', 'One or more of the required fields\' values are empty!', '']);
         return;
     }
 
@@ -305,11 +305,11 @@ const submitHandler = (e) => {
             try {
                 newTask = application.createNewTask(inputNewTask);
             } catch (e) {
-                showErrorModal([ERR_HEADINGS.SUBMIT_ADDING, e.message]);
+                showErrorModal([ERR_EVENTS.ACTION_ADDING_TASK[0], e.message, ERR_EVENTS.ACTION_ADDING_TASK[2]]);
                 return;
             }
             if (!isObject(newTask)) {
-                showErrorModal(['Invalid input (task title)', 'A task with the this title already exists in the project!']);
+                showErrorModal(['Invalid input (task title)', 'A task with the this title already exists in the project!', '']);
                 return;
             }
 
@@ -330,7 +330,7 @@ const submitHandler = (e) => {
             const oldNotes = document.querySelector(taskSelector + ' .task-notes');
 
             if (!isValid(taskId)) {
-                showErrorModal([ERR_HEADINGS.SUBMIT_EDITING, ERR_APPLY_EVENTS.TASK_ID]);
+                showErrorModal(ERR_EVENTS.TASK_ID_EDITING);
                 return;
             }
             if (!isHTMLElement(editedTaskNode) ||
@@ -338,7 +338,7 @@ const submitHandler = (e) => {
             !isHTMLElement(oldDueDate) || 
             !isHTMLElement(oldDescription) || 
             !isHTMLElement(oldNotes)) {
-                showErrorModal([ERR_HEADINGS.SUBMIT_EDITING, ERR_APPLY_EVENTS.TASK_MENU_SHOWING]);
+                showErrorModal(ERR_EVENTS.TASK_MENU_PANEL_EDITING);
                 return;
             }
     
@@ -357,11 +357,11 @@ const submitHandler = (e) => {
             try {
                 editedTask = application.editTask(inputEditedTask);
             } catch (e) {
-                showErrorModal([ERR_HEADINGS.SUBMIT_EDITING, e.message]);
+                showErrorModal([ERR_EVENTS.ACTION_EDITING_TASK[0], e.message, ERR_EVENTS.ACTION_EDITING_TASK[2]]);
                 return;
             }
             if (!isObject(editedTask)) {
-                showErrorModal(['Invalid input (task title)', 'A task with the this title already exists in the project!']);
+                showErrorModal(['Invalid input (task title)', 'A task with the this title already exists in the project!', '']);
                 return;
             }
 
@@ -391,7 +391,7 @@ const exitHandler = (e) => {
     !isHTMLElement(menuCover) || 
     !isHTMLElement(menuTitle) || 
     !isHTMLElement(submitButton)) {
-        showErrorModal([ERR_HEADINGS.EXITING, ERR_APPLY_EVENTS.TASK_MENU_RENDERING]);
+        showErrorModal(ERR_EVENTS.TASK_MENU_PANEL_EXITING);
         return;
     }
   

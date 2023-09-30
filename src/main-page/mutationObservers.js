@@ -1,4 +1,4 @@
-import { showErrorModal, isHTMLElement } from './utils';
+import { showErrorModal, isHTMLElement } from '../utils';
 
 export function initializeFocusModules() {
     const projectMenu = document.querySelector('.project-menu');
@@ -8,13 +8,17 @@ export function initializeFocusModules() {
     const removeMenu = document.querySelector('.remove-menu');
     const removeMenuBtnCancel = document.querySelector('.remove-menu .button-box .exit');
     const errorModal = document.querySelector('.error-modal');
-    const errorModalBtnOk = document.querySelector('.error-modal .exit-ok');
+    const errorModalBtnOk = document.querySelector('.error-modal .button-box .exit-ok');
     if (!isHTMLElement(projectMenu) ||
         !isHTMLElement(taskMenu) ||
         !isHTMLElement(removeMenu) ||
-        !isHTMLElement(errorModal)
+        !isHTMLElement(errorModal) ||
+        !isHTMLElement(projectNameInput) ||
+        !isHTMLElement(taskTitleInput) ||
+        !isHTMLElement(removeMenuBtnCancel) ||
+        !isHTMLElement(errorModalBtnOk)
         ) {
-        showErrorModal(['Error (applying focus modules on menus)', 'One or more of the menus components couldn\'t be found']);
+        showErrorModal(['Application error', 'One or more of the menus components couldn\'t be found', 'Process: applying the observer modules on the menus']);
         return;
     }
 
@@ -44,7 +48,7 @@ export function initializeFocusModules() {
         }
     });
     const removeMenuFocusApplier = new MutationObserver(() => {
-        if (isNotHidden(removeMenu) && focusAppliedRemoveMenu) {
+        if (isNotHidden(removeMenu) && !focusAppliedRemoveMenu) {
             applyFocus(removeMenuBtnCancel);
             focusAppliedRemoveMenu = true;
         } else {
@@ -52,7 +56,7 @@ export function initializeFocusModules() {
         }
     });
     const errorModalFocusApplier = new MutationObserver(() => {
-        if (isNotHidden(errorModal) && focusAppliedErrorModal) {
+        if (isNotHidden(errorModal) && !focusAppliedErrorModal) {
             applyFocus(errorModalBtnOk);
             focusAppliedErrorModal = true;
         } else {

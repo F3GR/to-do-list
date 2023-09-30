@@ -3,7 +3,7 @@ import { renderProject } from './dom.js';
 import { renderGroup } from '../group/dom.js';
 import { getProjectNodes } from './static-selectors.js';
 import { showErrorModal, STANDARD_GROUPS, ACTIONS_PROJECTS, isHTMLElement, isValid, isObject, handleExitRemoveMenu, isNodeList } from '../utils.js';
-import { ERR_APPLY_EVENTS, ERR_HEADINGS } from './errors-text.js';
+import { ERR_EVENTS } from './errors-text.js';
 
 export function addListenersManageProjects() {
     const { 
@@ -26,12 +26,27 @@ export function addListenersManageProjects() {
     !isHTMLElement(optionsIconsContainer) ||
     !isNodeList(allOptions)
     ) {
-        showErrorModal([ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.PROJECT_MENU_RENDERING]);
+        showErrorModal(ERR_EVENTS.APPLY_EVENTS_PROJECT_MENU_RENDERING);
         return;
     }
 
     optionsIconsContainer.addEventListener('click', (e) => {
-        if (e.target.tagName === 'DIV' && e.target.classList.contains('project-icon-option')) {
+        if (e.target.tagName === 'DIV' && 
+            e.target.classList.contains('project-icon-option')
+            ) {
+            allOptions.forEach(optionNode => optionNode.classList.remove('selected'));
+            
+            const inputSelected = e.target.querySelector('input');
+            inputSelected.checked = true;
+            e.target.classList.add('selected');
+        }
+    });
+
+    optionsIconsContainer.addEventListener('keydown', (e) => {
+        if ((e.keyCode === 32 || e.keyCode === 13) &&
+            e.target.tagName === 'DIV' && 
+            e.target.classList.contains('project-icon-option')
+            ) {
             allOptions.forEach(optionNode => optionNode.classList.remove('selected'));
             
             const inputSelected = e.target.querySelector('input');
@@ -45,7 +60,7 @@ export function addListenersManageProjects() {
 
     removeConfirm.addEventListener('click', (e) => {
         if (!isHTMLElement(removeMenu)) {
-            showErrorModal([ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.PROJECT_MENU_RENDERING]);
+            showErrorModal(ERR_EVENTS.APPLY_EVENTS_PROJECT_MENU_RENDERING);
             return;
         }
         
@@ -69,7 +84,7 @@ const openMenuHandler = (e) => {
         return;
     }
     if (!Object.values(ACTIONS_PROJECTS).includes(action)) {
-        showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.DEFAULT_ACTION]);
+        showErrorModal(ERR_EVENTS.SHOWING_DEFAULT_ACTION);
         return;
     }
 
@@ -95,7 +110,7 @@ const openMenu = (action, target) => {
     !isHTMLElement(removeHeading) ||
     !isHTMLElement(removeMessage)
     ) {
-        showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.PROJECT_MENU_SHOWING]);
+        showErrorModal(ERR_EVENTS.PROJECT_MENU_SHOWING);
         return;
     }
 
@@ -113,7 +128,7 @@ const openMenu = (action, target) => {
             const editedProjectId = editedProject.getAttribute('data-group-id');
 
             if (!isHTMLElement(editedProject) || !isValid(editedProjectId)) {
-                showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.EDITED_PROJECT]);
+                showErrorModal(ERR_EVENTS.EDITED_PROJECT);
                 return;
             }   
 
@@ -131,11 +146,11 @@ const openMenu = (action, target) => {
             const projectId = project.getAttribute('data-group-id');
 
             if (!isHTMLElement(currentGroupIcon) || !isHTMLElement(currentGroupName)) {
-                showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.REMOVED_PROJECT_NODES]);
+                showErrorModal(ERR_EVENTS.REMOVED_PROJECT_NODES);
                 return;
             }
             if (!isHTMLElement(project) || !isValid(projectId)) {
-                showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.REMOVED_PROJECT]);
+                showErrorModal(ERR_EVENTS.REMOVED_PROJECT);
                 return;
             }
 
@@ -166,14 +181,14 @@ const removeHandler = (e) => {
     !isHTMLElement(currentGroupIcon) ||
     !isHTMLElement(currentGroupName)
     ) {
-        showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.PROJECT_MENU_SHOWING]);
+        showErrorModal(ERR_EVENTS.REMOVE_MENU_NODES);
         return;
     }
 
     const removedProject = removeMenu.project;
     const removedProjectId = removeMenu.getAttribute('data-project-id');
     if (!isHTMLElement(removedProject) || !isValid(removedProjectId) || removedProjectId === 'null') {
-        showErrorModal([ERR_HEADINGS.SHOWING, ERR_APPLY_EVENTS.PROJECT_MENU_SHOWING_REMOVED]);
+        showErrorModal(ERR_EVENTS.REMOVE_MENU_PROJECTS);
         return;
     }
     
@@ -181,7 +196,7 @@ const removeHandler = (e) => {
     try {
         projectListLength = application.removeProject(removedProjectId);
     } catch (e) {
-        showErrorModal([ERR_HEADINGS.REMOVING, e.message]);
+        showErrorModal([ERR_EVENTS.ACTION_REMOVING_PROJECT[0], e.message, ERR_EVENTS.ACTION_REMOVING_PROJECT[2]]);
         return;
     }
 
@@ -194,7 +209,7 @@ const removeHandler = (e) => {
     try {
         defaultProjectsList = application.getTasksGroup(STANDARD_GROUPS.ALL);
     } catch (e) {
-        showErrorModal([ERR_HEADINGS.REMOVING, e.message]);
+        showErrorModal([ERR_EVENTS.ACTION_REMOVING_PROJECT[0], e.message, ERR_EVENTS.ACTION_REMOVING_PROJECT[2]]);
         return;
     }
 
@@ -218,7 +233,7 @@ const submitHandler = (e) => {
 
     const { menu } = getProjectNodes();
     if (!isHTMLElement(menu)) {
-        showErrorModal([ERR_HEADINGS.SUBMITTING, ERR_APPLY_EVENTS.NO_PROJECT_MENU]);
+        showErrorModal(ERR_EVENTS.SUBMIT_NO_PROJECT_MENU);
         return;
     }
 
@@ -231,11 +246,11 @@ const submitForm = (action) => {
     const inputIcon = document.querySelector('.project-menu input[name="iconURL"]:checked');
 
     if (!isValid(inputName.value)) {
-        showErrorModal(['Invalid input (project name)', 'Please provide a new project\'s name']);
+        showErrorModal(['Invalid input (project name)', 'Please provide a new project\'s name', '']);
         return;
     }
     if (!isHTMLElement(inputIcon) || !isValid(inputIcon.value) || !isValid(inputIcon.dataset.altText)) {
-        showErrorModal(['Invalid input (project icon)', 'Please select an icon']);
+        showErrorModal(['Invalid input (project icon)', 'Please select an icon', '']);
         return;
     }
 
@@ -251,11 +266,11 @@ const submitForm = (action) => {
             try {
                 addedProject = application.createNewProject(inputNewProject);
             } catch (e) {
-                showErrorModal([ERR_HEADINGS.SUBMIT_ADDING, e.message]);
+                showErrorModal([ERR_EVENTS.ACTION_SUBMITTING_PROJECT[0], e.message, ERR_EVENTS.ACTION_SUBMITTING_PROJECT[2]]);
                 return;
             }
             if (!isObject(addedProject)) {
-                showErrorModal(['Invalid input (project name)', 'A project with the new name already exists!']);
+                showErrorModal(['Invalid input (project name)', 'A project with the new name already exists!', '']);
                 return;
             }
 
@@ -267,11 +282,11 @@ const submitForm = (action) => {
             const id = menu.getAttribute('data-group-id');
 
             if (!menu) {
-                showErrorModal([ERR_HEADINGS.SUBMIT_EDITING, ERR_APPLY_EVENTS.PROJECT_MENU_SHOWING]);
+                showErrorModal(ERR_EVENTS.SUBMIT_PROJECT_MENU_SHOWING);
                 return;
             }
             if (!id) {
-                showErrorModal([ERR_HEADINGS.SUBMIT_EDITING, ERR_APPLY_EVENTS.GROUP_ID]);
+                showErrorModal(ERR_EVENTS.SUBMIT_GROUP_ID);
                 return;
             }
             
@@ -286,11 +301,11 @@ const submitForm = (action) => {
             try {
                 editedProject = application.editProject(inputEditProject);
             } catch (e) {
-                showErrorModal([ERR_HEADINGS.SUBMIT_EDITING, e.message]);
+                showErrorModal([ERR_EVENTS.ACTION_SUBMITTING_PROJECT[0], e.message, ERR_EVENTS.ACTION_SUBMITTING_PROJECT[2]]);
                 return;
             }
             if (!isObject(editedProject)) {
-                showErrorModal(['Invalid input (project name)', 'A project with the new name already exists!']);
+                showErrorModal(['Invalid input (project name)', 'A project with the new name already exists!', '']);
                 return;
             }
 
@@ -313,11 +328,11 @@ const updateEditedProjectNode = (project) => {
     !isHTMLElement(editedProjectNodeIcon) ||
     !isHTMLElement(editedProjectNode)
     ) {
-        showErrorModal([ERR_HEADINGS.UPDATING_PROJECT_NODE, ERR_APPLY_EVENTS.EDITED_PROJECT_NODES]);
+        showErrorModal(ERR_EVENTS.EDITED_PROJECT_NODES);
         return;
     }
     if (!isValid(id) || !isValid(name) || !isValid(iconURL) || !isValid(altText)) {
-        showErrorModal([ERR_HEADINGS.UPDATING_PROJECT_NODE, ERR_APPLY_EVENTS.EDITED_DATA_VALUES]);
+        showErrorModal(ERR_EVENTS.EDITED_DATA_VALUES);
         return;
     }
     
@@ -348,7 +363,7 @@ const exitHandler = (e) => {
     !isHTMLElement(menuTitle) || 
     !isHTMLElement(submitButton)
     ) {
-        showErrorModal([ERR_HEADINGS.EXITING, ERR_APPLY_EVENTS.PROJECT_MENU_RENDERING]);
+        showErrorModal(ERR_EVENTS.EXITING_PROJECT_MENU_RENDERING);
         return;
     }
   

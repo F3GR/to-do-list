@@ -1,5 +1,6 @@
 import { getProjectsBarFooterNodes } from './static-selectors.js';
 import { isHTMLElement } from '../utils.js';
+import { ERR_RENDERING } from './errors-text.js';
 
 export function renderProjectsPageNav(current, total) {
     if (typeof current !== 'number' || 
@@ -7,7 +8,7 @@ export function renderProjectsPageNav(current, total) {
     typeof total !== 'number' || 
     total === NaN
     ) {
-        showErrorModal([ERR_HEADINGS.PROJECTS, ERR_RENDERING.PROJECTS_VALUES]);
+        showErrorModal(ERR_RENDERING.PROJECTS_VALUES);
         return;
     }
 
@@ -17,11 +18,11 @@ export function renderProjectsPageNav(current, total) {
 
     const { nextPageBtn, projectsBarFooter, projectsPageNav } = getProjectsBarFooterNodes();
     if (!isHTMLElement(nextPageBtn) || !isHTMLElement(projectsBarFooter)) {
-        showErrorModal([ERR_HEADINGS.PROJECTS, ERR_RENDERING.PROJECTS_BAR]);
+        showErrorModal(ERR_RENDERING.PROJECTS_BAR);
         return;
     }
     if (!isHTMLElement(projectsPageNav)) {
-        showErrorModal([ERR_HEADINGS.PROJECTS, ERR_RENDERING.PROJECTS_NAV]);
+        showErrorModal(ERR_RENDERING.PROJECTS_NAV);
         return;
     }
     projectsPageNav.textContent = `${current} / ${total}`;

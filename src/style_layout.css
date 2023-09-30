@@ -48,8 +48,8 @@
   font-size: 62.5%;
 }
 
-span, div {
-  font-size: 1.6rem;
+span, div, legend, label, p, option {
+  font-size: 1.2rem;
 }
 
 body {
@@ -77,15 +77,15 @@ h1, h2, h3 {
 }
 
 h1 {
-  font-size: 3rem;
-}
-
-h2 {
   font-size: 2.5rem;
 }
 
-h3 {
+h2 {
   font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.5rem;
 }
 
 ul {
@@ -141,6 +141,18 @@ input[type=number] {
   position: relative;
 }
 
+input, textarea {
+  padding: 0 0.5rem;
+}
+
+input {
+  min-height: 3rem;
+}
+
+textarea {
+  min-height: 5rem;
+}
+
 /* header */
 
 .content header {
@@ -173,7 +185,7 @@ header .heading {
   justify-self: start;
 }
 
-header .options {
+header button {
   width: var(--menu-button-option-width);
   height: var(--menu-button-option-height);
   justify-self: center;
@@ -263,6 +275,7 @@ header .aside-icon {
 
 .projects-list {
   display: grid;
+  grid-auto-rows: 3rem;
   justify-items: stretch;
   align-items: start;
   gap: 1rem;
@@ -312,7 +325,7 @@ header .aside-icon {
   right: 0;
   min-height: 30rem;
   display: grid;
-  grid-template-rows: repeat(2, 1fr) 7rem;
+  grid-template-rows: repeat(2, 1fr) 7.5rem;
   gap: 1rem;
   padding: 1.5rem;
   z-index: var(--z-index-view-options);
@@ -332,6 +345,7 @@ header .aside-icon {
   padding: 0.5rem 0 0 0;
 }
 
+
 .view-options-bar > div > .priority-header,
 .view-options-bar > div > .status-header,
 .view-options-bar > div > .sort-header {
@@ -339,23 +353,30 @@ header .aside-icon {
   padding-left: 1rem;
 }
 
-.status-border-box label,
-.priority-border-box label {
+.status-border-box > *,
+.priority-border-box > * {
   display: grid;
-  grid-template-columns: 2rem 10rem;
-  gap: 0.5rem;
+  grid-template-columns: 2rem 9rem;
+  gap: 1rem;
   justify-self: center;
   justify-items: stretch;
-  padding: 0.5rem 0 0.5rem 2rem;
+  padding: 0.5rem 0 0.5rem 1rem;
+}
+
+.status-border-box label,
+.priority-border-box label {
+  align-self: center;
+  justify-self: center;
 }
 
 .view-options-bar input {
   display: none;
 }
 
-.view-options-bar > div > div > label > .radio-button {
+.view-options-bar .option-button > .radio-button {
   max-width: var(--sidebar-icon-width);
-  max-height: var(--sidebar-icon-height);
+  max-height: var(--sidebar-icon-height);    
+  padding: 0.3rem;
 }
 
 .view-options-bar .sort-options-main-box input {
@@ -365,10 +386,6 @@ header .aside-icon {
 .view-options-bar.shown {
   visibility: visible;
   z-index: var(--z-index-view-options-shown);
-}
-
-.view-options-bar div {
-  cursor: default;
 }
 
 .view-options-bar .sort-options-main-box {
@@ -382,15 +399,10 @@ header .aside-icon {
   gap: 1rem;
 }
 
-.sort-options-main-box select {
-  display: block;
-}
-
-.sort-options-border-box .sort-order,
-.sort-order button {
-  padding-left: 0;
-  height: 100%;
-  width: 100%;
+.sort-options-border-box .sort-arrow {
+  height: var(--sidebar-icon-height);
+  width: var(--sidebar-icon-width);
+  align-self: center;
 }
 
 /* Main */
@@ -407,7 +419,6 @@ header .aside-icon {
 main .header {
   padding: 0 2rem;
   grid-area: 1 / 1 / 2 / 2;
-  cursor: default;
   display: grid;
   align-items: center;
   justify-content: center;
@@ -436,7 +447,6 @@ main .task-bar {
 
 .task-bar > * {
   padding: 0.5rem;
-  cursor: default;
 }
 
 .task-bar .task-number {
@@ -465,7 +475,6 @@ main .task-bar {
   grid-template-columns: var(--sidebar-icon-width) 1fr var(--sidebar-icon-width) 10rem repeat(3, var(--sidebar-icon-width));
   column-gap: 0.5rem;
   justify-items: stretch;
-  cursor: default;
   padding: 1rem;
 }
 
@@ -502,7 +511,6 @@ main .task-bar {
   display: inline-block;
   width: var(--sidebar-icon-width);
   height: var(--sidebar-icon-height);
-  cursor: pointer;
   position: relative;
   overflow: hidden;
   margin: 0;
@@ -540,18 +548,22 @@ main .task-bar {
 
 .task-unfold-box {
   grid-area: 2 / 1 / 3 / -1;
+  grid-template-columns: 2fr 3fr 3fr;
+  gap: 1rem;
   display: none;
 }
 
 .task-unfold-box > * {
   display: grid;
-  grid-template-columns: 7rem 1fr;
-  gap: 1rem;
+  grid-template-columns: min-content 1fr;
+  gap: 0.5rem;
+  padding: 1rem;
+  align-items: start;
 }
 
 .task-unfold-box.shown {
   display: grid;
-  padding: 1rem;
+  padding: 1rem 0 0 0;
 }
 
 /* Page menu */
@@ -630,19 +642,22 @@ main .sidebar-cover {
   margin-right: calc((100% - var(--menu-width))/2);
   width: var(--menu-width);
   z-index: var(--z-index-error);
-  padding: 0 0 1rem 0;
-  display: none;
+  padding: 0 0 2rem 0;
+  visibility: hidden;
+  display: grid;
 }
 
 .error-modal.shown {
-  display: grid;
+  grid-template-rows: 5rem 1fr;
   gap: 2rem;
 }
 
 .error-modal .title {
   display: grid;
   grid-template-columns: 1fr var(--menu-button-option-width);
-  padding: 1rem 1rem 0 1rem;
+  padding: 0 1rem;
+  align-items: center;
+  align-content: center;
 }
 
 .error-modal .exit {
@@ -653,10 +668,18 @@ main .sidebar-cover {
 .error-modal .error-message {
   padding: 0 2rem;
 }
+.error-modal .error-process {
+  padding: 0 2rem;
+}
+
+.error-modal .button-box {
+  padding: 0 2rem;
+  display: grid;
+  justify-items: stretch;
+}
 
 .error-modal .exit-ok {
   height: var(--menu-button-option-height);
-  padding: 0 2rem;
   align-self: center;
 }
 
@@ -681,53 +704,54 @@ main .sidebar-cover {
   margin-right: calc((100% - var(--menu-width))/2);
   width: var(--menu-width);
   z-index: var(--z-index-menu);
-  padding: 0 0 1rem 0;
-  display: none;
-}
-
-.project-menu.shown {
+  padding: 0 0 2rem 0;
+  visibility: hidden;
   display: grid;
   grid-template-rows: 5rem 1fr;
   gap: 1rem;
 }
 
+.project-menu.shown {
+  visibility: visible;
+}
+
 .project-menu .title {
   grid-area: 1 / 1 / 2 / 2;
   display: grid;
-  grid-template-columns: 1fr 2rem;
+  grid-template-columns: 1fr 3rem;
   align-items: center;
   align-content: center;
   padding: 0 1rem;
 }
 
-.project-menu .exit {
+.project-menu .title .exit {
   grid-area: 1 / 2 / 2 / 3;
   align-self: start;
   justify-self: center;
-  width: var(--sidebar-icon-width);
-  height: var(--sidebar-icon-height);
+  width: var(--menu-button-option-width);
+  height: var(--menu-button-option-height);
+  border-style: none;
 }
 
 .project-menu form {
   grid-area: 2 / 1 / 3 / 2;
   display: grid;
-  grid-template-rows: 2rem calc(var(--menu-button-option-height) + 2rem) calc(var(--menu-button-option-height) + 5rem) 3rem;
   align-items: start;
+  gap: 3rem;
   padding: 0 2rem;
 }
 
-.project-menu form > label {
+.project-menu form > .title-box {
   grid-area: 1 / 1 / 2 / 2;
+  display: grid;
 }
 
 .project-menu #project-name {
-  grid-area: 2 / 1 / 3 / 2;
   height: var(--menu-button-option-height);
-
 }
 
 .project-menu form > fieldset {
-  grid-area: 3 / 1 / 4 / 2;
+  grid-area: 2 / 1 / 3 / 2;
   display: grid;
   grid-template-rows: 2rem 1fr;
 }
@@ -743,15 +767,16 @@ main .sidebar-cover {
   width: var(--menu-button-option-width);
 }
 
-.project-icon-option label {
-  appearance: none;
+.project-icon-option label,
+.project-icon-option input {
+  display: none;
 }
 
 .project-menu form .button-box {
-  grid-area: 4 / 1 / 5 / 2;
+  grid-area: 3 / 1 / 4 / 2;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  padding: 0 1rem;
+  padding: 1rem 0 0 0;
   gap: 2rem;
 }
 
@@ -789,7 +814,7 @@ main .sidebar-cover {
 .task-menu.shown {
   display: grid;
   grid-template-rows: 5rem 1fr;
-  padding: 0 0 1rem 0;
+  padding: 0 0 2rem 0;
   gap: 1rem;
 }
 
@@ -801,14 +826,10 @@ main .sidebar-cover {
   padding: 0 2rem;
 }
 
-.task-menu * {
-  font-size: 1.2rem;
-}
-
 .task-menu .title {
   grid-area: 1 / 1 / 2 / 2;
   display: grid;
-  grid-template-columns: 1fr var(--sidebar-icon-width);
+  grid-template-columns: 1fr var(--menu-button-option-width);
   align-content: center;
 }
 
@@ -818,29 +839,25 @@ main .sidebar-cover {
 
 .task-menu .title .exit {
   align-self: start;
-  width: var(--sidebar-icon-width);
-  height: var(--sidebar-icon-height);
+  width: var(--menu-button-option-width);
+  height: var(--menu-button-option-height);
 }
 
 .task-menu form {
   grid-area: 2 / 1 / 3 / 2;
   display: grid;
-  grid-template-rows: repeat(2, 5rem) 5rem repeat(2, 7rem) 3rem;
   align-items: start;
-  gap: 2rem;
+  gap: 3rem;
 }
 
 .task-menu form > div {
   display: grid;
+  align-items: center;
 }
 
 .task-menu form .title-box,
 .task-menu form .due-date-box {
   grid-template-rows: 2rem 3rem;
-}
-
-.task-menu form input {
-  appearance: auto;
 }
 
 .task-menu fieldset {
@@ -849,17 +866,24 @@ main .sidebar-cover {
   flex-wrap: wrap;
   justify-content: space-around;
   align-items: center;
-  padding: 0.5rem;
+  padding: 0.5rem 0.5rem 1rem 0.5rem;
 }
 
 .task-menu fieldset div {
   display: grid;
   grid-template-columns: 2rem 1fr;
+  gap: 0.5rem;
   align-items: center;
 }
 
+.task-menu input[type="radio"] {
+  padding: 0;
+  width: var(--sidebar-icon-width);
+  height: var(--sidebar-icon-height);
+  min-height: 2rem;
+}
+
 .task-menu textarea {
-  min-height: 5rem;
   resize: none;
 }
 

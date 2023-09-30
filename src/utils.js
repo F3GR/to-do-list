@@ -21,6 +21,7 @@ export function showErrorModal(message) {
     const errorModal = document.querySelector('.error-modal');
     const messageHeading = errorModal.querySelector('.error-heading');
     const messagePara = errorModal.querySelector('.error-message');
+    const process = errorModal.querySelector('.error-process');
     const errorCover = document.querySelector('.error-cover');
 
     if (isValid(message[0])) {
@@ -32,6 +33,7 @@ export function showErrorModal(message) {
     errorModal.classList.add('shown');
     errorCover.classList.add('shown');
     messagePara.textContent = message[1];
+    process.textContent = message[2];
 }
 
 export function handleExitRemoveMenu(e) {

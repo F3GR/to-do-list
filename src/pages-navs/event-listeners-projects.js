@@ -1,7 +1,7 @@
 import { application } from '../main-app';
 import { getProjectsBarFooterNodes } from './static-selectors';
 import { isHTMLElement, showErrorModal } from '../utils';
-import { ERR_EVENT, ERR_HEADINGS } from './errors-text';
+import { ERR_EVENTS } from './errors-text';
 import { renderProject } from '../project/dom';
 
 export function addListenersProjectsPagesNav() {
@@ -9,17 +9,17 @@ export function addListenersProjectsPagesNav() {
 
     prevPageBtn.addEventListener('click', (e) => {
         if (!isHTMLElement(prevPageBtn) || !isHTMLElement(nextPageBtn)) {
-            showErrorModal([ERR_HEADINGS.PROJECTS_EVENT, ERR_EVENT.PROJECTS_BAR]);
+            showErrorModal(ERR_EVENTS.PROJECTS_BAR);
             return;
         }
         if (!isHTMLElement(projectsList)) {
-            showErrorModal([ERR_HEADINGS.TASKS_EVENT, ERR_EVENT.PROJECTS_LIST]);
+            showErrorModal(ERR_EVENTS.PROJECTS_LIST);
             return;
         }
 
         const currentProjectsPageNav = document.querySelector('.projects-pages-nums');
         if (!isHTMLElement(currentProjectsPageNav)) {
-            showErrorModal([ERR_HEADINGS.PROJECTS_EVENT, ERR_EVENT.PROJECTS_NAV]);
+            showErrorModal(ERR_EVENTS.PROJECTS_NAV);
             return;
         }
 
@@ -34,7 +34,7 @@ export function addListenersProjectsPagesNav() {
         try {
             prevProjectsPage = application.moveProjectsPageBackwards(currentProjectsPageNumber);
         } catch (e) {
-            showErrorModal([ERR_HEADINGS.PROJECTS_EVENT, e.message]);
+            showErrorModal([ERR_EVENTS.PREV_PROJECTS_PAGE[0], e.message, ERR_EVENTS.PREV_PROJECTS_PAGE[2]]);
             return;
         }
 
@@ -48,17 +48,17 @@ export function addListenersProjectsPagesNav() {
 
     nextPageBtn.addEventListener('click', (e) => {
         if (!isHTMLElement(prevPageBtn) || !isHTMLElement(nextPageBtn)) {
-            showErrorModal([ERR_HEADINGS.PROJECTS_EVENT, ERR_EVENT.PROJECTS_BAR]);
+            showErrorModal(ERR_EVENTS.PROJECTS_BAR);
             return;
         }
         if (!isHTMLElement(projectsList)) {
-            showErrorModal([ERR_HEADINGS.TASKS_EVENT, ERR_EVENT.PROJECTS_LIST]);
+            showErrorModal(ERR_EVENTS.PROJECTS_LIST);
             return;
         }
 
         const currentProjectsPageNav = document.querySelector('.projects-pages-nums');
         if (!isHTMLElement(currentProjectsPageNav)) {
-            showErrorModal([ERR_HEADINGS.PROJECTS_EVENT, ERR_EVENT.PROJECTS_NAV]);
+            showErrorModal(ERR_EVENTS.PROJECTS_NAV);
             return;
         }
 
@@ -73,7 +73,7 @@ export function addListenersProjectsPagesNav() {
         try {
             nextProjectsPage = application.moveProjectsPageForward(currentProjectsPageNumber);
         } catch (e) {
-            showErrorModal([ERR_HEADINGS.PROJECTS_EVENT, e.message]);
+            showErrorModal([ERR_EVENTS.NEXT_PROJECTS_PAGE[0], e.message, ERR_EVENTS.NEXT_PROJECTS_PAGE[2]]);
             return;
         }
 

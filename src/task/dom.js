@@ -2,7 +2,7 @@ import { createElementWithAttributes, showErrorModal } from '../utils.js';
 import { isHTMLElement, isValid, ACTIONS_TASKS } from '../utils.js';
 import { getTaskNodes } from './static-selectors.js';
 import { assets } from './assets.js';
-import { ERR_HEADINGS, ERR_RENDERING } from './errors-text.js';
+import { ERR_RENDERING } from './errors-text.js';
 
 export function renderTask(taskObj) {
     const { taskList } = getTaskNodes();
@@ -19,7 +19,7 @@ export function renderTask(taskObj) {
     } = taskObj;
 
     if (!isHTMLElement(taskList)) {
-        showErrorModal([ERR_HEADINGS.RENDERING, ERR_RENDERING.TASK_LIST_PANEL]);
+        showErrorModal(ERR_RENDERING.TASK_LIST_PANEL);
         return;
     }
     if (!isValid(projectId) || 
@@ -30,7 +30,7 @@ export function renderTask(taskObj) {
         !status || 
         !priority
     ) {
-        showErrorModal([ERR_HEADINGS.RENDERING, ERR_RENDERING.TASK_VALUES]);
+        showErrorModal(ERR_RENDERING.TASK_VALUES);
         return;
     }
 

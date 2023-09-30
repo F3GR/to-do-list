@@ -2,7 +2,7 @@ import { application } from '../main-app.js';
 import { renderTask } from '../task/dom.js';
 import { isBoolean, isHTMLElement, showErrorModal, SORTBY } from '../utils.js';
 import { getMainNodes, getViewOptionsNodes } from './static-selectors.js';
-import { ERR_APPLY_EVENTS, ERR_HEADINGS } from './errors-text.js';
+import { ERR_EVENTS } from './errors-text.js';
 
 export function addListenersViewOptions() {
     const {
@@ -14,15 +14,17 @@ export function addListenersViewOptions() {
         inputStatusOverdue,
         inputSortAscendingOrder,
         viewOptionsIcon,
-        viewBox
+        viewBox,
+        toggleBoxes,
+        customSelectBox,
     } = getViewOptionsNodes();
     const {
         taskList
     } = getMainNodes();
-    const selectSortOptions = document.querySelector('.view-options-bar select');
+    const selectSortOptions = document.querySelector('.view-options-bar .custom-select > select');
 
     if (!isHTMLElement(taskList)) {
-        showErrorModal([ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.TASK_LIST_PANEL]);
+        showErrorModal(ERR_EVENTS.TASK_LIST_PANEL);
         return;
     }
     if (!isHTMLElement(inputPriorityHigh) ||
@@ -34,7 +36,7 @@ export function addListenersViewOptions() {
     !isHTMLElement(inputSortAscendingOrder) ||
     !isHTMLElement(selectSortOptions)
     ) {
-        showErrorModal([ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.OPTIONS_NODES]);
+        showErrorModal(ERR_EVENTS.OPTIONS_NODES);
         return;
     }
 
@@ -45,15 +47,15 @@ export function addListenersViewOptions() {
     !isBoolean(inputStatusCompleted.checked) ||
     !isBoolean(inputStatusOverdue.checked)
     ) {
-        showErrorModal(ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.FILTER_VALUES);
+        showErrorModal(ERR_EVENTS.FILTER_VALUES);
         return;
     }
     if (!isBoolean(inputSortAscendingOrder.checked)) {
-        showErrorModal(ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.SORT_ORDER_VALUE);
+        showErrorModal(ERR_EVENTS.SORT_ORDER_VALUE);
         return;
     }
     if (!Object.values(SORTBY).includes(selectSortOptions.value)) {
-        showErrorModal(ERR_HEADINGS.APPLY_EVENTS, ERR_APPLY_EVENTS.SORT_OPTION_VALUE);
+        showErrorModal(ERR_EVENTS.SORT_OPTION_VALUE);
         return;
     }
 
@@ -70,21 +72,39 @@ export function addListenersViewOptions() {
     };
 
     viewOptionsIcon.addEventListener('click', () => viewBox.classList.toggle('shown'));
-    viewBox.addEventListener('change', (e) => {
-        const SortOption = e.target.closest('select');
-        if (SortOption) {
+    customSelectBox.addEventListener('click', (e) => {
+        if (e.target.tagName !== 'DIV') {
+            return;
+        }
+        const optionValue = e.target.getAttribute('value');
+        if (optionValue && queries.selectSortOptions.value === optionValue) {
+            queries.selectSortOptions.value = optionValue;
             updateTaskListView(queries);
         }
     });
-    viewBox.addEventListener('click', (e) => {
-        if (e.target.tagName === 'LABEL' || e.target.tagName === 'BUTTON') {
-            const filterOption = e.target.closest('label').firstElementChild;
-            if (filterOption) {
-                filterOption.checked = !(filterOption.checked);
-                updateTaskListView(queries);
+
+    toggleBoxes.forEach(box => box.addEventListener('click', viewOptionToggleHandler));
+    toggleBoxes.forEach(box => box.addEventListener('keydown', viewOptionToggleHandler));
+    function viewOptionToggleHandler(e) {
+        if ((e.type === 'click' || 
+            e.type === 'keydown' && (e.key === 'Enter' || e.key === ' ')) &&
+            e.target.closest('.option-button')
+        ) {
+            e.stopImmediatePropagation();
+            e.stopPropagation();
+            const element = e.target.closest('.option-button');
+            let input;
+            if (!element) {
+                return;
             }
-        }
-    });
+            input = element.firstElementChild;
+            if (!input || input.tagName !== 'INPUT') {
+                return;
+            }
+            input.checked = !(input.checked);
+            element.classList.toggle('enabled');
+            updateTaskListView(queries);
+    }}
 }
 
 const updateTaskListView = (queries) => {  
@@ -124,7 +144,7 @@ const updateTaskListView = (queries) => {
     try {
         tasksWithUpdatedView = application.applyViewOptions(newState);
     } catch (e) {
-        showErrorModal([ERR_APPLY_EVENTS.UPDATING_TASKS_NODE, e.message]);
+        showErrorModal([ERR_EVENTS.UPDATING_TASKS_NODE[0], e.message, ERR_EVENTS.UPDATING_TASKS_NODE[2]]);
         return;
     }
 

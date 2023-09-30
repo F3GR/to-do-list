@@ -1,24 +1,25 @@
 :root {
     --system-ui: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    --light-emerald: rgb(122, 255, 213);
-    --light-blue: rgb(159, 237, 255);
     --white: white;
     --whitesmoke: rgb(242, 239, 239);
+    --dark-grey: rgb(90, 90, 90);
+    --grey: rgb(170, 170, 170);
     --required-color: tomato;
-
+    --background-color-header-start: #0099f5;
+    --background-color-header-end: #000df1;
+    --background-color-sidebar-start: #0099f5;
+    --background-color-sidebar-end: rgb(0, 114, 244);
+    --background-color-view-options-start: rgb(0, 65, 243);
+    --background-color-view-options-end: #000df1;
 
     --element-panels-border-radius: 0.5rem;
     --main-panels-border-radius: 1rem;
-    --group-borders-color: var(--whitesmoke);
-    --task-background-color: var(--whitesmoke);
-    --task-border-color: var(--whitesmoke);
-    --project-background-color: var(--whitesmoke);
-    --project-border-color: var(--whitesmoke);
 
-    --menu-border-color: var(--whitesmoke);
-    --selected-color: rgb(36, 255, 20);
-    --text-color: rgb(90, 90, 90);
-    --borders-color: rgb(90, 90, 90);
+    --task-background-color: var(--white);
+    --project-background-color: var(--white);
+
+    --border-color: var(--grey);
+    --text-color: var(--dark-grey);
 
     --main-heading-1-font-size: ;     /* trackIt */
     --main-heading-2-font-size: ;     /* task */
@@ -36,14 +37,16 @@
     color: var(--text-color);
     font-weight: 500;
     font-family: "NotoSans", sans-serif;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 
   button {
     background: none;
-    border: none;
     background-size: contain;
+    background-repeat: no-repeat;
   }
-  
+
   @font-face {
     font-family: "NotoSerifMakasar";
     src: url(./originals/NotoSerifMakasar-Regular.ttf);
@@ -52,29 +55,27 @@
   /* HEADER */
   
   .content header {
-    background: linear-gradient(to right, var(--light-emerald), var(--light-blue));
-    border: 1px solid var(--menu-border-color);
+    background: linear-gradient(to right, var(--background-color-header-start), var(--background-color-header-end));
+    border: 1px solid var(--selected-border-color);
     border-radius: var(--main-panels-border-radius) var(--main-panels-border-radius) 0 0;
   }
   
   .heading h1 {
-    font-size: 2rem;
-    cursor: default;
+    font-size: 2.5rem;
+    color: var(--white);
   }
-  
 
+  header button {
+    border-style: none;
+  }
   
   /* Sidebar */
   
   .content aside {
-    background-color: var(--light-emerald);
-    border: 1px solid var(--menu-border-color);
+    background: linear-gradient(to right, var(--background-color-sidebar-start), var(--background-color-sidebar-end));
+    border: 1px solid var(--selected-border-color);
     border-top-style: none;
     border-radius: 0 0 var(--main-panels-border-radius) var(--main-panels-border-radius);
-  }
-  
-  .content aside * {
-    font-size: 1.3rem;
   }
   
   .bar-footer a {
@@ -83,13 +84,13 @@
   
   .bar-types > * {
     background-color: var(--white);
-    border: 0.1rem solid var(--group-borders-color);
+    border: 0.1rem solid var(--border-color);
     border-radius: var(--element-panels-border-radius);
   }
-  
+
   .bar-projects {
     background-color: var(--white);
-    border: 0.1rem solid var(--group-borders-color);
+    border: 0.1rem solid var(--border-color);
     border-radius: var(--element-panels-border-radius);
   }
   
@@ -97,32 +98,26 @@
     border-bottom: 1px solid var(--text-color);
   }
   
-  .bar-types > *.current,
-  aside .projects-list > .project.current {
-    background-color: var(--selected-color);
+  .bar-projects button,
+  .bar-projects img {
+    border-style: none;
   }
-  
-  .bar-types > *.current *,
-  aside .projects-list > .project.current * {
-    color: var(--white);
-  }
-  
+
   /* Project */
   
-
   .bar-projects .project {
     background-color: var(--project-background-color);
     border-radius: var(--element-panels-border-radius);
-    border: 0.1rem solid var(--project-background-color);
+    border: 0.1rem solid var(--border-color);
   }
-  
-  .bar-projects .project span {
-    font-size: 1.2rem;
-  } 
+
+  .bar-projects .project.current {
+    border: 0.1rem solid var(--selected-border-color);
+  }
   
   .bar-footer {
     background-color: var(--white);
-    border: 0.1rem solid var(--whitesmoke);
+    border: 0.1rem solid var(--border-color);
     border-radius: var(--element-panels-border-radius);
   }
   
@@ -133,16 +128,12 @@
   /* View options */
   
   .view-options-bar {
-    background-color: var(--light-blue);
-    border: 0.1rem solid var(--whitesmoke);
+    background: linear-gradient(to right, var(--background-color-view-options-start), var(--background-color-view-options-end));
+    border: 0.1rem solid var(--selected-border-color);
     border-top-style: none;
     border-radius: 0 0 var(--main-panels-border-radius) var(--main-panels-border-radius);
   }
   
-  .view-options-bar * {
-    font-size: 1.2rem;
-  }
-
   .view-options-bar > * {
     background-color: var(--white);
     border-radius: var(--element-panels-border-radius);
@@ -154,40 +145,28 @@
     border-bottom: 1px solid var(--text-color);
   }
 
-  .view-options-bar > label > div {
+  .status-border-box > *,
+  .priority-border-box > * {
     background-color: var(--white);
-    border: 0.1rem solid var(--whitesmoke);
-    border-radius: var(--element-panels-border-radius);
-  }
-  .view-options-bar label {
-    background-color: var(--whitesmoke);
+    border: 0.1rem solid var(--border-color);
     border-radius: var(--element-panels-border-radius);
   }
 
-  .view-options-bar label > .radio-button {
+  .status-border-box > * > input + div,
+  .priority-border-box > * > input + div {
     background-color: var(--white);
     border-radius: 50%;
-    border: 0.1rem solid var(--borders-color);
+    border: 0.1rem solid var(--border-color);
   }
 
-  .sort-options-box select {
+  .sort-options-border-box select {
+    border: 0.1rem solid var(--border-color);
     border-radius: var(--element-panels-border-radius);
+    background-color: var(--white);
   }
 
-  .sort-options-box img {
-    transition: 0.5sec;
-  }
-  
-  .view-options-bar .sort-options-box .sort-order {
+  .view-options-bar .sort-options-border-box .sort-order {
     border-radius: 0.5rem;
-  }
-  
-  .sort-options-box .sort-arrow {
-    transition: transform 0.4s ease;
-  }
-  
-  .sort-options-border-box #sort-order:checked + .sort-arrow {
-    transform: rotate(180deg);
   }
   
   /* Main */
@@ -207,12 +186,16 @@
   .task-bar .task-number {
     background: none;
   }
+
+  main button {
+    border-style: none;
+  }
   
   /* Task component */
   
   .task {
     background-color: var(--task-background-color);
-    border: 0.1rem solid var(--whitesmoke);
+    border: 0.1rem solid var(--border-color);
     border-radius: var(--element-panels-border-radius);
   }
   
@@ -222,7 +205,7 @@
   
   .task label.status-checkbox {
     background-color: var(--white);
-    border: 0.1rem solid var(--text-color);
+    border: 0.1rem solid var(--border-color);
     border-radius: var(--element-panels-border-radius);
   }
   
@@ -233,13 +216,14 @@
     stroke-dasharray: 100;
     stroke-dashoffset: 100;
   }
-  
-  .task * {
-    font-size: 1.2rem;
-  }
-  
+
   .task-unfold-box {
-    background-color: var(--whitesmoke);
+    background-color: var(--white);
+  }
+
+  .task-unfold-box > * {
+    border: 0.1rem solid var(--border-color);
+    border-radius: var(--element-panels-border-radius);
   }
   
   /* Page menu */
@@ -253,29 +237,64 @@
 
   .remove-menu {
     background-color: var(--white);
-    border: 0.1rem solid var(--whitesmoke);
+    border: 0.1rem solid var(--selected-border-color);
     border-radius: 0.5rem;
   }
-  
-  .remove-menu > p {
-    font-size: 1.6rem;
+
+  .remove-menu .title {
+    background-color: var(--required-color);
+    border-radius: 0.5rem 0.5rem 0 0;
+  }
+
+  .remove-menu .title .remove-heading {
+    color: var(--white);
+  }
+
+  .remove-menu .title .exit {
+    border-style: none;
+  }
+
+  .remove-menu .button-box button {
+    background-color: var(--white);
+    border: 0.1rem solid var(--border-color);
+    border-radius: 0.5rem;
   }
   
   /* Error modal */
 
   .error-modal {
     background-color: var(--white);
-    border: 0.1rem solid var(--whitesmoke);
+    border: 0.1rem solid var(--selected-border-color);
     border-radius: 0.5rem;
   }
-  
-  .error-modal > p {
-    font-size: 1.6rem;
+
+  .error-modal .title {
+    background-color: var(--required-color);
+    border-radius: 0.5rem 0.5rem 0 0;
+  }
+
+  .error-modal .title .error-heading {
+    color: var(--white);
+  }
+
+  .error-modal > .title .exit {
+    border-style: none;
+  }
+
+  .error-modal .error-process {
+    font-size: 1rem;
+    font-family: var(--system-ui);
   }
   
   .content .error-cover {
     background-color: var(--text-color);
     opacity: 50%;
+  }
+
+  .error-modal .button-box .exit-ok {
+    background-color: var(--white);
+    border: 0.1rem solid var(--border-color);
+    border-radius: 0.5rem;
   }
   
   /* Project menu */
@@ -284,40 +303,23 @@
     color: var(--required-color);
   }
   
-  .content .project-menu {
+  .project-menu {
     background-color: var(--white);
-    border: 0.1rem solid var(--whitesmoke);
+    border: 0.1rem solid var(--selected-border-color);
     border-radius: 0.5rem;
   }
   
-  .content .project-menu * {
-    font-size: 1.25rem;
-  }
-  
-  .content .project-menu .title {
-    font-size: 1.5rem;
-    font-weight: bolder;
-    background: linear-gradient(to right, var(--light-emerald), var(--light-blue));
+  .project-menu .title {
+    background: linear-gradient(to right, var(--background-color-header-start), var(--background-color-header-end));
     border-radius: 0.5rem 0.5rem 0 0;
   }
-  
-  .content .project-menu .title * {
-    font-size: 1.5rem;
-    font-weight: bolder;
+
+  .project-menu .title * {
+    color: var(--white);
   }
-  
-  .content .project-menu .exit {
-    font-size: 1.5rem;
-    font-weight: bolder;
-  }
-  
-  .content .project-menu form {
-    font-size: 1.5rem;
-    font-weight: bolder;
-  }
-  
-  .project-menu form > input {
-    border: 0.1rem solid var(--whitesmoke);
+
+  .project-menu form > .title-box input {
+    border: 0.1rem solid var(--border-color);
     border-radius: 0.5rem;
   }
   
@@ -326,14 +328,12 @@
   }
   
   .project-menu fieldset > .project-options > * {
-    border: 0.1rem solid var(--whitesmoke);
+    border: 0.1rem solid var(--border-color);
     border-radius: 0.5rem;
-    background-size: contain;
-    background-repeat: no-repeat;
   }
 
   .project-menu .button-box > * {
-    border: 0.1rem solid var(--whitesmoke);
+    border: 0.1rem solid var(--border-color);
     border-radius: 0.5rem;
   }
   
@@ -354,24 +354,38 @@
     color: var(--required-color);
   }
   
-  .content .task-menu {
-    border: 0.1rem solid var(--whitesmoke);
+  .task-menu {
+    border: 0.1rem solid var(--selected-border-color);
     border-radius: var(--element-panels-border-radius);
   }
 
-  .task-menu * {
-    font-size: 1.2rem;
-  }
-  
   .task-menu .title {
-    font-size: 1.5rem;
-    font-weight: bolder;
-    background: linear-gradient(to right, var(--light-emerald), var(--light-blue));
+    background: linear-gradient(to right, var(--background-color-header-start), var(--background-color-header-end));
+    border-radius: var(--element-panels-border-radius) var(--element-panels-border-radius) 0 0;
+  }
+
+  .task-menu .title .title-text {
+    font-size: bolder;
+    color: var(--white);
+  }
+
+  .task-menu form input {
+    appearance: auto;
+  }
+
+  .task-menu .title .exit {
+    border-style: none;
+  }
+
+  .task-menu form input,
+  .task-menu form fieldset,
+  .task-menu form textarea {
+    border: 0.1rem solid var(--border-color);
     border-radius: var(--element-panels-border-radius);
   }
 
   .task-menu .button-box > * {
-    border: 0.1rem solid var(--whitesmoke);
+    border: 0.1rem solid var(--border-color);
     border-radius: 0.5rem;
   }
   

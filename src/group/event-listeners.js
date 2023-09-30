@@ -1,6 +1,6 @@
 import { renderGroup } from './dom.js';
 import { isHTMLElement, isValid, showErrorModal } from '../utils.js';
-import { ERR_HEADINGS, ERR_POPULATE, ERR_EVENTS } from './errors-text.js';
+import { ERR_EVENTS } from './errors-text.js';
 import { application } from '../main-app.js';
 
 export function addListenersSidebar() {
@@ -16,7 +16,7 @@ export function addListenersSidebar() {
         !isHTMLElement(standardGroups) ||
         !isHTMLElement(projectGroups)
         ) {
-        showErrorModal([ERR_HEADINGS.POPULATE, ERR_EVENTS.SIDEBAR_ELEMENTS]);
+        showErrorModal(ERR_EVENTS.SIDEBAR_ELEMENTS);
         return;
     }
 
@@ -40,7 +40,7 @@ const handleGroupSelection = (e) => {
     if (selectedGroup && !selectedGroup.classList.contains('current')) {
         const groupIdentifier = selectedGroup.getAttribute('data-group-id');
         if (!isValid(groupIdentifier)) {
-            showErrorModal([ERR_HEADINGS.POPULATE, ERR_POPULATE.NO_GROUP_ID]);
+            showErrorModal(ERR_EVENTS.NO_GROUP_ID);
             return;
         }
 
@@ -48,7 +48,7 @@ const handleGroupSelection = (e) => {
         try {
             newGroup = application.getTasksGroup(groupIdentifier);
         } catch(e) {
-            showErrorModal([ERR_HEADINGS.POPULATE, e.message]);
+            showErrorModal([ERR_EVENTS.NEW_GROUP[0], e.message, ERR_EVENTS.NEW_GROUP[2]]);
             return;
         }
     
@@ -56,7 +56,7 @@ const handleGroupSelection = (e) => {
         try {
             currentViewState = application.getViewState();
         } catch(e) {
-            showErrorModal([ERR_HEADINGS.POPULATE, e.message]);
+            showErrorModal([ERR_EVENTS.NEW_GROUP[0], e.message, ERR_EVENTS.NEW_GROUP[2]]);
             return;
         }
     
@@ -64,7 +64,7 @@ const handleGroupSelection = (e) => {
         try {
             filteredSortedFirstPage = application.applyViewOptions(currentViewState, newGroup);
         } catch(e) {
-            showErrorModal([ERR_HEADINGS.POPULATE, e.message]);
+            showErrorModal([ERR_EVENTS.NEW_GROUP[0], e.message, ERR_EVENTS.NEW_GROUP[2]]);
             return;
         }
 
