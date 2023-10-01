@@ -1,6 +1,6 @@
 import { application } from '../main-app.js';
 import { renderTask } from '../task/dom.js';
-import { isBoolean, isHTMLElement, showErrorModal, SORTBY } from '../utils.js';
+import { isBoolean, isHTMLElement, isPressedKey, showErrorModal, SORTBY } from '../utils.js';
 import { getMainNodes, getViewOptionsNodes } from './static-selectors.js';
 import { ERR_EVENTS } from './errors-text.js';
 
@@ -71,25 +71,32 @@ export function addListenersViewOptions() {
         inputSortAscendingOrder 
     };
 
-    viewOptionsIcon.addEventListener('click', () => viewBox.classList.toggle('shown'));
-    customSelectBox.addEventListener('click', (e) => {
-        if (e.target.tagName !== 'DIV') {
-            return;
+    viewOptionsIcon.addEventListener('click', (e) => handleViewBoxToggle(e));
+    function handleViewBoxToggle(e) {
+        if (isPressedKey(e)) {
+            viewBox.classList.toggle('shown');
         }
-        const optionValue = e.target.getAttribute('value');
-        if (optionValue !== null && optionValue !== undefined) {
-            selectSortOptions.value = optionValue;
-            updateTaskListView(queries);
-        }
-    });
+    }
 
-    toggleBoxes.forEach(box => box.addEventListener('click', viewOptionToggleHandler));
-    toggleBoxes.forEach(box => box.addEventListener('keydown', viewOptionToggleHandler));
+    customSelectBox.addEventListener('click', (e) => handleBoxSelection(e));
+    customSelectBox.addEventListener('keydown', (e) => handleBoxSelection(e));
+    function handleBoxSelection(e) {
+        if (isPressedKey(e)) {
+            if (e.target.tagName !== 'DIV') {
+                return;
+            }
+            const optionValue = e.target.getAttribute('value');
+            if (optionValue !== null && optionValue !== undefined) {
+                selectSortOptions.value = optionValue;
+                updateTaskListView(queries);
+            }
+        }
+    }
+
+    toggleBoxes.forEach(box => box.addEventListener('click', (e) => viewOptionToggleHandler(e)));
+    toggleBoxes.forEach(box => box.addEventListener('keydown', (e) => viewOptionToggleHandler(e)));
     function viewOptionToggleHandler(e) {
-        if ((e.type === 'click' || 
-            e.type === 'keydown' && (e.key === 'Enter' || e.key === ' ')) &&
-            e.target.closest('.option-button')
-        ) {
+        if (isPressedKey(e) && e.target.closest('.option-button')) {
             e.stopImmediatePropagation();
             e.stopPropagation();
             const element = e.target.closest('.option-button');

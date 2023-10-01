@@ -1,5 +1,5 @@
 import { renderGroup } from './dom.js';
-import { isHTMLElement, isValid, showErrorModal } from '../utils.js';
+import { isHTMLElement, isPressedKey, isValid, showErrorModal } from '../utils.js';
 import { ERR_EVENTS } from './errors-text.js';
 import { application } from '../main-app.js';
 
@@ -20,55 +20,56 @@ export function addListenersSidebar() {
         return;
     }
 
-    sidebarIcon.addEventListener('click', () => {
-        sidebar.classList.toggle('shown');
-        sidebarCover.classList.toggle('shown');
-    });
-    
-    standardGroups.addEventListener('click', handleGroupSelection);
-    projectGroups.addEventListener('click', handleGroupSelection);
-    projectGroups.addEventListener('keydown', (e) => {
-        if (e.keyCode === 13 || e.keyCode === 32) {
-            handleGroupSelection(e);
+    sidebarIcon.addEventListener('click', (e) => handleSidebarToggle(e));
+    function handleSidebarToggle(e) {
+        if (isPressedKey(e)) {
+            sidebar.classList.toggle('shown');
+            sidebarCover.classList.toggle('shown');
         }
-    });
+    }
+
+    standardGroups.addEventListener('click', (e) => handleGroupSelection(e));
+    projectGroups.addEventListener('click', (e) => handleGroupSelection(e));
+    projectGroups.addEventListener('keydown', (e) => handleGroupSelection(e));
 };
 
 const handleGroupSelection = (e) => {
-    const selectedGroup = e.target.closest('.bar-types > *, .projects-list > li.project');
+    if (isPressedKey(e)) {
+        const selectedGroup = e.target.closest('.bar-types > *, .projects-list > li.project');
 
-    if (selectedGroup && !selectedGroup.classList.contains('current')) {
-        const groupIdentifier = selectedGroup.getAttribute('data-group-id');
-        if (!isValid(groupIdentifier)) {
-            showErrorModal(ERR_EVENTS.NO_GROUP_ID);
-            return;
-        }
-
-        let newGroup;
-        try {
-            newGroup = application.getTasksGroup(groupIdentifier);
-        } catch(e) {
-            showErrorModal([ERR_EVENTS.NEW_GROUP[0], e.message, ERR_EVENTS.NEW_GROUP[2]]);
-            return;
-        }
+        if (selectedGroup && !selectedGroup.classList.contains('current')) {
+            const groupIdentifier = selectedGroup.getAttribute('data-group-id');
+            if (!isValid(groupIdentifier)) {
+                showErrorModal(ERR_EVENTS.NO_GROUP_ID);
+                return;
+            }
     
-        let currentViewState;
-        try {
-            currentViewState = application.getViewState();
-        } catch(e) {
-            showErrorModal([ERR_EVENTS.NEW_GROUP[0], e.message, ERR_EVENTS.NEW_GROUP[2]]);
-            return;
-        }
+            let newGroup;
+            try {
+                newGroup = application.getTasksGroup(groupIdentifier);
+            } catch(e) {
+                showErrorModal([ERR_EVENTS.NEW_GROUP[0], e.message, ERR_EVENTS.NEW_GROUP[2]]);
+                return;
+            }
+        
+            let currentViewState;
+            try {
+                currentViewState = application.getViewState();
+            } catch(e) {
+                showErrorModal([ERR_EVENTS.NEW_GROUP[0], e.message, ERR_EVENTS.NEW_GROUP[2]]);
+                return;
+            }
+        
+            let filteredSortedFirstPage;
+            try {
+                filteredSortedFirstPage = application.applyViewOptions(currentViewState, newGroup);
+            } catch(e) {
+                showErrorModal([ERR_EVENTS.NEW_GROUP[0], e.message, ERR_EVENTS.NEW_GROUP[2]]);
+                return;
+            }
     
-        let filteredSortedFirstPage;
-        try {
-            filteredSortedFirstPage = application.applyViewOptions(currentViewState, newGroup);
-        } catch(e) {
-            showErrorModal([ERR_EVENTS.NEW_GROUP[0], e.message, ERR_EVENTS.NEW_GROUP[2]]);
-            return;
+            renderGroup(filteredSortedFirstPage, groupIdentifier);
         }
-
-        renderGroup(filteredSortedFirstPage, groupIdentifier);
     }
 }
 

@@ -37,39 +37,34 @@ export function showErrorModal(message) {
 }
 
 export function handleExitRemoveMenu(e) {
-  const menuCover = document.querySelector('.menu-cover');
-  const removeMenu = document.querySelector('.remove-menu');
-  const removeHeading = document.querySelector('.remove-heading');
-  const removeMessage = document.querySelector('.remove-message');
-
-  if (!isHTMLElement(menuCover) ||
-  !isHTMLElement(removeMenu) ||
-  !isHTMLElement(removeHeading) ||
-  !isHTMLElement(removeMessage)
-  ) {
-      showErrorModal(['Error (exiting the remove confirmation menu)', 'One or more menu components couldn\'t be found']);
-      return;
+  if (isPressedKey(e)) {        
+      if (!isHTMLElement(menuCover) ||
+      !isHTMLElement(removeMenu) ||
+      !isHTMLElement(heading) ||
+      !isHTMLElement(message)
+      ) {
+          showErrorModal(['Error (exiting the remove confirmation menu)', 'One or more menu components couldn\'t be found']);
+          return;
+      }
+  
+      removeMenu.classList.remove('shown');
+      menuCover.classList.remove('shown');
+      heading.textContent = '';
+      message.textContent = '';
+  
+      removeMenu.project = null;
+      removeMenu.task = null;
+      removeMenu.setAttribute('data-project-id', null);
+      removeMenu.setAttribute('data-task-id', null);
+      removeMenu.setAttribute('data-task-action', null);
+      removeMenu.setAttribute('data-project-action', null);
   }
-
-  removeMenu.classList.remove('shown');
-  menuCover.classList.remove('shown');
-  removeHeading.textContent = '';
-  removeMessage.textContent = '';
-
-  removeMenu.project = null;
-  removeMenu.task = null;
-  removeMenu.setAttribute('data-project-id', null);
-  removeMenu.setAttribute('data-task-id', null);
-  removeMenu.setAttribute('data-task-action', null);
-  removeMenu.setAttribute('data-project-action', null);
 }
 
 export const removeCurrentStatus = (element) => element.removeAttribute('data-value');
 
-export const DEFAULT_PAGE = 1;
-export const DEFAULT_GROUP = 'all';
-export const NUM_PROJECTS_PAGE = 3;
-export const NUM_TASKS_PAGE = 6;
+
+export const isPressedKey = (e) => e.type === 'click' || e.type === 'keydown' && e.code === 'Enter';
 
 export function isNodeList(element) {
   return element instanceof NodeList;
@@ -94,7 +89,6 @@ export function isValid(value) {
 export function isNotEmpty(value) {
   return value !== '';
 }
-
 
 export function checkIfCurrent(element) {
   if (element.getAttribute('data-value') === 'current') {
@@ -158,6 +152,11 @@ export function Enum(baseEnum) {
     }
   })
 }
+
+export const DEFAULT_PAGE = 1;
+export const DEFAULT_GROUP = 'all';
+export const NUM_PROJECTS_PAGE = 3;
+export const NUM_TASKS_PAGE = 6;
 
 export const ACTIONS_PROJECTS = new Enum ({
   ADD_NEW: 'add-new',

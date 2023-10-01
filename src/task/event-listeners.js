@@ -1,6 +1,6 @@
 import { application } from '../main-app.js';
 import { renderTask } from './dom.js';
-import { ACTIONS_TASKS, isHTMLElement, isNodeList, isObject, isValid, showErrorModal, handleExitRemoveMenu } from '../utils.js';
+import { ACTIONS_TASKS, isHTMLElement, isNodeList, isObject, isValid, showErrorModal, handleExitRemoveMenu, isPressedKey } from '../utils.js';
 import { getTaskNodes } from './static-selectors.js';
 import { ERR_EVENTS } from './errors-text.js';
 import { assets } from './assets.js';
@@ -18,50 +18,54 @@ export function addListenersManageTasks() {
         return;
     }
 
-    main.addEventListener('click', (e) => {
-        const reactiveTaskIcon = e.target.closest('.task, button, label');
-        if (isHTMLElement(reactiveTaskIcon)) {
-            const action = reactiveTaskIcon.getAttribute('data-task-action');
-
-            if (!isValid(action)) {
-                return;
-            }
-            if (!Object.values(ACTIONS_TASKS).includes(action)) {
-                showErrorModal(ERR_EVENTS.DEFAULT_ACTION);
-                return;
-            }
+    main.addEventListener('click', (e) => handleTaskAction(e));
+    main.addEventListener('click', (e) => handleLabelSelection(e));
+    main.addEventListener('keydown', (e) => handleLabelSelection(e));
+    function handleTaskAction(e) {
+        if (isPressedKey(e)) {
+            const reactiveTaskIcon = e.target.closest('.task button');
+            if (isHTMLElement(reactiveTaskIcon)) {
+                const action = reactiveTaskIcon.getAttribute('data-task-action');
     
-            taskAction(action, reactiveTaskIcon);
-        }
-    });
-
-    main.addEventListener('keydown', (e) => {
-        if (e.keyCode !== 32 && e.keyCode !== 13) {
-            return;
-        }
-        const reactiveTaskIcon = e.target.closest('.task, button, label');
-        if (isHTMLElement(reactiveTaskIcon)) {
-            const action = reactiveTaskIcon.getAttribute('data-task-action');
-
-            if (!isValid(action)) {
-                return;
+                if (!isValid(action)) {
+                    return;
+                }
+                if (!Object.values(ACTIONS_TASKS).includes(action)) {
+                    showErrorModal(ERR_EVENTS.DEFAULT_ACTION);
+                    return;
+                }
+        
+                taskAction(action, reactiveTaskIcon);
             }
-            if (!Object.values(ACTIONS_TASKS).includes(action)) {
-                showErrorModal(ERR_EVENTS.DEFAULT_ACTION);
-                return;
-            }
+        }
+    }
+    function handleLabelSelection(e) {
+        if (isPressedKey(e)) {
+            const reactiveTaskIcon = e.target.closest('.task label');
+            if (isHTMLElement(reactiveTaskIcon)) {
+                const action = reactiveTaskIcon.getAttribute('data-task-action');
     
-            taskAction(action, reactiveTaskIcon);
+                if (!isValid(action)) {
+                    return;
+                }
+                if (!Object.values(ACTIONS_TASKS).includes(action)) {
+                    showErrorModal(ERR_EVENTS.DEFAULT_ACTION);
+                    return;
+                }
+        
+                taskAction(action, reactiveTaskIcon);
+            }
         }
-    });
+    }
 
     form.addEventListener('submit', (e) => submitHandler(e));
-
     removeConfirm.addEventListener('click', (e) => {
-        const taskAction = removeMenu.getAttribute('data-task-action');
-        if (taskAction && taskAction !== 'null') {
-            removeHandler(e);
-            handleExitRemoveMenu(e);
+        if (isPressedKey(e)) {
+            const taskAction = removeMenu.getAttribute('data-task-action');
+            if (taskAction && taskAction !== 'null') {
+                removeHandler(e);
+                handleExitRemoveMenu(e);
+            }
         }
     });
 
@@ -378,32 +382,34 @@ const submitHandler = (e) => {
 };
 
 const exitHandler = (e) => {
-    e.preventDefault();
+    if (isPressedKey(e)) {
+        e.preventDefault();
 
-    const { 
-        menu,
-        menuCover,
-        menuTitle,
-        submitButton 
-    } = getTaskNodes();
-
-    if (!isHTMLElement(menu) || 
-    !isHTMLElement(menuCover) || 
-    !isHTMLElement(menuTitle) || 
-    !isHTMLElement(submitButton)) {
-        showErrorModal(ERR_EVENTS.TASK_MENU_PANEL_EXITING);
-        return;
+        const { 
+            menu,
+            menuCover,
+            menuTitle,
+            submitButton 
+        } = getTaskNodes();
+    
+        if (!isHTMLElement(menu) || 
+        !isHTMLElement(menuCover) || 
+        !isHTMLElement(menuTitle) || 
+        !isHTMLElement(submitButton)) {
+            showErrorModal(ERR_EVENTS.TASK_MENU_PANEL_EXITING);
+            return;
+        }
+      
+        menuTitle.textContent = '';
+        submitButton.textContent = '';
+      
+        menuCover.classList.remove('shown');
+        menu.classList.remove('shown');
+        menu.removeAttribute('data-project-action');
+        menu.removeAttribute('data-group-id');
+        menu.removeAttribute('data-task-action');
+        menu.removeAttribute('data-task-id');
     }
-  
-    menuTitle.textContent = '';
-    submitButton.textContent = '';
-  
-    menuCover.classList.remove('shown');
-    menu.classList.remove('shown');
-    menu.removeAttribute('data-project-action');
-    menu.removeAttribute('data-group-id');
-    menu.removeAttribute('data-task-action');
-    menu.removeAttribute('data-task-id')
 }
 
 const handleToggleOverdueIcon = (task) => {

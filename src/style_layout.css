@@ -11,13 +11,16 @@
   --sidebar-icon-height: 2rem;
 }
 
+html {
+  font-size: 35%;
+}
+
 /* GENERAL */
 
 .content {
   display: grid;
   grid-template-columns: 25rem minmax(30rem, 1fr);
   grid-template-rows: 5rem 1fr;
-  overflow: auto;
   position: relative;
 }
 
@@ -146,7 +149,7 @@ header .aside-icon {
 
 .bar-projects .header {
   display: grid;
-  grid-template-columns: 2rem 5rem 2rem 1fr 2rem;
+  grid-template-columns: 2rem max-content max-content 1fr 2rem;
   align-content: center;
   justify-items: start;
 }
@@ -291,8 +294,8 @@ header .aside-icon {
   grid-area: 2 / 2 / 3 / 3;
   display: grid;
   grid-template-rows: auto auto 1fr 3rem;
-  padding: 1rem clamp(2rem, 40px, 5rem);
-  gap: 2rem;
+  padding: 1rem clamp(2rem, 4rem, 5rem);
+  gap: 1rem;
   position: relative;
 }
 
@@ -332,7 +335,7 @@ main .task-bar {
 .task-bar .task-number {
   display: grid;
   justify-items: start;
-  grid-template-columns: 4.5rem 6rem;
+  grid-template-columns: max-content max-content;
   padding-left: 1rem;
   gap: 0.5rem;
 }
@@ -352,7 +355,6 @@ main .task-bar {
 
 .task {
   display: grid;
-  gap: 1rem;
 }
 
 .task .task-head-box {
@@ -432,6 +434,11 @@ main .task-bar {
   overflow-x: hidden;
 }
 
+.task .task-due-date {
+  display: flex;
+  justify-content: center;
+}
+
 .task-unfold-box {
   grid-area: 2 / 1 / 3 / -1;
   display: none;
@@ -486,12 +493,13 @@ main .sidebar-cover {
   width: var(--menu-width);
   z-index: var(--z-index-menu);
   padding: 0 0 1rem 0;
-  display: none;
+  display: grid;
+  gap: 2rem;
+  visibility: hidden;
 }
 
 .remove-menu.shown {
-  display: grid;
-  gap: 2rem;
+  visibility: visible;
 }
 
 .remove-menu .title {
@@ -694,14 +702,15 @@ main .sidebar-cover {
   width: var(--menu-width);
   background-color: var(--white);
   z-index: var(--z-index-menu);
-  display: none;
-}
-
-.task-menu.shown {
   display: grid;
   grid-template-rows: 5rem 1fr;
   padding: 0 0 2rem 0;
   gap: 1rem;
+  visibility: hidden;
+}
+
+.task-menu.shown {
+  visibility: visible;
 }
 
 .task-menu > .title {
@@ -787,7 +796,42 @@ main .sidebar-cover {
   height: var(--menu-button-option-height);
 }
 
-@media (max-width: 950px) {
+@media screen and (min-width: 600px) {
+  html {
+    font-size: 45%;
+  }
+ }
+
+@media screen and (min-width: 1025px) {
+  html {
+    font-size: 55%;
+  }
+ }
+@media screen and (min-width:1281px) { 
+  html {
+    font-size: 62.5%;
+  }
+ }
+
+ @media screen and (min-width: 1440px) {
+  html {
+    font-size: 70%;
+  }
+}
+
+@media screen and (min-width: 1920px) {
+  html {
+    font-size: 115%;
+  }
+}
+
+@media screen and (max-width: 400px) {
+ .content main {
+  padding: 1rem;
+ }
+}
+
+@media screen and (max-width: 800px) {
   .content {
     grid-template-columns: 1fr;
     position: relative;
@@ -800,7 +844,7 @@ main .sidebar-cover {
   }
   .content aside.shown {
     visibility: visible;
-    width: 25rem;
+    max-width: 25rem;
     z-index: var(--z-index-aside-shown);
   }
   header .sidebar-icon {

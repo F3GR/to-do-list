@@ -1,20 +1,4 @@
 :root {
-    /*--system-ui: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    --light-emerald: rgb(122, 255, 213);
-    --light-blue: rgb(159, 237, 255);
-    --white: white;
-    --whitesmoke: rgb(242, 239, 239);
-
-
-
-    --element-panels-border-radius: 0.5rem;
-    --main-panels-border-radius: 1rem;
-    --group-borders-color: var(--whitesmoke);
-    --task-background-color: var(--whitesmoke);
-    --task-border-color: var(--whitesmoke);
-    --project-background-color: var(--whitesmoke);
-    --project-border-color: var(--whitesmoke);*/
-
     --black: rgb(0, 0, 0);
 
     --interactive-pointer-style: pointer;
@@ -31,15 +15,6 @@
 
     --text-color: rgb(45, 45, 45);
     --borders-color: rgb(90, 90, 90);
-
-    --main-heading-1-font-size: ;     /* trackIt */
-    --main-heading-2-font-size: ;     /* task */
-    --main-heading-3-font-size: ;     /* task description heads */
-    --main-paragraph-font-size: ;     /* task description heads */
-
-    --menu-heading-3-font-size: ;
-    --menu-paragraph-font-size: ;
-    --menu-button-text-font-size: ;
 
     --element-panels-border-radius: 0.5rem;
     --main-panels-border-radius: 1rem;
@@ -180,7 +155,7 @@ button:active {
     content: '';
     width: 100%;
     height: 100%;
-    background-color: var(--completed-task-color);
+    background-color: var(--selected-background-color);
     border-radius: 50%;
     transform: scale(0);
     transition: transform 0.3s ease;
@@ -199,6 +174,13 @@ button:active {
 
 .sort-options-border-box .sort-arrow.enabled {
   transform: rotate(180deg);
+}
+
+.sort-options-border-box .sort-arrow:focus,
+.sort-options-border-box .sort-arrow:focus {
+  outline: 0.2rem ridge var(--black);
+  border: 0.1rem solid var(--selected-border-color);
+  border-radius: var(--element-panels-border-radius);
 }
 
 
@@ -222,14 +204,6 @@ button:active {
   background-color: var(--selected-background-color);
 }
 
-.select-selected:hover:after {
-  background: url(./assets/fold-select-hover.svg);
-  background-size: contain;
-  background-repeat: no-repeat;
-  width: 2rem;
-  height: 2rem;
-}
-
 /*style the arrow inside the select element:*/
 .select-selected:after {
   position: absolute;
@@ -247,7 +221,6 @@ button:active {
 .select-selected.select-arrow-active:after {
   transform: rotate(180deg);
 }
-
 
 /*style the items (options), including the selected item:*/
 .select-items div,
@@ -341,6 +314,9 @@ button:active {
   transform: scale(var(--scale-size-hover-small-icons));
   position: relative;
   transition: transform var(--click-animation-duration);
+  outline: 0.2rem ridge var(--black);
+  border: 0.1rem solid var(--selected-border-color);
+  border-radius: var(--element-panels-border-radius);
 }
 
 .task label.status-checkbox:active {

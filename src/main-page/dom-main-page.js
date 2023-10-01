@@ -1,6 +1,5 @@
-import { is } from 'date-fns/locale';
 import { assets } from './assets.js';
-import { Enum,createElementWithAttributes, isHTMLElement, showErrorModal, ACTIONS_PROJECTS, ACTIONS_TASKS, handleExitRemoveMenu, STANDARD_GROUPS, DEFAULT_GROUP } from '../utils.js';
+import { Enum,createElementWithAttributes, isHTMLElement, showErrorModal, ACTIONS_PROJECTS, ACTIONS_TASKS, handleExitRemoveMenu, STANDARD_GROUPS, DEFAULT_GROUP, isPressedKey } from '../utils.js';
 
 const ERR = new Enum ({
     ERROR_MODAL_CONTENT_NOT_FOUND: ['Application error', 'The content couldn\'t be found', 'Process: rendering the error modal template'],
@@ -74,36 +73,25 @@ function renderErrorModal() {
     }, buttonBox);
     buttonExit.textContent = 'OK';
 
-    exitIcon.addEventListener('click', () => {
-        if (!isHTMLElement(heading)) {
-            showErrorModal(ERR.ERROR_MODAL_HEADING_NOT_FOUND);
-            return;
+    exitIcon.addEventListener('click', (e) => exitMenu(e));
+    buttonExit.addEventListener('click', (e) => exitMenu(e));
+    function exitMenu(e) {
+        if (isPressedKey(e)) {
+            if (!isHTMLElement(heading)) {
+                showErrorModal(ERR.ERROR_MODAL_HEADING_NOT_FOUND);
+                return;
+            }
+            if (!isHTMLElement(message)) {
+                showErrorModal(ERR.ERROR_MODAL_PARA_NOT_FOUND);
+                return;
+            }
+    
+            modal.classList.remove('shown');
+            errorCover.classList.remove('shown');
+            heading.textContent = '';
+            message.textContent = '';
         }
-        if (!isHTMLElement(message)) {
-            showErrorModal(ERR.ERROR_MODAL_PARA_NOT_FOUND);
-            return;
-        }
-
-        modal.classList.remove('shown');
-        errorCover.classList.remove('shown');
-        heading.textContent = '';
-        message.textContent = '';
-    });
-    buttonExit.addEventListener('click', () => {
-        if (!isHTMLElement(heading)) {
-            showErrorModal(ERR.ERROR_MODAL_HEADING_NOT_FOUND);
-            return;
-        }
-        if (!isHTMLElement(message)) {
-            showErrorModal(ERR.ERROR_MODAL_PARA_NOT_FOUND);
-            return;
-        }
-
-        modal.classList.remove('shown');
-        errorCover.classList.remove('shown');
-        heading.textContent = '';
-        message.textContent = '';
-    });
+    }
 }
 
 function renderRemoveConfirmationTemplate() {
@@ -157,6 +145,31 @@ function renderRemoveConfirmationTemplate() {
 
     const buttons = removeMenu.querySelectorAll('.exit');
     buttons.forEach(btn => btn.addEventListener('click', (e) => handleExitRemoveMenu(e)));
+    buttons.forEach(btn => btn.addEventListener('keydown', (e) => handleExitRemoveMenu(e)));
+    function handleExitRemoveMenu(e) {
+        if (isPressedKey(e)) {        
+            if (!isHTMLElement(menuCover) ||
+            !isHTMLElement(removeMenu) ||
+            !isHTMLElement(heading) ||
+            !isHTMLElement(message)
+            ) {
+                showErrorModal(['Error (exiting the remove confirmation menu)', 'One or more menu components couldn\'t be found']);
+                return;
+            }
+        
+            removeMenu.classList.remove('shown');
+            menuCover.classList.remove('shown');
+            heading.textContent = '';
+            message.textContent = '';
+        
+            removeMenu.project = null;
+            removeMenu.task = null;
+            removeMenu.setAttribute('data-project-id', null);
+            removeMenu.setAttribute('data-task-id', null);
+            removeMenu.setAttribute('data-task-action', null);
+            removeMenu.setAttribute('data-project-action', null);
+        }
+    }
 }
 
 function renderProjectMenuTemplate() {
@@ -849,7 +862,7 @@ function renderCustomDropDownMenu() {
   
         // Attach event listeners for 'keydown' ('Enter' and 'Space') events
         c.addEventListener("keydown", function (e) {
-          if (e.key === "Enter" || e.key === " ") {
+          if (e.code === 'Enter') {
             e.preventDefault(); // Prevent the default behavior (e.g., scrolling)
             this.click(); // Trigger the click event when 'Enter' or 'Space' is pressed
             closeAllSelect(this);
@@ -870,7 +883,7 @@ function renderCustomDropDownMenu() {
   
       // Add a focus event listener to open the menu on 'Enter' or 'Space' keydown
       a.addEventListener("keydown", function (e) {
-        if (e.key === "Enter" || e.key === " ") {
+        if (e.code === 'Enter') {
           e.preventDefault();
           this.click();
           closeAllSelect(this);

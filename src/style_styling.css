@@ -5,6 +5,7 @@
     --dark-grey: rgb(90, 90, 90);
     --grey: rgb(170, 170, 170);
     --required-color: rgb(255, 60, 0);
+    --high-priority-border-color: rgb(220, 60, 0);
     --background-color-header-start: #45b8ff;
     --background-color-header-end: #6cbfff;
     --background-color-sidebar-start: #45b8ff;
@@ -20,15 +21,6 @@
 
     --border-color: var(--grey);
     --text-color: var(--dark-grey);
-
-    --main-heading-1-font-size: ;     
-    --main-heading-2-font-size: ;    
-    --main-heading-3-font-size: ;     
-    --main-paragraph-font-size: ;     
-
-    --menu-heading-3-font-size: ;
-    --menu-paragraph-font-size: ;
-    --menu-button-text-font-size: ;
   }
   
   /* GENERAL */
@@ -196,14 +188,12 @@
   .task[data-task-priority="2"],
   .task[data-task-priority="2"] label.status-checkbox,
   .task[data-task-priority="2"] .task-unfold-box > * {
-    border: 0.1rem solid var(--required-color);
+    border: 0.1rem solid var(--high-priority-border-color);
   }
 
-  .task[data-task-priority="2"] {
-    background-color: var(--required-color);
-  }
-
-  .task[data-task-priority="2"] .task-unfold-box {
+  .task[data-task-priority="2"],
+  .task[data-task-priority="2"] .task-unfold-box,
+  .task[data-task-priority="2"] .task-head-box {
     background-color: var(--required-color);
   }
 
@@ -211,8 +201,10 @@
     border-bottom: 0.1rem solid var(--required-color);
   }
 
+  .task[data-task-priority="2"] .task-head-box > *,
   .task[data-task-priority="2"] .task-unfold-box > * {
     background-color: var(--white);
+    border: 0.1rem solid var(--high-priority-border-color);
   }
 
   .task[data-task-priority="2"] .task-unfold-box > .task-priority-box .task-priority {
@@ -225,15 +217,10 @@
     border-radius: var(--element-panels-border-radius);
   }
 
-  .task .task-head-box {
-    background-color: var(--white);
-    border-radius: var(--element-panels-border-radius);
-    border-bottom: 0.1rem solid var(--border-color);
-  }
-  
+  .task .task-head-box,
   .task .task-unfold-box {
     background-color: var(--task-background-color);
-    border-radius: 0 0 var(--element-panels-border-radius) var(--element-panels-border-radius);
+    border-radius: var(--element-panels-border-radius);
   }
   
   .task label.status-checkbox {
@@ -250,6 +237,7 @@
     stroke-dashoffset: 100;
   }
 
+  .task .task-head-box > *,
   .task-unfold-box > * {
     background-color: var(--white);
     border: 0.1rem solid var(--border-color);

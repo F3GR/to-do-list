@@ -2,7 +2,7 @@ import { application } from '../main-app.js';
 import { renderProject } from './dom.js';
 import { renderGroup } from '../group/dom.js';
 import { getProjectNodes } from './static-selectors.js';
-import { showErrorModal, STANDARD_GROUPS, ACTIONS_PROJECTS, isHTMLElement, isValid, isObject, handleExitRemoveMenu, isNodeList } from '../utils.js';
+import { showErrorModal, STANDARD_GROUPS, ACTIONS_PROJECTS, isHTMLElement, isValid, isObject, handleExitRemoveMenu, isNodeList, isPressedKey } from '../utils.js';
 import { ERR_EVENTS } from './errors-text.js';
 
 export function addListenersManageProjects() {
@@ -30,20 +30,10 @@ export function addListenersManageProjects() {
         return;
     }
 
-    optionsIconsContainer.addEventListener('click', (e) => {
-        if (e.target.tagName === 'DIV' && 
-            e.target.classList.contains('project-icon-option')
-            ) {
-            allOptions.forEach(optionNode => optionNode.classList.remove('selected'));
-            
-            const inputSelected = e.target.querySelector('input');
-            inputSelected.checked = true;
-            e.target.classList.add('selected');
-        }
-    });
-
-    optionsIconsContainer.addEventListener('keydown', (e) => {
-        if ((e.keyCode === 32 || e.keyCode === 13) &&
+    optionsIconsContainer.addEventListener('click', (e) => handleProjectIconSelection(e));
+    optionsIconsContainer.addEventListener('keydown', (e) => handleProjectIconSelection(e));
+    function handleProjectIconSelection(e) {
+        if (isPressedKey(e) &&
             e.target.tagName === 'DIV' && 
             e.target.classList.contains('project-icon-option')
             ) {
@@ -53,42 +43,48 @@ export function addListenersManageProjects() {
             inputSelected.checked = true;
             e.target.classList.add('selected');
         }
-    });
+    }
 
     projectsBar.addEventListener('click', (e) => openMenuHandler(e));
+    projectsBar.addEventListener('keydown', (e) => openMenuHandler(e));
     form.addEventListener('submit', (e) => submitHandler(e));
 
-    removeConfirm.addEventListener('click', (e) => {
-        if (!isHTMLElement(removeMenu)) {
-            showErrorModal(ERR_EVENTS.APPLY_EVENTS_PROJECT_MENU_RENDERING);
-            return;
+    removeConfirm.addEventListener('click', (e) => handleProjectRemove(e));
+    function handleProjectRemove(e) {
+        if (isPressedKey(e)) {
+            if (!isHTMLElement(removeMenu)) {
+                showErrorModal(ERR_EVENTS.APPLY_EVENTS_PROJECT_MENU_RENDERING);
+                return;
+            }
+            
+            const projectAction = removeMenu.getAttribute('data-project-action');
+            if (projectAction && projectAction !== 'null') {
+                removeHandler(e);
+                handleExitRemoveMenu(e);
+            }
         }
-        
-        const projectAction = removeMenu.getAttribute('data-project-action');
-        if (projectAction && projectAction !== 'null') {
-            removeHandler(e);
-            handleExitRemoveMenu(e);
-        }
-    });
+    }
 
     exitButton.addEventListener('click', (e) => exitHandler(e));
     cancelButton.addEventListener('click', (e) =>  exitHandler(e));
 };
 
 const openMenuHandler = (e) => {
-    e.preventDefault();
-    e.stopImmediatePropagation();
+    if (isPressedKey(e)) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        
+        const action = e.target.getAttribute('data-project-action');
+        if (!isValid(action)) {
+            return;
+        }
+        if (!Object.values(ACTIONS_PROJECTS).includes(action)) {
+            showErrorModal(ERR_EVENTS.SHOWING_DEFAULT_ACTION);
+            return;
+        }
     
-    const action = e.target.getAttribute('data-project-action');
-    if (!isValid(action)) {
-        return;
+        openMenu(action, e.target);
     }
-    if (!Object.values(ACTIONS_PROJECTS).includes(action)) {
-        showErrorModal(ERR_EVENTS.SHOWING_DEFAULT_ACTION);
-        return;
-    }
-
-    openMenu(action, e.target);
 };
 
 const openMenu = (action, target) => {
@@ -355,25 +351,27 @@ const updateEditedProjectNode = (project) => {
 };
 
 const exitHandler = (e) => {
-    e.preventDefault();
-    const { menuCover, menu, menuTitle, submitButton } = getProjectNodes();
-
-    if (!isHTMLElement(menu) || 
-    !isHTMLElement(menuCover) || 
-    !isHTMLElement(menuTitle) || 
-    !isHTMLElement(submitButton)
-    ) {
-        showErrorModal(ERR_EVENTS.EXITING_PROJECT_MENU_RENDERING);
-        return;
+    if (isPressedKey(e)) {
+        e.preventDefault();
+        const { menuCover, menu, menuTitle, submitButton } = getProjectNodes();
+    
+        if (!isHTMLElement(menu) || 
+        !isHTMLElement(menuCover) || 
+        !isHTMLElement(menuTitle) || 
+        !isHTMLElement(submitButton)
+        ) {
+            showErrorModal(ERR_EVENTS.EXITING_PROJECT_MENU_RENDERING);
+            return;
+        }
+      
+        menuTitle.textContent = '';
+        submitButton.textContent = '';
+      
+        menuCover.classList.remove('shown');
+        menu.classList.remove('shown');
+        menu.removeAttribute('data-project-action');
+        menu.removeAttribute('data-group-id');
+        menu.removeAttribute('data-task-action');
+        menu.removeAttribute('data-task-id');
     }
-  
-    menuTitle.textContent = '';
-    submitButton.textContent = '';
-  
-    menuCover.classList.remove('shown');
-    menu.classList.remove('shown');
-    menu.removeAttribute('data-project-action');
-    menu.removeAttribute('data-group-id');
-    menu.removeAttribute('data-task-action');
-    menu.removeAttribute('data-task-id');
 };

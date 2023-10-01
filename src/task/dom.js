@@ -1,4 +1,4 @@
-import { PRIORITY, createElementWithAttributes, showErrorModal } from '../utils.js';
+import { createElementWithAttributes, showErrorModal } from '../utils.js';
 import { isHTMLElement, isValid, ACTIONS_TASKS } from '../utils.js';
 import { getTaskNodes } from './static-selectors.js';
 import { assets } from './assets.js';
@@ -34,7 +34,6 @@ export function renderTask(taskObj) {
         return;
     }
 
-    
     const task = createElementWithAttributes('li', {class: 'task'}, taskList);
     task.setAttribute('data-project-id', `${projectId}`);
     task.setAttribute('data-task-id', `${id}`);
