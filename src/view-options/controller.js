@@ -1,4 +1,3 @@
-import { parseISO } from 'date-fns';
 import { PRIORITY, STATUS, SORTBY } from '../utils.js';
 import { isBoolean } from '../utils.js';
 import { ERR_CONTROLLER } from './errors-text.js';
@@ -74,8 +73,8 @@ export const viewController = {
 
 const sortTasksByDate = (tasksGroup, ascendingOrder) => {
     return tasksGroup.sort((task1, task2) => {
-        const date1 = parseISO(task1.dueDate);
-        const date2 = parseISO(task2.dueDate);
+        const date1 = Date.parse(task1.dueDate);
+        const date2 = Date.parse(task2.dueDate);
         if (ascendingOrder) {
             return date1 - date2;
         } else {

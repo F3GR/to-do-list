@@ -1,4 +1,4 @@
-import { createElementWithAttributes, showErrorModal } from '../utils.js';
+import { PRIORITY, createElementWithAttributes, showErrorModal } from '../utils.js';
 import { isHTMLElement, isValid, ACTIONS_TASKS } from '../utils.js';
 import { getTaskNodes } from './static-selectors.js';
 import { assets } from './assets.js';
@@ -40,18 +40,20 @@ export function renderTask(taskObj) {
     task.setAttribute('data-task-id', `${id}`);
     task.setAttribute('data-task-status', `${status}`);
     task.setAttribute('data-task-priority', `${priority}`);
+
+    const taskHeadBox = createElementWithAttributes('div', {class: 'task-head-box'}, task);
     
     const checkbox = createElementWithAttributes('input', {
         type: 'checkbox', 
         id: 'task-status',
         class: 'status'
-    }, task);
+    }, taskHeadBox);
     
     const label = createElementWithAttributes('label', {
         for: 'task-status', 
         class: 'status-checkbox',
         tabindex: 0,
-    }, task);
+    }, taskHeadBox);
     label.setAttribute('data-task-action', ACTIONS_TASKS.UPDATE_STATUS);
     
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -65,13 +67,13 @@ export function renderTask(taskObj) {
     svg.appendChild(path);
     label.appendChild(svg);
 
-    const taskTitleBox = createElementWithAttributes('div', {class: 'task-title-box'}, task);
+    const taskTitleBox = createElementWithAttributes('div', {class: 'task-title-box'},taskHeadBox);
     const taskTitle = createElementWithAttributes('span', {class: 'task-title'}, taskTitleBox);
     taskTitle.textContent = `${title}`;
 
     const taskOverDueBox = createElementWithAttributes('div', {
         class: 'overdue-box'
-    }, task); 
+    }, taskHeadBox); 
 
     const taskOverDueIcon = createElementWithAttributes('img', {
         src: assets.taskOverDueIconPath, 
@@ -82,28 +84,28 @@ export function renderTask(taskObj) {
         taskOverDueIcon.classList.add('shown');
     }
 
-    const taskDueDateBox = createElementWithAttributes('div', {class: 'task-due-date', }, task);
+    const taskDueDateBox = createElementWithAttributes('div', {class: 'task-due-date', }, taskHeadBox);
 
     const taskDueDateText = createElementWithAttributes('span', {class: '', }, taskDueDateBox);
     taskDueDateText.textContent = `${dueDate}`;
 
     const taskEditIcon = createElementWithAttributes('button', {
         class: 'edit'
-    }, task);
+    }, taskHeadBox);
     taskEditIcon.ariaLabel = 'Edit task';
     taskEditIcon.style.backgroundImage = `url(${assets.taskEditIconPath})`;
     taskEditIcon.setAttribute('data-task-action', ACTIONS_TASKS.EDIT);
 
     const taskRemoveIcon = createElementWithAttributes('button', {
         class: 'remove'
-    }, task);
+    }, taskHeadBox);
     taskEditIcon.ariaLabel = 'Remove task';
     taskRemoveIcon.style.backgroundImage = `url(${assets.taskRemoveIconPath})`;
     taskRemoveIcon.setAttribute('data-task-action', ACTIONS_TASKS.REMOVE);
 
     const taskUnfoldIcon = createElementWithAttributes('button', {
         class: 'unfold'
-    }, task);
+    }, taskHeadBox);
     taskUnfoldIcon.ariaLabel = 'Unfold the task\'s details panel';
     taskUnfoldIcon.style.backgroundImage = `url(${assets.taskUnfoldIconPath})`;
     taskUnfoldIcon.setAttribute('data-task-action', ACTIONS_TASKS.UNFOLD);
@@ -125,6 +127,20 @@ export function renderTask(taskObj) {
         class: 'task-project-name',
     }, taskProjectNameBox);
     taskProjectName.textContent = `${projectName}`;
+
+    const taskPriorityBox = createElementWithAttributes('div', {
+        class: 'task-priority-box',
+    }, taskUnfoldedPanel);
+
+    const taskPriorityTitle = createElementWithAttributes('span', {
+        class: 'task-priority-title',
+    }, taskPriorityBox);
+    taskPriorityTitle.textContent = 'Priority: ';
+
+    const taskPriorityText = createElementWithAttributes('span', {
+        class: 'task-priority',
+    }, taskPriorityBox);
+    taskPriorityText.textContent = `${convertPriorityCodeToText(priority)}`;
 
     const taskDescriptionBox = createElementWithAttributes('div', {
         class: 'task-description-box',
@@ -153,4 +169,18 @@ export function renderTask(taskObj) {
         class: 'task-notes',
     }, taskNotesBox);
     taskNotes.textContent = `${notes}`;
+}
+
+function convertPriorityCodeToText(priority) {
+    switch (priority) {
+        case '0': {
+            return 'Normal';
+        }
+        case '1': {
+            return 'Medium';
+        }
+        case '2': {
+            return 'High';
+        }
+    }
 }

@@ -77,8 +77,8 @@ export function addListenersViewOptions() {
             return;
         }
         const optionValue = e.target.getAttribute('value');
-        if (optionValue && queries.selectSortOptions.value === optionValue) {
-            queries.selectSortOptions.value = optionValue;
+        if (optionValue !== null && optionValue !== undefined) {
+            selectSortOptions.value = optionValue;
             updateTaskListView(queries);
         }
     });

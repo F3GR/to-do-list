@@ -1,6 +1,4 @@
 import { Task } from './task.js';
-import { differenceInCalendarDays } from 'date-fns';
-import { parseISO } from 'date-fns';
 import { isValid, STATUS, noDuplicateTitle, findIndex } from '../utils.js';
 import { ERR_CONTROLLER } from './errors-text.js';
 
@@ -26,7 +24,7 @@ export const tasksController = {
         }
 
         let newTaskStatus = '1';
-        newTaskStatus = updateOverdueStatus(newTaskStatus, parseISO(dueDate));
+        newTaskStatus = updateOverdueStatus(newTaskStatus, Date.parse(dueDate));
         
         const newTask = new Task(
             projectId, 
@@ -77,7 +75,7 @@ export const tasksController = {
             editedTask.dueDate = editedDueDate;
         }
         if (editedTask.status !== '0') {
-            editedTask.status = updateOverdueStatus(editedTask.status, parseISO(editedTask.dueDate));
+            editedTask.status = updateOverdueStatus(editedTask.status, Date.parse(editedTask.dueDate));
         }
         if (editedTask.priority !== editedPriority) {
             editedTask.priority = editedPriority;
@@ -111,7 +109,7 @@ export const tasksController = {
 
         if (editedTask.status === STATUS.COMPLETED) {
             let updatedStatus = STATUS.ONGOING;
-            editedTask.status = updateOverdueStatus(updatedStatus, parseISO(editedTask.dueDate));
+            editedTask.status = updateOverdueStatus(updatedStatus, Date.parse(editedTask.dueDate));
         } else {
             editedTask.status = STATUS.COMPLETED;
         }
@@ -159,7 +157,7 @@ export const tasksController = {
 };
 
 const updateOverdueStatus = (status, dueDate) => {
-    if (differenceInCalendarDays(dueDate, Date.now()) < 0) {
+    if (Date.now() - dueDate > 0) {
         status = STATUS.OVERDUE;
         return status;
     }

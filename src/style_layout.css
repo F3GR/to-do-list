@@ -7,128 +7,8 @@
   --z-index-aside-shown: 3;
   --z-index-view-options-shown: 2;
   --z-index-view-options: 1;
-
   --sidebar-icon-width: 2rem;
   --sidebar-icon-height: 2rem;
-}
-
-/*
-
-  --main-button-size: ;
-  --main-button-task-project-option-size: ;
-  --main-heading-1-font-size: ;     trackIt 
-  --main-heading-2-font-size: ;     task 
-  --main-heading-3-font-size: ;     task description heads
-  --main-paragraph-font-size: ;      task description heads
-  --menu-heading-3-font-size: ;
-  --menu-paragraph-font-size: ;
-  
-  --menu-button-text-font-size: ;
-
-  --menu-button-exit-size: ;
-  --menu-width: ;
-  --menu-height: ;
-  --error-modal-width: ;
-  --error-modal-height: ;
-  **/
-
-
-/* RESET */
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  vertical-align: baseline;
-  border-collapse: collapse;
-  border-spacing: 0;
-  font-family: var(--system-ui);
-  overflow-wrap: break-word;
-  hyphens: auto;
-  font-size: 62.5%;
-}
-
-span, div, legend, label, p, option {
-  font-size: 1.2rem;
-}
-
-body {
-  max-width: 2560px;
-  margin: 0 auto;
-  padding: 0;
-  font-size: 1.6rem;
-  line-height: 1.75;
-  letter-spacing: 0.05rem;
-}
-
-img, picture, video, canvas, svg,
-article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section {
-  display: block;
-  max-width: 100%;
-}
-
-button, textarea, select, input, li {
-  font: inherit;
-}
-
-h1, h2, h3 {
-  font-weight: 700;
-}
-
-h1 {
-  font-size: 2.5rem;
-}
-
-h2 {
-  font-size: 2rem;
-}
-
-h3 {
-  font-size: 1.5rem;
-}
-
-ul {
-  list-style: disc;
-}
-
-ol {
-  list-style-position: outside;
-  list-style: decimal;
-}
-
-td, th {
-  border: 1px solid var(--text-color);
-}
-
-blockquote, q {
-quotes: none;
-}
-
-*::not(img),
-*::before,
-*::after {
-  margin: inherit;
-  padding: inherit;
-  box-sizing: inherit;
-}
-
-input {
--webkit-appearance: none;
-appearance: none;
-background-color: #fff;
-margin: 0;
-padding: 0;
-}
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-input[type=number] {
-  -moz-appearance: textfield;
 }
 
 /* GENERAL */
@@ -159,7 +39,7 @@ textarea {
   grid-area: 1 / 1 / 2 / 3;
   display: grid;
   align-content: center;
-  grid-template-columns: 3rem 25rem auto 3rem;
+  grid-template-columns: 3rem 15rem 1fr 3rem;
   padding: 0 1rem;
 }
 
@@ -275,7 +155,7 @@ header .aside-icon {
 
 .projects-list {
   display: grid;
-  grid-auto-rows: 3rem;
+  grid-auto-rows: max(3rem, 1fr);
   justify-items: stretch;
   align-items: start;
   gap: 1rem;
@@ -472,6 +352,11 @@ main .task-bar {
 
 .task {
   display: grid;
+  gap: 1rem;
+}
+
+.task .task-head-box {
+  display: grid;
   grid-template-columns: var(--sidebar-icon-width) 1fr var(--sidebar-icon-width) 10rem repeat(3, var(--sidebar-icon-width));
   column-gap: 0.5rem;
   justify-items: stretch;
@@ -541,6 +426,7 @@ main .task-bar {
 .task .task-title,
 .task .task-due-date > span,
 .task .task-project-name,
+.task .task-priority-text,
 .task .task-description,
 .task .task-notes {
   overflow-x: hidden;
@@ -548,9 +434,8 @@ main .task-bar {
 
 .task-unfold-box {
   grid-area: 2 / 1 / 3 / -1;
-  grid-template-columns: 2fr 3fr 3fr;
-  gap: 1rem;
   display: none;
+  padding: 1rem;
 }
 
 .task-unfold-box > * {
@@ -563,7 +448,8 @@ main .task-bar {
 
 .task-unfold-box.shown {
   display: grid;
-  padding: 1rem 0 0 0;
+  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+  gap: 1rem;
 }
 
 /* Page menu */
@@ -793,7 +679,7 @@ main .sidebar-cover {
 .menu-cover {
   position: absolute;
   width: 100%;
-  height: 100%;
+  height: 120%;
   z-index: var(--z-index-menu);
   display: none;
 }

@@ -16,7 +16,7 @@ const result1 = add(date, {
 });
 
 const result2 = add(date, {
-    days: -1
+    days: -4
 });
 
 export const projectExample = {

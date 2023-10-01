@@ -586,7 +586,7 @@ function renderMainPageFrame() {
     const barProjects = createElementWithAttributes('div', {class: 'bar-projects'}, sidebar);
     const projectsBarHeader = createElementWithAttributes('div', {class: 'header'}, barProjects);
     const projectsList = createElementWithAttributes('ul', {class: 'projects-list'}, barProjects);
-    const barFooter = createElementWithAttributes('div', {class: 'bar-footer'}, sidebar);
+    const barFooter = createElementWithAttributes('button', {class: 'bar-footer'}, sidebar);
     renderFilterOptionsMenu();
     const mainHeadBox = createElementWithAttributes('div', {class: 'header'}, main);
     const mainTaskBar = createElementWithAttributes('div', {class: 'task-bar'}, main);
@@ -1047,7 +1047,9 @@ function renderMainPageTemplate() {
     nextProjectsPageIcon.style.backgroundImage = `url(${assets.nextPageIconPath})`;
 
     const footerLink = createElementWithAttributes('a', {
-        href: 'https://github.com/F3GR'
+        href: 'https://github.com/F3GR',
+        target: '_blank',
+        tabindex: -1,
     }, barFooter);
     const footerText = createElementWithAttributes('span', {}, footerLink);
     footerText.textContent = 'F3GR, 2023';
