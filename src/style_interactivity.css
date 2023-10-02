@@ -311,7 +311,7 @@ button:active {
 .task label.status-checkbox:hover,
 .task label.status-checkbox:focus {
   cursor: pointer;
-  transform: scale(var(--scale-size-hover-small-icons));
+  transform: scale(var(--scale-size-hover-panels));
   position: relative;
   transition: transform var(--click-animation-duration);
   outline: 0.2rem ridge var(--black);

@@ -21,7 +21,7 @@ const result2 = add(date, {
 
 export const projectExample = {
     name: 'New project', 
-    iconURL: assets.iconCategoryITPath, 
+    iconURL: './assets/category-it.svg', 
     altText: 'Category IT icon'
 };
 

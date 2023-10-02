@@ -16,7 +16,7 @@ export function renderTasksPageNav(current, total) {
         total = 1;
     }
 
-    const { nextPageBtn, tasksBarFooter, tasksPageNav } = getTasksBarFooterNodes();
+    const { nextPageBtn, tasksBarFooter, tasksPageNav, tasksList } = getTasksBarFooterNodes();
     if (!isHTMLElement(nextPageBtn) || !isHTMLElement(tasksBarFooter)) {
         showErrorModal(ERR_RENDERING.TASKS_BAR);
         return;
@@ -25,5 +25,11 @@ export function renderTasksPageNav(current, total) {
         showErrorModal(ERR_RENDERING.TASKS_NAV);
         return;
     }
+    if (!isHTMLElement(tasksList)) {
+        showErrorModal(ERR_RENDERING.TASKS_LIST);
+        return;
+    }
+
+    tasksList.setAttribute('current-tasks-page', `${current}`);
     tasksPageNav.textContent = `${current} / ${total}`;
 }

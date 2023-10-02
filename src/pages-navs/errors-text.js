@@ -9,9 +9,11 @@ export const ERR_RENDERING = new Enum({
     PROJECTS_VALUES: ['Application error', 'The total number of projects pages and/or current project page isn\'t a valid number', 'Process: rendering the projects navigation bar'],
     PROJECTS_BAR: ['Application error', 'The projects navigation buttons couldn\'t be found', 'Process: rendering the projects navigation bar'],
     PROJECTS_NAV: ['Application error', 'The projects pagination couldn\'t be found', 'Process: rendering the projects navigation bar'],
+    PROJECTS_LIST: ['Application error', 'The projects list component couldn\'t be found', 'Process: rendering the projects navigation bar'],
     TASKS_BAR: ['Application error', 'The tasks navigation buttons couldn\'t be found', 'Process: rendering the tasks navigation bar'],
     TASKS_NAV: ['Application error', 'The tasks pagination couldn\'t be found', 'Process: rendering the tasks navigation bar'],
     TASKS_VALUES: ['Application error', 'The total number of projects pages and/or current project page isn\'t a valid number', 'Process: rendering the tasks navigation bar'],
+    TASKS_LIST: ['Application error', 'The tasks list component couldn\'t be found', 'Process: rendering the tasks navigation bar'],
 });
 
 export const ERR_EVENTS = new Enum({

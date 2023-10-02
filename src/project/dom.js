@@ -32,14 +32,14 @@ export function renderProject(project) {
     newProjectText.textContent = name;
 
     const newProjectEditImage = createElementWithAttributes('button', {
-        class: 'edit',
+        class: 'edit non-select',
     }, nodeNewProject);
     newProjectEditImage.ariaLabel = 'Edit project';
     newProjectEditImage.style.backgroundImage = `url(${assets.newProjectEditImagePath})`;
     newProjectEditImage.setAttribute('data-project-action', ACTIONS_PROJECTS.EDIT);
     
     const newProjectDeleteImage = createElementWithAttributes('button', {
-        class: 'remove',
+        class: 'remove non-select',
     }, nodeNewProject);
     newProjectDeleteImage.ariaLabel = 'Remove project';
     newProjectDeleteImage.style.backgroundImage = `url(${assets.newProjectDeleteImagePath})`,

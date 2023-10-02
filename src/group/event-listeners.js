@@ -35,9 +35,10 @@ export function addListenersSidebar() {
 
 const handleGroupSelection = (e) => {
     if (isPressedKey(e)) {
+        const validTarget = !e.target.classList.contains('non-select');
         const selectedGroup = e.target.closest('.bar-types > *, .projects-list > li.project');
 
-        if (selectedGroup && !selectedGroup.classList.contains('current')) {
+        if (validTarget && selectedGroup && !selectedGroup.classList.contains('current')) {
             const groupIdentifier = selectedGroup.getAttribute('data-group-id');
             if (!isValid(groupIdentifier)) {
                 showErrorModal(ERR_EVENTS.NO_GROUP_ID);

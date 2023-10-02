@@ -20,6 +20,7 @@ export function getTaskNodes() {
     const submitButton = document.querySelector('.task-menu .submit');
 
     const titleInput = document.querySelector('.task-menu #task-title');
+    const allPriorityInputs = document.querySelectorAll('.task-menu .priority input');
     const dueDateInput = document.querySelector('.task-menu #task-dueDate');
     const descriptionInput = document.querySelector('.task-menu #task-description');
     const notesInput = document.querySelector('.task-menu #task-notes');
@@ -47,5 +48,6 @@ export function getTaskNodes() {
         removeConfirm,
         removeHeading,
         removeMessage,
+        allPriorityInputs,
     };
 };

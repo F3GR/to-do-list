@@ -16,7 +16,7 @@ export function renderProjectsPageNav(current, total) {
         total = 1;
     }
 
-    const { nextPageBtn, projectsBarFooter, projectsPageNav } = getProjectsBarFooterNodes();
+    const { nextPageBtn, projectsBarFooter, projectsPageNav, projectsList } = getProjectsBarFooterNodes();
     if (!isHTMLElement(nextPageBtn) || !isHTMLElement(projectsBarFooter)) {
         showErrorModal(ERR_RENDERING.PROJECTS_BAR);
         return;
@@ -25,5 +25,11 @@ export function renderProjectsPageNav(current, total) {
         showErrorModal(ERR_RENDERING.PROJECTS_NAV);
         return;
     }
+    if (!isHTMLElement(projectsList)) {
+        showErrorModal(ERR_RENDERING.PROJECTS_LIST);
+        return;
+    }
+
+    projectsList.setAttribute('current-projects-page', `${current}`);
     projectsPageNav.textContent = `${current} / ${total}`;
 }

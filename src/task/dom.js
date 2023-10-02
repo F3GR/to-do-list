@@ -1,5 +1,5 @@
 import { createElementWithAttributes, showErrorModal } from '../utils.js';
-import { isHTMLElement, isValid, ACTIONS_TASKS } from '../utils.js';
+import { isHTMLElement, isValid, ACTIONS_TASKS, convertPriorityCodeToText } from '../utils.js';
 import { getTaskNodes } from './static-selectors.js';
 import { assets } from './assets.js';
 import { ERR_RENDERING } from './errors-text.js';
@@ -170,16 +170,3 @@ export function renderTask(taskObj) {
     taskNotes.textContent = `${notes}`;
 }
 
-function convertPriorityCodeToText(priority) {
-    switch (priority) {
-        case '0': {
-            return 'Normal';
-        }
-        case '1': {
-            return 'Medium';
-        }
-        case '2': {
-            return 'High';
-        }
-    }
-}

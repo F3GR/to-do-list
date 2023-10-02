@@ -1,6 +1,6 @@
 import { application } from '../main-app.js';
 import { renderTask } from './dom.js';
-import { ACTIONS_TASKS, isHTMLElement, isNodeList, isObject, isValid, showErrorModal, handleExitRemoveMenu, isPressedKey } from '../utils.js';
+import { ACTIONS_TASKS, isHTMLElement, isNodeList, isObject, isValid, showErrorModal, handleExitRemoveMenu, isPressedKey, isReal } from '../utils.js';
 import { getTaskNodes } from './static-selectors.js';
 import { ERR_EVENTS } from './errors-text.js';
 import { assets } from './assets.js';
@@ -23,7 +23,7 @@ export function addListenersManageTasks() {
     main.addEventListener('keydown', (e) => handleLabelSelection(e));
     function handleTaskAction(e) {
         if (isPressedKey(e)) {
-            const reactiveTaskIcon = e.target.closest('.task button');
+            const reactiveTaskIcon = e.target.closest('.task button, .task-bar .add-new');
             if (isHTMLElement(reactiveTaskIcon)) {
                 const action = reactiveTaskIcon.getAttribute('data-task-action');
     
@@ -153,7 +153,59 @@ const taskAction = (action, target) => {
                 showErrorModal(ERR_EVENTS.NO_TASK_OR_IDS_EDIT_SHOWING);
                 return;
             }
-    
+
+            const {
+                titleInput,
+                allPriorityInputs,
+                dueDateInput,
+                descriptionInput,
+                notesInput,
+            } = getTaskNodes();
+        
+            if (!isHTMLElement(titleInput) ||
+            !isNodeList(allPriorityInputs) ||
+            !isHTMLElement(dueDateInput) ||
+            !isHTMLElement(descriptionInput) ||
+            !isHTMLElement(notesInput)
+            ) {
+                showErrorModal(ERR_EVENTS.NO_TASK_OR_IDS_EDIT_SHOWING);
+                return;
+            }
+
+            const tasksTitle = task.querySelector('.task .task-title').textContent;
+            const tasksPriorityCode = task.getAttribute('data-task-priority');
+            const tasksDueDate = task.querySelector('.task .task-due-date span').textContent;
+            const tasksDescription = task.querySelector('.task .task-description').textContent;
+            const tasksNotes = task.querySelector('.task .task-notes').textContent;
+
+            if (!isReal(tasksTitle) ||
+            !isReal(tasksPriorityCode) ||
+            !isReal(tasksDueDate) ||
+            !isReal(tasksDescription) ||
+            !isReal(tasksNotes)
+            ) {
+                showErrorModal(ERR_EVENTS.NO_TASK_OR_IDS_EDIT_SHOWING);
+                return;
+            }
+
+            let selectedInput;
+            for (const input of allPriorityInputs) {
+                if (input.value === tasksPriorityCode) {
+                    selectedInput = input;
+                    selectedInput.checked = true;
+                    break;
+                }
+            }
+            if (!selectedInput) {
+                showErrorModal(ERR_EVENTS.EDITED_TASK_PRIORITY_VALUE);
+                return;
+            }
+
+            titleInput.value = tasksTitle;
+            dueDateInput.value = tasksDueDate;
+            descriptionInput.value = tasksDescription;
+            notesInput.value = tasksNotes;
+
             menu.setAttribute('data-project-id', `${projectId}`);
             menu.setAttribute('data-task-action', 'edit');
             menu.setAttribute('data-task-id', `${taskId}`);
@@ -162,6 +214,7 @@ const taskAction = (action, target) => {
             submitButton.textContent = 'Save';
             menuCover.classList.add('shown');
             menu.classList.add('shown');
+
             break;
 
         case ACTIONS_TASKS.REMOVE:
@@ -379,6 +432,8 @@ const submitHandler = (e) => {
             handleToggleOverdueIcon(editedTaskNode);
             break;
     }
+
+    exitHandler(e);
 };
 
 const exitHandler = (e) => {
@@ -389,13 +444,24 @@ const exitHandler = (e) => {
             menu,
             menuCover,
             menuTitle,
-            submitButton 
+            submitButton,
+            titleInput,
+            allPriorityInputs,
+            dueDateInput,
+            descriptionInput,
+            notesInput,
         } = getTaskNodes();
     
         if (!isHTMLElement(menu) || 
         !isHTMLElement(menuCover) || 
         !isHTMLElement(menuTitle) || 
-        !isHTMLElement(submitButton)) {
+        !isHTMLElement(submitButton) ||
+        !isHTMLElement(titleInput) ||
+        !isNodeList(allPriorityInputs) ||
+        !isHTMLElement(dueDateInput) ||
+        !isHTMLElement(descriptionInput) ||
+        !isHTMLElement(notesInput)
+        ) {
             showErrorModal(ERR_EVENTS.TASK_MENU_PANEL_EXITING);
             return;
         }
@@ -409,6 +475,12 @@ const exitHandler = (e) => {
         menu.removeAttribute('data-group-id');
         menu.removeAttribute('data-task-action');
         menu.removeAttribute('data-task-id');
+
+        titleInput.value = '';
+        allPriorityInputs.forEach(input => input.checked = false);
+        dueDateInput.value = '';
+        descriptionInput.value = '';
+        notesInput.value = '';
     }
 }
 

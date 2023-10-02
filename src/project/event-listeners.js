@@ -45,8 +45,16 @@ export function addListenersManageProjects() {
         }
     }
 
-    projectsBar.addEventListener('click', (e) => openMenuHandler(e));
-    projectsBar.addEventListener('keydown', (e) => openMenuHandler(e));
+    projectsBar.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        openMenuHandler(e);
+    });
+    projectsBar.addEventListener('keydown', (e) => {
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        openMenuHandler(e);
+    });
     form.addEventListener('submit', (e) => submitHandler(e));
 
     removeConfirm.addEventListener('click', (e) => handleProjectRemove(e));
@@ -70,7 +78,7 @@ export function addListenersManageProjects() {
 };
 
 const openMenuHandler = (e) => {
-    if (isPressedKey(e)) {
+    if (isPressedKey(e) && e.target.tagName === 'BUTTON') {
         e.preventDefault();
         e.stopImmediatePropagation();
         
@@ -96,6 +104,8 @@ const openMenu = (action, target) => {
         removeMenu,
         removeHeading,
         removeMessage,
+        inputsAllOptions,
+        inputProjectName,
     } = getProjectNodes();
 
     if (!isHTMLElement(menu) || 
@@ -104,7 +114,9 @@ const openMenu = (action, target) => {
     !isHTMLElement(submitButton) ||
     !isHTMLElement(removeMenu) ||
     !isHTMLElement(removeHeading) ||
-    !isHTMLElement(removeMessage)
+    !isHTMLElement(removeMessage) ||
+    !isHTMLElement(inputProjectName) ||
+    !isNodeList(inputsAllOptions)
     ) {
         showErrorModal(ERR_EVENTS.PROJECT_MENU_SHOWING);
         return;
@@ -126,14 +138,41 @@ const openMenu = (action, target) => {
             if (!isHTMLElement(editedProject) || !isValid(editedProjectId)) {
                 showErrorModal(ERR_EVENTS.EDITED_PROJECT);
                 return;
-            }   
+            }
+
+            const projectsName = editedProject.querySelector('span').textContent;
+            const projectsIconURL = editedProject.querySelector('img').getAttribute('src');
+            if (!projectsName || !projectsIconURL) {
+                showErrorModal(ERR_EVENTS.EDITED_PROJECT_VALUES);
+                return;
+            }
+            
+            let selectedInput;
+            for (const input of inputsAllOptions) {
+                if (input.value === projectsIconURL) {
+                    selectedInput = input;
+                    break;
+                }
+            }
+
+            const div = selectedInput.closest('.project-icon-option');
+            if (!selectedInput || !isHTMLElement(div)) {
+                showErrorModal(ERR_EVENTS.EDITED_PROJECT_URL);
+                return;
+            }
+
+            div.classList.add('selected');
+            inputProjectName.value = projectsName;
+            selectedInput.checked = true;
 
             menu.setAttribute('data-project-action', action);
             menu.setAttribute('data-group-id', editedProjectId);
             menuCover.classList.add('shown');
             menu.classList.add('shown');
+
             menuTitle.textContent = 'Edit the project';
             submitButton.textContent = 'Save';
+
             break;
 
         case ACTIONS_PROJECTS.REMOVE:
@@ -234,10 +273,10 @@ const submitHandler = (e) => {
     }
 
     const action = menu.getAttribute('data-project-action');
-    submitForm(action);
+    submitForm(e, action);
 };
 
-const submitForm = (action) => {
+const submitForm = (e, action) => {
     const inputName = document.querySelector('#project-name');
     const inputIcon = document.querySelector('.project-menu input[name="iconURL"]:checked');
 
@@ -308,6 +347,8 @@ const submitForm = (action) => {
             updateEditedProjectNode(editedProject);
             break;
     }
+
+    exitHandler(e);
 };
 
 const updateEditedProjectNode = (project) => {
@@ -353,22 +394,39 @@ const updateEditedProjectNode = (project) => {
 const exitHandler = (e) => {
     if (isPressedKey(e)) {
         e.preventDefault();
-        const { menuCover, menu, menuTitle, submitButton } = getProjectNodes();
-    
+        const { 
+            menuCover, 
+            menu, 
+            menuTitle, 
+            submitButton, 
+            inputsAllOptions, 
+            inputProjectName 
+        } = getProjectNodes();
+
         if (!isHTMLElement(menu) || 
         !isHTMLElement(menuCover) || 
         !isHTMLElement(menuTitle) || 
-        !isHTMLElement(submitButton)
+        !isHTMLElement(submitButton) ||
+        !isNodeList(inputsAllOptions) ||
+        !isHTMLElement(inputProjectName)
         ) {
             showErrorModal(ERR_EVENTS.EXITING_PROJECT_MENU_RENDERING);
             return;
         }
-      
+
+        const selectedOption = menu.querySelector('.project-options .selected');
+        
         menuTitle.textContent = '';
         submitButton.textContent = '';
-      
+        inputProjectName.value = '';
+        inputsAllOptions.forEach(input => input.checked = false);
+
+        if (isHTMLElement(selectedOption)) {
+            selectedOption.classList.remove('selected');
+        }
         menuCover.classList.remove('shown');
         menu.classList.remove('shown');
+
         menu.removeAttribute('data-project-action');
         menu.removeAttribute('data-group-id');
         menu.removeAttribute('data-task-action');

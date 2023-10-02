@@ -14,7 +14,7 @@ export function createElementWithAttributes(tagName, attributes = {}, parentElem
 
 export function showErrorModal(message) {
     if (!Array.isArray(message)) {
-      showErrorModal(['Error (rendering error modal)', 'Heading and/or error message couldn\'t be found']);
+      showErrorModal(['Application error', 'Heading and/or error message couldn\'t be found', 'Process: rendering error modal']);
       return;
     }
     
@@ -37,13 +37,18 @@ export function showErrorModal(message) {
 }
 
 export function handleExitRemoveMenu(e) {
-  if (isPressedKey(e)) {        
+  if (isPressedKey(e)) {    
+    const menuCover = document.querySelector('.menu-cover'); 
+    const removeMenu = document.querySelector('.remove-menu'); 
+    const heading = document.querySelector('.remove-menu .remove-heading'); 
+    const message = document.querySelector('.remove-menu .remove-message');
+        
       if (!isHTMLElement(menuCover) ||
       !isHTMLElement(removeMenu) ||
       !isHTMLElement(heading) ||
       !isHTMLElement(message)
       ) {
-          showErrorModal(['Error (exiting the remove confirmation menu)', 'One or more menu components couldn\'t be found']);
+          showErrorModal(['Application error', 'One or more menu components couldn\'t be found', 'Process: exiting the remove confirmation menu']);
           return;
       }
   
@@ -58,6 +63,20 @@ export function handleExitRemoveMenu(e) {
       removeMenu.setAttribute('data-task-id', null);
       removeMenu.setAttribute('data-task-action', null);
       removeMenu.setAttribute('data-project-action', null);
+  }
+}
+
+export function convertPriorityCodeToText(priority) {
+  switch (priority) {
+      case '0': {
+          return 'Normal';
+      }
+      case '1': {
+          return 'Medium';
+      }
+      case '2': {
+          return 'High';
+      }
   }
 }
 
@@ -80,6 +99,10 @@ export function isObject(obj) {
 
 export function isBoolean(value) {
   return typeof value === 'boolean';
+}
+
+export function isReal(value) {
+  return value !== undefined && value !== null;
 }
 
 export function isValid(value) {
