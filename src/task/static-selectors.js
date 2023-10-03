@@ -6,14 +6,15 @@ export function getTaskNodes() {
     }
 
     const taskList = document.querySelector('.task-list');
+    const sidebar = document.querySelector('aside');
 
-    const main = document.querySelector('.content main');
+    const main = document.querySelector('main');
     const form = document.querySelector('.task-menu form');
 
     const exitButton = document.querySelector('.task-menu .exit');
     const cancelButton = document.querySelector('.task-menu .cancel');
 
-    const menu = document.querySelector('.content .task-menu');
+    const menu = document.querySelector('.task-menu');
     const menuCover = document.querySelector('.menu-cover');
 
     const menuTitle = document.querySelector('.task-menu .title .title-text');
@@ -32,6 +33,7 @@ export function getTaskNodes() {
     
     return taskNodes = {    
         taskList,
+        sidebar,
         main,
         form,
         exitButton,

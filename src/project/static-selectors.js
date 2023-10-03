@@ -4,8 +4,9 @@ export function getProjectNodes() {
     if (projectNodes) {
         return projectNodes;
     }
-    
+    const sidebar = document.querySelector('aside');
     const projectsList = document.querySelector('.projects-list');
+    const tasksList = document.querySelector('.task-list');
 
     const projectsBar = document.querySelector('aside .bar-projects');
     const form = document.querySelector('.project-menu form');
@@ -49,5 +50,7 @@ export function getProjectNodes() {
         removeMessage,
         inputsAllOptions,
         inputProjectName,
+        sidebar,
+        tasksList,
     };
 };

@@ -594,6 +594,7 @@ function renderMainPageFrame() {
 
     const header = createElementWithAttributes('header', {}, content);
     const sidebar = createElementWithAttributes('aside', {}, content);
+    sidebar.setAttribute('current-group', DEFAULT_GROUP);
     const main = createElementWithAttributes('main', {}, content);
     const barTypes = createElementWithAttributes('div', {class: 'bar-types'}, sidebar);
     const barProjects = createElementWithAttributes('div', {class: 'bar-projects'}, sidebar);

@@ -32,11 +32,23 @@ const pagesController = (numTasksPerPage) => {
             return { newPageNumber: currentPage, newPage };
         },
         getPageItems: (currentPage, listArr) => {
+            if (typeof currentPage !== 'number') {
+                throw new Error(ERR_CONTROLLER.NUM);
+            }
+            if (!Array.isArray(listArr)) {
+                throw new Error(ERR_CONTROLLER.LIST);
+            }
+
             const startIndex = (currentPage - 1) * numTasksPerPage;
             const endIndex = startIndex + numTasksPerPage;
             return listArr.slice(startIndex, endIndex);
         },
-        pagesTotal: (listArr) => Math.ceil(listArr.length / numTasksPerPage),
+        pagesTotal: (listArr) => {
+            if (!Array.isArray(listArr)) {
+                throw new Error(ERR_CONTROLLER.LIST);
+            }
+            return Math.ceil(listArr.length / numTasksPerPage);
+        },
     };
 };
 

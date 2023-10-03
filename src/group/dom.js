@@ -10,8 +10,13 @@ export function renderGroup(newGroup, groupIdentifier) {
     const selectedGroup = document.querySelector(`.bar-types > *[data-group-id="${groupIdentifier}"], 
                                                 .projects-list > li.project[data-group-id="${groupIdentifier}"]`);
     const { addTaskIcon } = getGroupNodes();
-    const selectedGroupName = selectedGroup.querySelector('span');
-    const selectedGroupIcon = selectedGroup.querySelector('img');
+
+    let selectedGroupName;
+    let selectedGroupIcon;
+    if (selectedGroup) {
+        selectedGroupName = selectedGroup.querySelector('span');
+        selectedGroupIcon = selectedGroup.querySelector('img');
+    }
 
     if (!isHTMLElement(mainGroupName) || 
     !isHTMLElement(mainGroupIcon) || 
@@ -28,14 +33,6 @@ export function renderGroup(newGroup, groupIdentifier) {
         showErrorModal(ERR_RENDERING.ADD_TASK_ICON);
         return;
     }
-    if (!isHTMLElement(selectedGroup)) {
-        showErrorModal(ERR_RENDERING.CURRENT_GROUP);
-        return;
-    }
-    if (!isHTMLElement(selectedGroupName) || !isHTMLElement(selectedGroupIcon)) {
-        showErrorModal(ERR_RENDERING.CURRENT_GROUP_ELEMENT);
-        return;
-    }
     
     taskList.innerHTML = '';
     newGroup.forEach((task) => renderTask(task));
@@ -47,9 +44,11 @@ export function renderGroup(newGroup, groupIdentifier) {
     }
 
     allGroups.forEach((group) => group.classList.remove('current'));
-    selectedGroup.classList.add('current');
-    
-    mainGroupName.textContent = selectedGroupName.textContent;
-    mainGroupIcon.src = selectedGroupIcon.src;
-    mainGroupIcon.alt = selectedGroupIcon.alt;
+
+    if (selectedGroup) {
+        selectedGroup.classList.add('current');
+        mainGroupName.textContent = selectedGroupName.textContent;
+        mainGroupIcon.src = selectedGroupIcon.src;
+        mainGroupIcon.alt = selectedGroupIcon.alt;
+    }
 }

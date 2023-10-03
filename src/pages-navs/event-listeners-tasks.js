@@ -1,6 +1,6 @@
 import { application } from '../main-app';
 import { getTasksBarFooterNodes } from './static-selectors';
-import { isHTMLElement, isPressedKey, showErrorModal } from '../utils';
+import { isHTMLElement, isPressedKey, showErrorModal, isValid } from '../utils';
 import { ERR_EVENTS } from './errors-text';
 import { renderTask } from '../task/dom';
 
@@ -19,18 +19,11 @@ export function addListenersTasksPagesNav() {
                 return;
             }
     
-            const currentTasksPageNav = document.querySelector('.tasks-pages-nums');
-            if (!isHTMLElement(currentTasksPageNav)) {
-                showErrorModal(ERR_EVENTS.TASKS_NAV);
+            const currentTasksPageNumber = parseInt(tasksList.getAttribute('current-tasks-page'));
+            if (!isValid(currentTasksPageNumber)) {
+                showErrorModal(ERR_EVENTS.PROJECTS_NAV);
                 return;
             }
-    
-            const currentTasksPageNumber = parseInt(
-            currentTasksPageNav
-            .textContent
-            .split('/')[0]
-            .trim()
-            );
     
             let prevTasksPage;
             try {
@@ -61,18 +54,11 @@ export function addListenersTasksPagesNav() {
                 return;
             }
     
-            const currentTasksPageNav = document.querySelector('.tasks-pages-nums');
-            if (!isHTMLElement(currentTasksPageNav)) {
-                showErrorModal(ERR_EVENTS.TASKS_NAV);
+            const currentTasksPageNumber = parseInt(tasksList.getAttribute('current-tasks-page'));
+            if (!isValid(currentTasksPageNumber)) {
+                showErrorModal(ERR_EVENTS.PROJECTS_NAV);
                 return;
             }
-    
-            const currentTasksPageNumber = parseInt(
-            currentTasksPageNav
-            .textContent
-            .split('/')[0]
-            .trim()
-            );
             
             let nextTasksPage;
             try {

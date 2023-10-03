@@ -40,7 +40,7 @@ export const projectsController = {
             throw new Error(ERR_CONTROLLER.NO_INDEX);
         }
         
-        if (!noDuplicateName(projectsList, name, "")) {
+        if (!noDuplicateName(projectsList, name, id)) {
             return -1;
         }
 

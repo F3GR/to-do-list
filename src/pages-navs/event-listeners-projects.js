@@ -1,6 +1,6 @@
 import { application } from '../main-app';
 import { getProjectsBarFooterNodes } from './static-selectors';
-import { isHTMLElement, isPressedKey, showErrorModal } from '../utils';
+import { isHTMLElement, isPressedKey, showErrorModal, isValid } from '../utils';
 import { ERR_EVENTS } from './errors-text';
 import { renderProject } from '../project/dom';
 
@@ -19,18 +19,11 @@ export function addListenersProjectsPagesNav() {
                 return;
             }
     
-            const currentProjectsPageNav = document.querySelector('.projects-pages-nums');
-            if (!isHTMLElement(currentProjectsPageNav)) {
+            const currentProjectsPageNumber = parseInt(projectsList.getAttribute('current-projects-page'));
+            if (!isValid(currentProjectsPageNumber)) {
                 showErrorModal(ERR_EVENTS.PROJECTS_NAV);
                 return;
             }
-    
-            const currentProjectsPageNumber = parseInt(
-            currentProjectsPageNav
-            .textContent
-            .split('/')[0]
-            .trim()
-            );
     
             let prevProjectsPage;
             try {
@@ -61,18 +54,11 @@ export function addListenersProjectsPagesNav() {
                 return;
             }
     
-            const currentProjectsPageNav = document.querySelector('.projects-pages-nums');
-            if (!isHTMLElement(currentProjectsPageNav)) {
+            const currentProjectsPageNumber = parseInt(projectsList.getAttribute('current-projects-page'));
+            if (!isValid(currentProjectsPageNumber)) {
                 showErrorModal(ERR_EVENTS.PROJECTS_NAV);
                 return;
             }
-    
-            const currentProjectsPageNumber = parseInt(
-            currentProjectsPageNav
-            .textContent
-            .split('/')[0]
-            .trim()
-            );
     
             let nextProjectsPage;
             try {

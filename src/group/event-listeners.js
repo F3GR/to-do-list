@@ -2,6 +2,9 @@ import { renderGroup } from './dom.js';
 import { isHTMLElement, isPressedKey, isValid, showErrorModal } from '../utils.js';
 import { ERR_EVENTS } from './errors-text.js';
 import { application } from '../main-app.js';
+import { getGroupNodes } from './static-selectors.js';
+
+
 
 export function addListenersSidebar() {
     const sidebarIcon = document.querySelector('header > .sidebar-icon');
@@ -9,7 +12,7 @@ export function addListenersSidebar() {
     const sidebarCover = document.querySelector('main .sidebar-cover');
     const standardGroups = document.querySelector('.bar-types');
     const projectGroups = document.querySelector('.projects-list');
-    
+
     if (!isHTMLElement(sidebarIcon) ||
         !isHTMLElement(sidebar) ||
         !isHTMLElement(sidebarCover) ||
@@ -39,6 +42,12 @@ const handleGroupSelection = (e) => {
         const selectedGroup = e.target.closest('.bar-types > *, .projects-list > li.project');
 
         if (validTarget && selectedGroup && !selectedGroup.classList.contains('current')) {
+            const { sidebar } = getGroupNodes();
+            if (!isHTMLElement(sidebar)) {
+                showErrorModal(ERR_EVENTS.NO_SIDEBAR);
+                return;
+            }
+
             const groupIdentifier = selectedGroup.getAttribute('data-group-id');
             if (!isValid(groupIdentifier)) {
                 showErrorModal(ERR_EVENTS.NO_GROUP_ID);
@@ -68,7 +77,8 @@ const handleGroupSelection = (e) => {
                 showErrorModal([ERR_EVENTS.NEW_GROUP[0], e.message, ERR_EVENTS.NEW_GROUP[2]]);
                 return;
             }
-    
+            
+            sidebar.setAttribute('current-group', groupIdentifier);
             renderGroup(filteredSortedFirstPage, groupIdentifier);
         }
     }

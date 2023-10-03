@@ -26,12 +26,12 @@ export const localStorageController = {
     getAllTasks: () => {
         const { projectsList } = localStorageController.getProjectsList();
         const arrayOfProjectIds = projectsList.map(({ id, name, iconURL }) => ({ id }));
-        console.log(`Array of project Id's: ${arrayOfProjectIds}`);
+        console.log('Array of project Id\'s:', arrayOfProjectIds);
 
         const allTasksList = arrayOfProjectIds.flatMap(
             ({ id }) => Object.values(localStorageController.getTasksListByProjectId(id))
         );
-        console.log(`Array of all tasks: ${allTasksList}`);
+        console.log('Array of all tasks:', allTasksList);
         return allTasksList;
     },
 

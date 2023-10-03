@@ -11,7 +11,9 @@ export function renderProjectsPageNav(current, total) {
         showErrorModal(ERR_RENDERING.PROJECTS_VALUES);
         return;
     }
-
+    if (current === 0) {
+        current = 1;
+    }
     if (total === 0) {
         total = 1;
     }

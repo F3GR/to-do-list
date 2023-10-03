@@ -73,11 +73,15 @@ export const viewController = {
 
 const sortTasksByDate = (tasksGroup, ascendingOrder) => {
     return tasksGroup.sort((task1, task2) => {
-        const date1 = Date.parse(task1.dueDate);
-        const date2 = Date.parse(task2.dueDate);
+        const date1 = new Date(task1.dueDate);
+        const date2 = new Date(task2.dueDate);
+        console.log('date1:', date1);
+        console.log('date2:', date2);
         if (ascendingOrder) {
+            console.log('first', date1);
             return date1 - date2;
         } else {
+            console.log('first', date2);
             return date2 - date1;
         }
     });

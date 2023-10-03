@@ -1,4 +1,3 @@
-import { isToday, parseISO, differenceInWeeks } from 'date-fns';
 import { STATUS, STANDARD_GROUPS } from '../utils.js';
 import { ERR_CONTROLLER } from './errors-text.js';
 
@@ -25,9 +24,22 @@ export const groupsController = {
     },
 };
 
-const filterTasksByToday = (taskList) => taskList.filter( ({ dueDate }) => isToday(parseISO(dueDate)) );
+const filterTasksByToday = (taskList) => taskList.filter( ({ dueDate }) => {
+    const parsedDueDate = new Date(dueDate);
+    const now = new Date();
+
+    return now.getDate() === parsedDueDate.getDate() && 
+    now.getMonth() === parsedDueDate.getMonth() && 
+    now.getFullYear() === parsedDueDate.getFullYear();
+});
 const filterTasksByWeek = (taskList) => {
     const today = new Date();
-    return taskList.filter(({ dueDate }) => differenceInWeeks(parseISO(dueDate), today) === 0);
+    const millisecondsInAWeek = 7 * 24 * 60 * 60 * 1000;
+    return taskList.filter(({ dueDate }) => {
+        const taskDueDate = new Date(dueDate);
+        const timeDifference = taskDueDate - today;
+        const weeksDifference = Math.floor(timeDifference / millisecondsInAWeek);
+        return weeksDifference === 0;
+    });
 };
 const filterTasksByStatus = (taskList, status) => taskList.filter(({ status: taskStatus }) => taskStatus === status);

@@ -62,29 +62,29 @@ export const tasksController = {
             throw new Error(ERR_CONTROLLER.NO_INDEX);
         }
 
-        if (!noDuplicateTitle(tasksList, title)) {
+        if (!noDuplicateTitle(tasksList, title, taskId)) {
             return -1;
         }
         
         const editedTask = Object.assign({}, tasksList[editedTaskIndex]);
         const editedTasksList = [...tasksList];
-        if (editedTask.title !== editedTitle) {
-            editedTask.title = editedTitle;
+        if (editedTask.title !== title) {
+            editedTask.title = title;
         }
-        if (editedTask.dueDate !== editedDueDate) {
-            editedTask.dueDate = editedDueDate;
+        if (editedTask.dueDate !== dueDate) {
+            editedTask.dueDate = dueDate;
         }
         if (editedTask.status !== '0') {
             editedTask.status = updateOverdueStatus(editedTask.status, Date.parse(editedTask.dueDate));
         }
-        if (editedTask.priority !== editedPriority) {
-            editedTask.priority = editedPriority;
+        if (editedTask.priority !== priority) {
+            editedTask.priority = priority;
         }
-        if (editedTask.description !== editedDescription) {
-            editedTask.description = editedDescription;
+        if (editedTask.description !== description) {
+            editedTask.description = description;
         }
-        if (editedTask.notes !== editedNotes) {
-            editedTask.notes = editedNotes;
+        if (editedTask.notes !== notes) {
+            editedTask.notes = notes;
         }
 
         editedTasksList.splice(editedTaskIndex, 1, editedTask);
@@ -157,9 +157,13 @@ export const tasksController = {
 };
 
 const updateOverdueStatus = (status, dueDate) => {
-    if (Date.now() - dueDate > 0) {
-        status = STATUS.OVERDUE;
-        return status;
+    const today = new Date();
+    const taskDueDate = new Date(dueDate);
+    const millisecondsInADay = 24 * 60 * 60 * 1000;
+    const timeDifference = today - taskDueDate;
+    const isOverDue = Math.floor(timeDifference / millisecondsInADay);
+    if (isOverDue > 0) {
+        return STATUS.OVERDUE;
     }
     return status;
 };

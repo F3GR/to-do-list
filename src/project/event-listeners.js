@@ -2,7 +2,7 @@ import { application } from '../main-app.js';
 import { renderProject } from './dom.js';
 import { renderGroup } from '../group/dom.js';
 import { getProjectNodes } from './static-selectors.js';
-import { showErrorModal, STANDARD_GROUPS, ACTIONS_PROJECTS, isHTMLElement, isValid, isObject, handleExitRemoveMenu, isNodeList, isPressedKey } from '../utils.js';
+import { showErrorModal, STANDARD_GROUPS, ACTIONS_PROJECTS, isHTMLElement, isValid, isObject, handleExitRemoveMenu, isNodeList, isPressedKey, NUM_PROJECTS_PAGE, DEFAULT_GROUP } from '../utils.js';
 import { ERR_EVENTS } from './errors-text.js';
 
 export function addListenersManageProjects() {
@@ -73,8 +73,16 @@ export function addListenersManageProjects() {
         }
     }
 
-    exitButton.addEventListener('click', (e) => exitHandler(e));
-    cancelButton.addEventListener('click', (e) =>  exitHandler(e));
+    exitButton.addEventListener('click', (e) => {
+        if (isPressedKey(e)) {
+            exitHandler(e);
+        }
+    });
+    cancelButton.addEventListener('click', (e) =>  {
+        if (isPressedKey(e)) {
+            exitHandler(e);
+        }
+    });
 };
 
 const openMenuHandler = (e) => {
@@ -208,6 +216,8 @@ const removeHandler = (e) => {
         removeMenu,
         removeHeading,
         removeMessage,
+        sidebar,
+        tasksList,
     } = getProjectNodes();
 
     if (!isHTMLElement(removeMenu) ||
@@ -219,6 +229,11 @@ const removeHandler = (e) => {
         showErrorModal(ERR_EVENTS.REMOVE_MENU_NODES);
         return;
     }
+    if (!isHTMLElement(sidebar) ||
+    !isHTMLElement(tasksList)) {
+        showErrorModal(ERR_EVENTS.ACTION_REMOVING_NO_SIDEBAR);
+        return;
+    }
 
     const removedProject = removeMenu.project;
     const removedProjectId = removeMenu.getAttribute('data-project-id');
@@ -226,35 +241,53 @@ const removeHandler = (e) => {
         showErrorModal(ERR_EVENTS.REMOVE_MENU_PROJECTS);
         return;
     }
-    
-    let projectListLength;
+
+    const { projectsList } = getProjectNodes();
+    const allProjectNodes = projectsList.querySelectorAll('.project');
+    if (!isHTMLElement(projectsList) ||
+    !isNodeList(allProjectNodes)
+    ) {
+        showErrorModal(ERR_EVENTS.ACTION_REMOVING_PROJECT_LIST_PANEL);
+        return;
+    }
+
+    const currentProjectsPageNumber = parseInt(projectsList.getAttribute('current-projects-page'));
+    let currentGroupId = sidebar.getAttribute('current-group');
+    if (!isValid(currentProjectsPageNumber) || 
+    !isValid(currentGroupId)
+    ) {
+        showErrorModal(ERR_EVENTS.ACTION_REMOVING_PROJECTS_NAV);
+        return;
+    }
+    if (removedProject.getAttribute('data-group-id') === currentGroupId) {
+        currentGroupId = DEFAULT_GROUP;
+    }
+
+    let newProjectView;
     try {
-        projectListLength = application.removeProject(removedProjectId);
+        newProjectView = application.removeProject(removedProjectId, currentProjectsPageNumber, allProjectNodes.length, currentGroupId);
     } catch (e) {
         showErrorModal([ERR_EVENTS.ACTION_REMOVING_PROJECT[0], e.message, ERR_EVENTS.ACTION_REMOVING_PROJECT[2]]);
         return;
     }
+    const { newTasksPageView, newProjectsPageView } = newProjectView;
 
-    if (!removedProject.classList.contains('current')) {
-        removedProject.remove();
-        return;
+    projectsList.innerHTML = '';
+    newProjectsPageView.forEach(project => renderProject(project));
+
+    const currentGroup = document.querySelector(`.project[data-group-id='${currentGroupId}'], .bar-types > button[data-group-id='${currentGroupId}']`);
+    if (currentGroup) {
+        currentGroup.classList.add('current');
     }
 
-    let defaultProjectsList;
-    try {
-        defaultProjectsList = application.getTasksGroup(STANDARD_GROUPS.ALL);
-    } catch (e) {
-        showErrorModal([ERR_EVENTS.ACTION_REMOVING_PROJECT[0], e.message, ERR_EVENTS.ACTION_REMOVING_PROJECT[2]]);
-        return;
-    }
-
-    renderGroup(defaultProjectsList, STANDARD_GROUPS.ALL);
-    removedProject.remove();
+    tasksList.innerHTML = '';
+    renderGroup(newTasksPageView, currentGroupId);
 
     currentGroupName.textContent = '';
     currentGroupIcon.src = '';
     currentGroupIcon.alt = '';
 
+    sidebar.setAttribute('current-group', currentGroupId);
     removeMenu.project = null;
     removeMenu.setAttribute('data-project-id', null);
     removeMenu.setAttribute('data-project-action', null);
@@ -297,19 +330,36 @@ const submitForm = (e, action) => {
                 altText: inputIcon.dataset.altText,   
             };
 
-            let addedProject;
+            const { projectsList } = getProjectNodes();
+            if (!isHTMLElement(projectsList)) {
+                showErrorModal(ERR_EVENTS.ACTION_SUBMITTING_PROJECT_LIST_PANEL);
+                return;
+            }
+
+            const currentProjectsPageNumber = parseInt(projectsList.getAttribute('current-projects-page'));
+            if (!isValid(currentProjectsPageNumber)) {
+                showErrorModal(ERR_EVENTS.ACTION_ADDING_PROJECTS_NAV);
+                return;
+            }
+
+            let addProject;
             try {
-                addedProject = application.createNewProject(inputNewProject);
+                addProject = application.createNewProject(inputNewProject, currentProjectsPageNumber);
             } catch (e) {
                 showErrorModal([ERR_EVENTS.ACTION_SUBMITTING_PROJECT[0], e.message, ERR_EVENTS.ACTION_SUBMITTING_PROJECT[2]]);
                 return;
             }
-            if (!isObject(addedProject)) {
+            const { newProject, currentPageLength } = addProject;
+            if (!isObject(newProject)) {
                 showErrorModal(['Invalid input (project name)', 'A project with the new name already exists!', '']);
                 return;
             }
 
-            renderProject(addedProject);
+            if (currentPageLength < NUM_PROJECTS_PAGE) {
+                renderProject(newProject);
+            }
+
+            exitHandler(e);
             break;
 
         case ACTIONS_PROJECTS.EDIT:
@@ -345,17 +395,16 @@ const submitForm = (e, action) => {
             }
 
             updateEditedProjectNode(editedProject);
+            exitHandler(e);
             break;
     }
-
-    exitHandler(e);
 };
 
 const updateEditedProjectNode = (project) => {
     const { currentGroupIcon, currentGroupName } = getProjectNodes();
     const { id, name, iconURL, altText } = project;
     const editedProjectNodeName = document.querySelector(`.project[data-group-id="${id}"] span`);
-    const editedProjectNodeIcon = document.querySelector(`.project[data-group-id="${id}"] .icon`);
+    const editedProjectNodeIcon = document.querySelector(`.project[data-group-id="${id}"] img`);
     const editedProjectNode = document.querySelector(`.project[data-group-id="${id}"]`);
     const editedProjectTaskNodes = document.querySelectorAll(`.task[data-project-id="${id}"]`);
 
@@ -392,44 +441,42 @@ const updateEditedProjectNode = (project) => {
 };
 
 const exitHandler = (e) => {
-    if (isPressedKey(e)) {
-        e.preventDefault();
-        const { 
-            menuCover, 
-            menu, 
-            menuTitle, 
-            submitButton, 
-            inputsAllOptions, 
-            inputProjectName 
-        } = getProjectNodes();
+    e.preventDefault();
+    const { 
+        menuCover, 
+        menu, 
+        menuTitle, 
+        submitButton, 
+        inputsAllOptions, 
+        inputProjectName 
+    } = getProjectNodes();
 
-        if (!isHTMLElement(menu) || 
-        !isHTMLElement(menuCover) || 
-        !isHTMLElement(menuTitle) || 
-        !isHTMLElement(submitButton) ||
-        !isNodeList(inputsAllOptions) ||
-        !isHTMLElement(inputProjectName)
-        ) {
-            showErrorModal(ERR_EVENTS.EXITING_PROJECT_MENU_RENDERING);
-            return;
-        }
-
-        const selectedOption = menu.querySelector('.project-options .selected');
-        
-        menuTitle.textContent = '';
-        submitButton.textContent = '';
-        inputProjectName.value = '';
-        inputsAllOptions.forEach(input => input.checked = false);
-
-        if (isHTMLElement(selectedOption)) {
-            selectedOption.classList.remove('selected');
-        }
-        menuCover.classList.remove('shown');
-        menu.classList.remove('shown');
-
-        menu.removeAttribute('data-project-action');
-        menu.removeAttribute('data-group-id');
-        menu.removeAttribute('data-task-action');
-        menu.removeAttribute('data-task-id');
+    if (!isHTMLElement(menu) || 
+    !isHTMLElement(menuCover) || 
+    !isHTMLElement(menuTitle) || 
+    !isHTMLElement(submitButton) ||
+    !isNodeList(inputsAllOptions) ||
+    !isHTMLElement(inputProjectName)
+    ) {
+        showErrorModal(ERR_EVENTS.EXITING_PROJECT_MENU_RENDERING);
+        return;
     }
+
+    const selectedOption = menu.querySelector('.project-options .selected');
+    
+    menuTitle.textContent = '';
+    submitButton.textContent = '';
+    inputProjectName.value = '';
+    inputsAllOptions.forEach(input => input.checked = false);
+
+    if (isHTMLElement(selectedOption)) {
+        selectedOption.classList.remove('selected');
+    }
+    menuCover.classList.remove('shown');
+    menu.classList.remove('shown');
+
+    menu.setAttribute('data-project-action', null);
+    menu.setAttribute('data-group-id', null);
+    menu.setAttribute('data-task-action', null);
+    menu.setAttribute('data-task-id', null);
 };

@@ -19,12 +19,12 @@ export const ERR_RENDERING = new Enum({
 export const ERR_EVENTS = new Enum({
     PROJECTS_BAR: ['Application error', 'The projects navigation buttons couldn\'t be found', 'Process: applying events on the projects navigation bar'],
     PROJECTS_LIST: ['Application error', 'The projects list component couldn\'t be found', 'Process: applying events on the projects navigation bar'],
-    PROJECTS_NAV: ['Application error', 'The projects pagination couldn\'t be found', 'Process: applying events on the projects navigation bar'],
+    PROJECTS_NAV: ['Application error', 'The projects pagination data couldn\'t be found', 'Process: applying events on the projects navigation bar'],
     NEXT_PROJECTS_PAGE: ['Application error', null, 'Process: populating the next projects page'],
     PREV_PROJECTS_PAGE: ['Application error', null, 'Process: populating the previous projects page'],
     TASKS_BAR: ['Application error', 'The tasks navigation buttons couldn\'t be found', 'Process: applying events on the tasks navigation bar'],
     TASKS_LIST: ['Application error', 'The tasks list component couldn\'t be found', 'Process: applying events on the tasks navigation bar'],
-    TASKS_NAV: ['Application error', 'The tasks pagination couldn\'t be found', 'Process: applying events on the tasks navigation bar'],
+    TASKS_NAV: ['Application error', 'The tasks pagination data couldn\'t be found', 'Process: applying events on the tasks navigation bar'],
     NEXT_TASK_PAGE: ['Application error', null, 'Process: populating the next tasks page'],
     PREV_TASK_PAGE: ['Application error', null, 'Process: populating the previous tasks page'],
 });

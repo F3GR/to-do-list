@@ -1,9 +1,10 @@
 import { application } from '../main-app.js';
 import { renderTask } from './dom.js';
-import { ACTIONS_TASKS, isHTMLElement, isNodeList, isObject, isValid, showErrorModal, handleExitRemoveMenu, isPressedKey, isReal } from '../utils.js';
+import { ACTIONS_TASKS, isHTMLElement, isNodeList, isObject, isValid, showErrorModal, handleExitRemoveMenu, isPressedKey, isReal, NUM_TASKS_PAGE } from '../utils.js';
 import { getTaskNodes } from './static-selectors.js';
 import { ERR_EVENTS } from './errors-text.js';
 import { assets } from './assets.js';
+import { renderGroup } from '../group/dom.js';
 
 export function addListenersManageTasks() {
     const { main, form, exitButton, cancelButton, removeConfirm, removeMenu } = getTaskNodes();
@@ -69,8 +70,16 @@ export function addListenersManageTasks() {
         }
     });
 
-    exitButton.addEventListener('click', (e) => exitHandler(e));
-    cancelButton.addEventListener('click', (e) => exitHandler(e));
+    exitButton.addEventListener('click', (e) => {
+        if (isPressedKey(e)) {
+            exitHandler(e);
+        }
+    });
+    cancelButton.addEventListener('click', (e) => {
+        if (isPressedKey(e)) {
+            exitHandler(e);
+        }
+    });
 }
 
 const taskAction = (action, target) => {
@@ -266,6 +275,8 @@ const removeHandler = (e) => {
         removeConfirm,
         removeHeading,
         removeMessage,
+        taskList,
+        sidebar,
     } = getTaskNodes();
 
     if (!isHTMLElement(removeMenu) ||
@@ -274,6 +285,32 @@ const removeHandler = (e) => {
     !isHTMLElement(removeMessage)
     ) {
         showErrorModal(ERR_EVENTS.TASK_MENU_REMOVING);
+        return;
+    }
+    if (!isHTMLElement(taskList)) {
+        showErrorModal(ERR_EVENTS.ACTION_REMOVING_TASKS_LIST);
+        return;
+    }
+    if (!isHTMLElement(sidebar)) {
+        showErrorModal(ERR_EVENTS.ACTION_REMOVING_SIDEBAR);
+        return;
+    }
+
+    const currentTasksPage = Number(taskList.getAttribute('current-tasks-page'));
+    if (!isValid(currentTasksPage)) {
+        showErrorModal(ERR_EVENTS.ACTION_REMOVING_TASKS_LIST);
+        return;
+    }
+
+    const currentGroupId = sidebar.getAttribute('current-group');
+    if (!isValid(currentGroupId)) {
+        showErrorModal(ERR_EVENTS.ACTION_REMOVING_SIDEBAR);
+        return;
+    }
+
+    const allTaskNodes = taskList.querySelectorAll('.task');
+    if (!isNodeList(allTaskNodes)) {
+        showErrorModal(ERR_EVENTS.ACTION_REMOVING_TASKS_NODES);
         return;
     }
 
@@ -290,15 +327,17 @@ const removeHandler = (e) => {
         return;
     }
     
-    let removedTask;
+    let removeTask;
     try {
-        removedTask = application.removeTask(removedProjectId, removedTaskId);
+        removeTask = application.removeTask(removedProjectId, removedTaskId, currentTasksPage, allTaskNodes.length);
     } catch (e) {
         showErrorModal([ERR_EVENTS.ACTION_REMOVING_TASK[0], e.message, ERR_EVENTS.ACTION_REMOVING_TASK[2]]);
         return;
     }
+    const { newTasksPageView } = removeTask;
 
-    task.remove();
+    taskList.innerHTML = '';
+    renderGroup(newTasksPageView, currentGroupId);
 
     removeMenu.task = null;
     removeMenu.setAttribute('data-project-id', null);
@@ -316,14 +355,20 @@ const submitHandler = (e) => {
         titleInput,
         dueDateInput,
         descriptionInput,
-        notesInput 
+        notesInput,
+        taskList,
     } = getTaskNodes();
     const priorityInputs = document.querySelectorAll('.task-menu input[name="priority"]');
     const action = menu.getAttribute('data-task-action');
     const projectId = menu.getAttribute('data-project-id');
+    const currentTasksPage = Number(taskList.getAttribute('current-tasks-page'));
 
     if (!isHTMLElement(menu)) {
         showErrorModal(ERR_EVENTS.NO_TASK_MENU_SUBMIT)
+    }
+    if (!isHTMLElement(taskList)) {
+        showErrorModal(ERR_EVENTS.ACTION_SUBMITTING_PROJECT_LIST_PANEL);
+        return;
     }
     if (!isHTMLElement(titleInput) || 
     !isHTMLElement(dueDateInput) || 
@@ -333,7 +378,7 @@ const submitHandler = (e) => {
     ) {
         showErrorModal(ERR_EVENTS.TASK_MENU_PANEL_SUBMIT)
     }
-    if (!isValid(action) || !isValid(projectId)) {
+    if (!isValid(action) || !isValid(projectId) || !isValid(currentTasksPage)) {
         showErrorModal(ERR_EVENTS.NO_PROJECT_ID_OR_ACTION);
         return;
     }
@@ -358,25 +403,27 @@ const submitHandler = (e) => {
                 notes: notesInput.value  
             };
 
-            let newTask;
+            let addTask;
             try {
-                newTask = application.createNewTask(inputNewTask);
+                addTask = application.createNewTask(inputNewTask, currentTasksPage);
             } catch (e) {
                 showErrorModal([ERR_EVENTS.ACTION_ADDING_TASK[0], e.message, ERR_EVENTS.ACTION_ADDING_TASK[2]]);
                 return;
             }
-            if (!isObject(newTask)) {
+            const { newTask, currentPageLength } = addTask;
+            if (!isObject(addTask)) {
                 showErrorModal(['Invalid input (task title)', 'A task with the this title already exists in the project!', '']);
                 return;
             }
 
-            renderTask(newTask);
+            if (currentPageLength < NUM_TASKS_PAGE) {
+                renderTask(newTask);
+            }
             break;
 
         case ACTIONS_TASKS.EDIT:
             const taskId = menu.getAttribute('data-task-id');
 
-            
             const taskSelector = `.task[data-project-id="${projectId}"][data-task-id="${taskId}"]`;
             const editedTaskNode = document.querySelector(taskSelector);
             const projectName = document.querySelector(taskSelector + ' .task-project-name');
@@ -402,7 +449,7 @@ const submitHandler = (e) => {
             const inputEditedTask = {   
                 projectName: projectName.textContent,
                 projectId: projectId,
-                id: taskId,
+                taskId: taskId,
                 title: titleInput.value, 
                 dueDate: dueDateInput.value, 
                 priority: priorityInput.value, 
@@ -437,51 +484,49 @@ const submitHandler = (e) => {
 };
 
 const exitHandler = (e) => {
-    if (isPressedKey(e)) {
-        e.preventDefault();
+    e.preventDefault();
 
-        const { 
-            menu,
-            menuCover,
-            menuTitle,
-            submitButton,
-            titleInput,
-            allPriorityInputs,
-            dueDateInput,
-            descriptionInput,
-            notesInput,
-        } = getTaskNodes();
-    
-        if (!isHTMLElement(menu) || 
-        !isHTMLElement(menuCover) || 
-        !isHTMLElement(menuTitle) || 
-        !isHTMLElement(submitButton) ||
-        !isHTMLElement(titleInput) ||
-        !isNodeList(allPriorityInputs) ||
-        !isHTMLElement(dueDateInput) ||
-        !isHTMLElement(descriptionInput) ||
-        !isHTMLElement(notesInput)
-        ) {
-            showErrorModal(ERR_EVENTS.TASK_MENU_PANEL_EXITING);
-            return;
-        }
-      
-        menuTitle.textContent = '';
-        submitButton.textContent = '';
-      
-        menuCover.classList.remove('shown');
-        menu.classList.remove('shown');
-        menu.removeAttribute('data-project-action');
-        menu.removeAttribute('data-group-id');
-        menu.removeAttribute('data-task-action');
-        menu.removeAttribute('data-task-id');
+    const { 
+        menu,
+        menuCover,
+        menuTitle,
+        submitButton,
+        titleInput,
+        allPriorityInputs,
+        dueDateInput,
+        descriptionInput,
+        notesInput,
+    } = getTaskNodes();
 
-        titleInput.value = '';
-        allPriorityInputs.forEach(input => input.checked = false);
-        dueDateInput.value = '';
-        descriptionInput.value = '';
-        notesInput.value = '';
+    if (!isHTMLElement(menu) || 
+    !isHTMLElement(menuCover) || 
+    !isHTMLElement(menuTitle) || 
+    !isHTMLElement(submitButton) ||
+    !isHTMLElement(titleInput) ||
+    !isNodeList(allPriorityInputs) ||
+    !isHTMLElement(dueDateInput) ||
+    !isHTMLElement(descriptionInput) ||
+    !isHTMLElement(notesInput)
+    ) {
+        showErrorModal(ERR_EVENTS.TASK_MENU_PANEL_EXITING);
+        return;
     }
+  
+    menuTitle.textContent = '';
+    submitButton.textContent = '';
+  
+    menuCover.classList.remove('shown');
+    menu.classList.remove('shown');
+    menu.removeAttribute('data-project-action');
+    menu.removeAttribute('data-project-id');
+    menu.removeAttribute('data-task-action');
+    menu.removeAttribute('data-task-id');
+
+    titleInput.value = '';
+    allPriorityInputs.forEach(input => input.checked = false);
+    dueDateInput.value = '';
+    descriptionInput.value = '';
+    notesInput.value = '';
 }
 
 const handleToggleOverdueIcon = (task) => {
