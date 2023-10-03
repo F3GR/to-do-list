@@ -592,10 +592,14 @@ function renderMainPageFrame() {
         return;
     }
 
-    const header = createElementWithAttributes('header', {}, content);
-    const sidebar = createElementWithAttributes('aside', {}, content);
+    const backgroundContainer = createElementWithAttributes('div', {
+        class: 'content-background-container'
+    }, content);
+    const header = createElementWithAttributes('header', {}, backgroundContainer);
+    const sidebar = createElementWithAttributes('aside', {}, backgroundContainer);
     sidebar.setAttribute('current-group', DEFAULT_GROUP);
-    const main = createElementWithAttributes('main', {}, content);
+    const sidebarCover = createElementWithAttributes('div', {class: 'sidebar-cover'}, backgroundContainer);
+    const main = createElementWithAttributes('main', {}, backgroundContainer);
     const barTypes = createElementWithAttributes('div', {class: 'bar-types'}, sidebar);
     const barProjects = createElementWithAttributes('div', {class: 'bar-projects'}, sidebar);
     const projectsBarHeader = createElementWithAttributes('div', {class: 'header'}, barProjects);
@@ -608,15 +612,15 @@ function renderMainPageFrame() {
 }
 
 function renderFilterOptionsMenu() {
-    const main = document.querySelector('main');
-    if (!isHTMLElement(main)) {
-        showErrorModal(ERR.FILTER_OPTIONS_MAIN_NOT_FOUND);
+    const backgroundContainer = document.querySelector('.content-background-container');
+    if (!isHTMLElement(backgroundContainer)) {
+        showErrorModal(ERR.MAIN_PAGE_CONTENT_NOT_FOUND);
         return;
     }
 
     const viewOptionsBox = createElementWithAttributes('div', {
         class: 'view-options-bar'
-    }, main);
+    }, backgroundContainer);
 
     const priorityContainer = createElementWithAttributes('div', {
         class: 'priority-main-box'
@@ -915,7 +919,6 @@ function renderCustomDropDownMenu() {
 }
 
 function renderMainPageTemplate() {
-    const content = document.querySelector('.content');
     const main = document.querySelector('main');
     const header = document.querySelector('header');
     const sidebar = document.querySelector('aside');
@@ -928,8 +931,7 @@ function renderMainPageTemplate() {
     const mainHeadBox = document.querySelector('main .header');
     const tasksList = document.querySelector('.task-list');
 
-    if (!isHTMLElement(content) || 
-    !isHTMLElement(main) ||
+    if (!isHTMLElement(main) ||
     !isHTMLElement(header) ||
     !isHTMLElement(sidebar) ||
     !isHTMLElement(tasksList) ||
@@ -1067,10 +1069,6 @@ function renderMainPageTemplate() {
     }, barFooter);
     const footerText = createElementWithAttributes('span', {}, footerLink);
     footerText.textContent = 'F3GR, 2023';
-
-    const sidebarCover = createElementWithAttributes('div', {
-        class: 'sidebar-cover'
-    }, main);
 
     const mainHeadImage = createElementWithAttributes('img', { 
         alt: 'All tasks icon'

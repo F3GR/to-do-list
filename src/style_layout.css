@@ -2,26 +2,36 @@
   --menu-width: 30rem;
   --menu-button-option-width: 3rem;
   --menu-button-option-height: 3rem;
-  --z-index-error: 5;
-  --z-index-menu: 4;
-  --z-index-aside-shown: 3;
-  --z-index-view-options-shown: 2;
-  --z-index-view-options: 1;
+  --z-index-error: 6;
+  --z-index-menu: 5;
+  --z-index-sidebar: 4;
+  --z-index-view-options: 3;
+  --z-index-sidebar-cover: 2;
+  --z-index-main: 1;
   --sidebar-icon-width: 2rem;
   --sidebar-icon-height: 2rem;
 }
 
 html {
-  font-size: 35%;
+  font-size: 62%;
 }
 
 /* GENERAL */
 
 .content {
   display: grid;
-  grid-template-columns: 25rem minmax(30rem, 1fr);
+}
+
+.content-background-container {
+  display: grid;
   grid-template-rows: 5rem 1fr;
+  grid-template-columns: 25rem 1fr;
+}
+
+.content-background-container > * {
   position: relative;
+  z-index: 2;
+  background-attachment: fixed;
 }
 
 input, textarea {
@@ -44,6 +54,8 @@ textarea {
   align-content: center;
   grid-template-columns: 3rem 15rem 1fr 3rem;
   padding: 0 1rem;
+  position: sticky;
+  z-index: var(--z-index-view-options);
 }
 
 header .sidebar-icon {
@@ -97,6 +109,8 @@ header .aside-icon {
   grid-template-rows: 20rem 1fr 3rem;
   row-gap: 2rem;
   padding: 2rem 2.5rem;
+  position: relative;
+  z-index: var(--z-index-sidebar);
 }
 
 .content aside * {
@@ -200,15 +214,19 @@ header .aside-icon {
 
 .view-options-bar {
   position: absolute;
-  top: 0;
+  top: 5rem;
   right: 0;
   min-height: 30rem;
   display: grid;
   grid-template-rows: repeat(2, 1fr) 7.5rem;
   gap: 1rem;
   padding: 1.5rem;
-  z-index: var(--z-index-view-options);
   visibility: hidden;
+  z-index: var(--z-index-view-options);
+}
+
+.view-options-bar.shown {
+  visibility: visible;
 }
 
 .view-options-bar > div {
@@ -262,10 +280,6 @@ header .aside-icon {
   display: none;
 }
 
-.view-options-bar.shown {
-  visibility: visible;
-  z-index: var(--z-index-view-options-shown);
-}
 
 .view-options-bar .sort-options-main-box {
   display: grid;
@@ -286,13 +300,14 @@ header .aside-icon {
 
 /* Main */
 
-.content main {
+.content-background-container main {
   grid-area: 2 / 2 / 3 / 3;
   display: grid;
   grid-template-rows: auto auto 1fr 3rem;
   padding: 1rem clamp(2rem, 4rem, 5rem);
   gap: 1rem;
   position: relative;
+  z-index: var(--z-index-main);
 }
 
 main .header {
@@ -302,6 +317,7 @@ main .header {
   align-items: center;
   justify-content: center;
   grid-template-columns: 5rem auto;
+  z-index: var(--z-index-view-options);
 }
 
 main .header img {
@@ -472,11 +488,12 @@ main .task-bar {
   height: var(--menu-button-option-height);
 }
 
-main .sidebar-cover {
+.sidebar-cover {
   display: none;
   position: absolute;
   width: 100%;
   height: 100%;
+  z-index: var(--z-index-sidebar-cover);
 }
 
 /* Remove confirmation menu */
@@ -692,10 +709,6 @@ main .sidebar-cover {
 
 .task-menu {
   position: absolute;
-  margin-top: 5rem;
-  margin-left: calc((100% - var(--menu-width))/2);
-  margin-right: calc((100% - var(--menu-width))/2);
-  width: var(--menu-width);
   background-color: var(--white);
   z-index: var(--z-index-menu);
   display: grid;
@@ -706,6 +719,10 @@ main .sidebar-cover {
 }
 
 .task-menu.shown {
+  margin-top: 5rem;
+  margin-left: calc((100% - var(--menu-width))/2);
+  margin-right: calc((100% - var(--menu-width))/2);
+  width: var(--menu-width);
   visibility: visible;
 }
 
@@ -792,44 +809,41 @@ main .sidebar-cover {
   height: var(--menu-button-option-height);
 }
 
-@media screen and (min-width: 600px) {
-  html {
-    font-size: 45%;
-  }
- }
-
-@media screen and (min-width: 1025px) {
-  html {
-    font-size: 55%;
-  }
- }
-@media screen and (min-width:1281px) { 
-  html {
-    font-size: 62.5%;
-  }
- }
-
- @media screen and (min-width: 1440px) {
-  html {
-    font-size: 70%;
-  }
-}
-
-@media screen and (min-width: 1920px) {
-  html {
-    font-size: 115%;
-  }
-}
-
 @media screen and (max-width: 400px) {
  .content main {
   padding: 1rem;
  }
 }
 
+@media screen and (max-width: 430px) {
+  .content {
+    position: relative;
+  }
+  .content-background-container {
+    grid-template-rows: 5rem;
+    grid-auto-flow: row;
+  }
+  .content aside {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    visibility: hidden;
+  }
+  .content .view-options-bar {
+    position: relative;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    top: 0;
+    right: 0;
+    z-index: var(--z-index-sidebar);
+    min-height: max-content;
+    align-items: start;
+  }
+}
+
 @media screen and (max-width: 800px) {
   .content {
-    grid-template-columns: 1fr;
     position: relative;
   }
   .content main {
@@ -840,13 +854,47 @@ main .sidebar-cover {
   }
   .content aside.shown {
     visibility: visible;
-    max-width: 25rem;
-    z-index: var(--z-index-aside-shown);
   }
   header .sidebar-icon {
     visibility: visible;
   }
-  main .sidebar-cover.shown {
+  .sidebar-cover.shown {
     display: block;
+  }
+}
+
+@media screen and (min-width: 640px) {
+  html {
+    font-size: 51%;
+  }
+ }
+
+@media screen and (min-width: 800px) {
+  html {
+    font-size: 63.5%;
+  }
+ }
+
+@media screen and (min-width:1024px) { 
+  html {
+    font-size: 80%;
+  }
+ }
+
+ @media screen and (min-width: 1440px) {
+  html {
+    font-size: 95.5%;
+  }
+}
+
+@media screen and (min-width: 1920px) {
+  html {
+    font-size: 115%;
+  }
+}
+
+@media screen and (min-width: 2560px) {
+  html {
+    font-size: 152%;
   }
 }

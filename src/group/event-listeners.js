@@ -9,7 +9,7 @@ import { getGroupNodes } from './static-selectors.js';
 export function addListenersSidebar() {
     const sidebarIcon = document.querySelector('header > .sidebar-icon');
     const sidebar = document.querySelector('aside');
-    const sidebarCover = document.querySelector('main .sidebar-cover');
+    const sidebarCover = document.querySelector('.sidebar-cover');
     const standardGroups = document.querySelector('.bar-types');
     const projectGroups = document.querySelector('.projects-list');
 

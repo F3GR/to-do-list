@@ -7,11 +7,12 @@
     --required-color: rgb(255, 60, 0);
     --high-priority-border-color: rgb(220, 60, 0);
     --background-color-header-start: #45b8ff;
-    --background-color-header-end: #6cbfff;
+    --background-color-header-end: #6c76ff;
     --background-color-sidebar-start: #45b8ff;
     --background-color-sidebar-end: #6cbfff;
     --background-color-view-options-start: #45b8ff;
     --background-color-view-options-end: #6cbfff;
+    --scrollbar-hover-color: #4047a3;
 
     --element-panels-border-radius: 0.5rem;
     --main-panels-border-radius: 1rem;
@@ -43,13 +44,44 @@
     font-family: "NotoSerifMakasar";
     src: url(./originals/NotoSerifMakasar-Regular.ttf);
   }
-  
+
+  ::-webkit-scrollbar {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--whitesmoke);
+    border-radius: 100vw;
+    margin-top: 0.5rem;
+    margin-left: 0.5rem;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--background-color-header-end);
+    border: 0.1rem solid var(--whitesmoke);
+    border-radius: 100vw;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-hover-color);
+    border-radius: 100vw;
+  }
+
+  @supports (scrollbar-color: red blue) {
+    * {
+      scrollbar-color: var(--background-color-header-end) var(--whitesmoke);
+      scrollbar-width: auto;
+    }
+  }
+
   /* HEADER */
-  
+
   .content header {
-    background: linear-gradient(to right, var(--background-color-header-start), var(--background-color-header-end));
-    border: 1px solid var(--selected-border-color);
+    border: 0.1rem solid var(--selected-border-color);
     border-radius: var(--main-panels-border-radius) var(--main-panels-border-radius) 0 0;
+    background: url(./assets/stacked-waves-haikei.svg) no-repeat center center fixed;
+    background-size: cover;
   }
   
   .heading h1 {
@@ -63,11 +95,12 @@
   
   /* Sidebar */
   
-  .content aside {
-    background: linear-gradient(to right, var(--background-color-sidebar-start), var(--background-color-sidebar-end));
-    border: 1px solid var(--selected-border-color);
-    border-top-style: none;
+  aside {
+    border: 0.1rem solid var(--selected-border-color);
     border-radius: 0 0 var(--main-panels-border-radius) var(--main-panels-border-radius);
+    border-top: none;
+    background: url(./assets/stacked-waves-haikei.svg) no-repeat center center fixed;
+    background-size: cover;
   }
   
   .bar-footer a {
@@ -113,17 +146,18 @@
     border-radius: var(--element-panels-border-radius);
   }
   
-  .content main {
+  main {
     background-color: var(--white);
   }
   
   /* View options */
   
   .view-options-bar {
-    background: linear-gradient(to right, var(--background-color-view-options-start), var(--background-color-view-options-end));
     border: 0.1rem solid var(--selected-border-color);
     border-top-style: none;
     border-radius: 0 0 var(--main-panels-border-radius) var(--main-panels-border-radius);
+    background: url(./assets/stacked-waves-haikei.svg) no-repeat center center fixed;
+    background-size: cover;
   }
   
   .view-options-bar > * {
@@ -184,6 +218,10 @@
   }
   
   /* Task component */
+
+  .task-list .task {
+    box-shadow: .1rem .1rem .1rem var(--whitesmoke);
+  }
 
   .task[data-task-priority="2"],
   .task[data-task-priority="2"] label.status-checkbox,
@@ -249,6 +287,7 @@
   .sidebar-cover {
     background-color: var(--text-color);
     opacity: 50%;
+    border-radius: var(--main-panels-border-radius) var(--main-panels-border-radius) 0 0;
   }
   
   /* Remove confirmation menu */

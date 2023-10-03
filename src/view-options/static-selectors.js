@@ -21,7 +21,7 @@ export function getViewOptionsNodes() {
     const inputSortAscendingOrder = document.querySelector('input#sort-order');
 
     const viewOptionsIcon = document.querySelector('header > .options');
-    const viewBox = document.querySelector('main > .view-options-bar');
+    const viewBox = document.querySelector('.view-options-bar');
     const customSelectBox = document.querySelector('.view-options-bar .select-items');
     const toggleBoxes = document.querySelectorAll('.view-options-bar .priority-border-box, .view-options-bar .status-border-box, .view-options-bar .sort-arrow');
     

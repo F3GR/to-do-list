@@ -204,7 +204,7 @@ const openMenu = (action, target) => {
             menuCover.classList.add('shown');
             removeMenu.classList.add('shown');
             removeHeading.textContent = 'Remove the project';
-            removeMessage.textContent = 'Are you sure you want to delete the project? All tasks of the project will be removed as well.';
+            removeMessage.textContent = 'Are you sure you want to delete the project? All tasks of the project will be removed!';
             break;
     }
 };
