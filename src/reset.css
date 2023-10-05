@@ -8,11 +8,10 @@
     font-family: var(--system-ui);
     overflow-wrap: break-word;
     hyphens: auto;
-    font-size: 62.5%;
   }
   
   span, div, legend, label, p, option {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
   }
   
   body {

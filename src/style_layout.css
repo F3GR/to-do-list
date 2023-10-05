@@ -1,15 +1,16 @@
 :root {
-  --menu-width: 30rem;
+  --big-menu-width: 35rem;
+  --small-menu-width: 30rem;
   --menu-button-option-width: 3rem;
   --menu-button-option-height: 3rem;
+  --small-button-option-width: 2.5rem;
+  --small-button-option-height: 2.5rem;
   --z-index-error: 6;
   --z-index-menu: 5;
   --z-index-sidebar: 4;
   --z-index-view-options: 3;
   --z-index-sidebar-cover: 2;
   --z-index-main: 1;
-  --sidebar-icon-width: 2rem;
-  --sidebar-icon-height: 2rem;
 }
 
 html {
@@ -72,6 +73,8 @@ header .heading {
 }
 
 .heading .logo {
+  width: 5rem;
+  height: 5rem;
   justify-self: start;
 }
 
@@ -113,10 +116,6 @@ header .aside-icon {
   z-index: var(--z-index-sidebar);
 }
 
-.content aside * {
-  font-size: 1.3rem;
-}
-
 .bar-footer a {
   text-decoration: none;
 }
@@ -137,8 +136,8 @@ header .aside-icon {
 }
 
 .bar-types img {
-  width: var(--sidebar-icon-width);
-  height: var(--sidebar-icon-height);
+  width: var(--menu-button-option-width);
+  height: var(--menu-button-option-height);
 }
 
 .bar-projects {
@@ -157,13 +156,13 @@ header .aside-icon {
 
 .bar-projects img,
 .bar-projects button {
-  width: var(--sidebar-icon-width);
-  height: var(--sidebar-icon-height);
+  width: var(--small-button-option-width);
+  height: var(--small-button-option-height);
 }
 
 .bar-projects .header {
   display: grid;
-  grid-template-columns: 2rem max-content max-content 1fr 2rem;
+  grid-template-columns: 2rem max-content max-content 1fr 3rem;
   align-content: center;
   justify-items: start;
 }
@@ -180,10 +179,11 @@ header .aside-icon {
 
 .bar-projects .project {
   display: grid;
-  grid-template-columns: 2rem 1fr 2rem 2rem;
+  grid-template-columns: 3rem 1fr 2.5rem 2.5rem;
   align-items: center;
   justify-items: stretch;
   padding: 0.5rem;
+  gap: 0.25rem;
 }
 
 .bar-projects .project span {
@@ -253,11 +253,12 @@ header .aside-icon {
 .status-border-box > *,
 .priority-border-box > * {
   display: grid;
-  grid-template-columns: 2rem 9rem;
-  gap: 1rem;
+  grid-template-columns: 3rem 9rem;
+  min-height: 4rem;
   justify-self: center;
   justify-items: stretch;
-  padding: 0.5rem 0 0.5rem 1rem;
+  padding: 0 1rem;
+  align-content: center;
 }
 
 .status-border-box label,
@@ -271,9 +272,9 @@ header .aside-icon {
 }
 
 .view-options-bar .option-button > .radio-button {
-  max-width: var(--sidebar-icon-width);
-  max-height: var(--sidebar-icon-height);    
-  padding: 0.3rem;
+  width: var(--menu-button-option-width);
+  height: var(--menu-button-option-height);    
+  padding: 0.4rem;
 }
 
 .view-options-bar .sort-options-main-box input {
@@ -288,13 +289,14 @@ header .aside-icon {
 
 .view-options-bar .sort-options-border-box {
   display: grid;
-  grid-template-columns: 1fr var(--sidebar-icon-width);
+  grid-template-columns: 1fr var(--menu-button-option-width);
   gap: 1rem;
+  padding: 0.5rem 0 0 0;
 }
 
 .sort-options-border-box .sort-arrow {
-  height: var(--sidebar-icon-height);
-  width: var(--sidebar-icon-width);
+  height: var(--menu-button-option-height);
+  width: var(--menu-button-option-width);
   align-self: center;
 }
 
@@ -321,7 +323,8 @@ main .header {
 }
 
 main .header img {
-  height: 5rem;
+  width: 6.5rem;
+  height: 6.5rem;
   align-self: start;
 }
 
@@ -367,14 +370,44 @@ main .task-bar {
 
 .task {
   display: grid;
+  padding: 1rem;
 }
 
 .task .task-head-box {
   display: grid;
-  grid-template-columns: var(--sidebar-icon-width) 1fr var(--sidebar-icon-width) 10rem repeat(3, var(--sidebar-icon-width));
-  column-gap: 0.5rem;
+  grid-template-columns: 1fr 26rem;
+  column-gap: 1rem;
   justify-items: stretch;
-  padding: 1rem;
+}
+
+.task-head-box > * {
+  min-height: 3rem;
+}
+
+.task-head-box-one {
+  display: grid;
+  grid-template-columns: var(--menu-button-option-width) 1fr;
+  align-items: center;
+  gap: 1rem;
+}
+
+.task-head-box-one > * {
+  min-height: 3rem;
+  display: grid;
+  align-items: center;
+}
+
+.task-head-box-two {
+  display: grid;
+  grid-template-columns: var(--menu-button-option-width) 10rem repeat(3, var(--menu-button-option-width));
+  align-items: center;
+  gap: 1rem;
+}
+
+.task-head-box-two > * {
+  min-height: 3rem;
+  display: grid;
+  align-items: center;
 }
 
 .task button {
@@ -384,7 +417,14 @@ main .task-bar {
   background-repeat: no-repeat;
 }
 
+.task .overdue-box {
+  height: 3rem;
+  width: 3rem;
+}
+
 .task .overdue {
+  height: 3rem;
+  width: 3rem;
   display: none;
 }
 
@@ -393,7 +433,7 @@ main .task-bar {
 }
 
 .task button {
-  height: var(--sidebar-icon-height);
+  height: var(--small-button-option-height);
 }
 
 .task > * {
@@ -408,8 +448,8 @@ main .task-bar {
 
 .task label.status-checkbox {
   display: inline-block;
-  width: var(--sidebar-icon-width);
-  height: var(--sidebar-icon-height);
+  width: var(--menu-button-option-width);
+  height: var(--menu-button-option-height);
   position: relative;
   overflow: hidden;
   margin: 0;
@@ -432,9 +472,10 @@ main .task-bar {
   display: block;
 }
 
-.task .task-title {
-  padding-left: 1rem;
-  
+.task .task-title-box {
+  padding: 0 1rem;
+  display: grid;
+  align-items: start;
 }
 
 .task .task-title,
@@ -454,7 +495,7 @@ main .task-bar {
 .task-unfold-box {
   grid-area: 2 / 1 / 3 / -1;
   display: none;
-  padding: 1rem;
+  padding: 1rem 0 0 0;
 }
 
 .task-unfold-box > * {
@@ -501,9 +542,9 @@ main .task-bar {
 .remove-menu {
   position: absolute;
   margin-top: 15rem;
-  margin-left: calc((100% - var(--menu-width))/2);
-  margin-right: calc((100% - var(--menu-width))/2);
-  width: var(--menu-width);
+  margin-left: calc((100% - var(--small-menu-width))/2);
+  margin-right: calc((100% - var(--small-menu-width))/2);
+  width: var(--small-menu-width);
   z-index: var(--z-index-menu);
   padding: 0 0 1rem 0;
   display: grid;
@@ -545,9 +586,9 @@ main .task-bar {
 .error-modal {
   position: absolute;
   margin-top: 15rem;
-  margin-left: calc((100% - var(--menu-width))/2);
-  margin-right: calc((100% - var(--menu-width))/2);
-  width: var(--menu-width);
+  margin-left: calc((100% - var(--small-menu-width))/2);
+  margin-right: calc((100% - var(--small-menu-width))/2);
+  width: var(--small-menu-width);
   z-index: var(--z-index-error);
   padding: 0 0 2rem 0;
   visibility: hidden;
@@ -607,9 +648,9 @@ main .task-bar {
 .project-menu {
   position: absolute;
   margin-top: 15rem;
-  margin-left: calc((100% - var(--menu-width))/2);
-  margin-right: calc((100% - var(--menu-width))/2);
-  width: var(--menu-width);
+  margin-left: calc((100% - var(--small-menu-width))/2);
+  margin-right: calc((100% - var(--small-menu-width))/2);
+  width: var(--small-menu-width);
   z-index: var(--z-index-menu);
   padding: 0 0 2rem 0;
   visibility: hidden;
@@ -700,7 +741,7 @@ main .task-bar {
 .menu-cover {
   position: absolute;
   width: 100%;
-  height: 120%;
+  height: 150%;
   z-index: var(--z-index-menu);
   display: none;
 }
@@ -720,9 +761,9 @@ main .task-bar {
 
 .task-menu.shown {
   margin-top: 5rem;
-  margin-left: calc((100% - var(--menu-width))/2);
-  margin-right: calc((100% - var(--menu-width))/2);
-  width: var(--menu-width);
+  margin-left: calc((100% - var(--big-menu-width))/2);
+  margin-right: calc((100% - var(--big-menu-width))/2);
+  width: var(--big-menu-width);
   visibility: visible;
 }
 
@@ -779,15 +820,15 @@ main .task-bar {
 
 .task-menu fieldset div {
   display: grid;
-  grid-template-columns: 2rem 1fr;
+  grid-template-columns: 3rem 1fr;
   gap: 0.5rem;
   align-items: center;
 }
 
 .task-menu input[type="radio"] {
   padding: 0;
-  width: var(--sidebar-icon-width);
-  height: var(--sidebar-icon-height);
+  width: var(--menu-button-option-width);
+  height: var(--menu-button-option-height);
   min-height: 2rem;
 }
 
@@ -809,19 +850,18 @@ main .task-bar {
   height: var(--menu-button-option-height);
 }
 
-@media screen and (max-width: 400px) {
+@media only screen and (max-width: 400px) {
  .content main {
   padding: 1rem;
  }
 }
 
-@media screen and (max-width: 430px) {
+@media only screen and (max-width: 450px) {
   .content {
     position: relative;
   }
-  .content-background-container {
-    grid-template-rows: 5rem;
-    grid-auto-flow: row;
+  .content-background-container main {
+    grid-area: 2 / 2 / 3 / 3;
   }
   .content aside {
     grid-column-start: 1;
@@ -840,9 +880,75 @@ main .task-bar {
     min-height: max-content;
     align-items: start;
   }
+  .view-options-bar > div {
+    padding: 1rem 1.5rem;
+  }
+  .view-options-bar > div > .priority-border-box,
+  .view-options-bar > div > .status-border-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem 0 0 0;
+    grid-template-columns: var(--menu-button-option-width) 1fr;
+  }
+  .status-border-box > *, .priority-border-box > * {
+    gap: 1rem;
+    justify-content: center;
+  }
+  .view-options-bar .sort-options-border-box {
+    grid-template-columns: 1fr var(--menu-button-option-width);
+    justify-content: center;
+    gap: 2rem;
+  }
+  .task .task-head-box {
+    grid-template-columns: 1fr 1fr;
+  }
+  .task .task-head-box-two {
+    grid-template-columns: var(--menu-button-option-width) 10rem repeat(3, var(--menu-button-option-width));
+  }
 }
 
-@media screen and (max-width: 800px) {
+@media only screen and (max-width: 650px) {
+  .task .task-head-box {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 3rem;
+    row-gap: 1rem;
+  }
+  .task-head-box-one {
+    grid-area: 1 / 1 / 2 / 2;
+    display: grid;
+    grid-template-columns: 4rem 1fr;
+  }
+  .task-head-box-one label.status-checkbox {
+    width: 4rem;
+    height: 4rem;
+  }
+  .task-head-box-two {
+    grid-area: 2 / 1 / 3 / 2;
+  }
+  .task-head-box-two {
+    grid-area: 2 / 1 / 3 / 2;
+    display: grid;
+    grid-template-columns: 3rem 10rem repeat(3, 1fr);
+  }
+  .page-menu {
+    grid-template-columns: 1fr 6rem 1fr;
+  }
+  .projects-nav {
+    grid-template-columns: 1fr 6rem 1fr;
+  }
+  .projects-nav button {
+    width: 5rem;
+  }
+  .page-menu button {
+    width: 15rem;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .content-background-container main {
+    min-height: 100svh;
+  }
   .content {
     position: relative;
   }
@@ -883,7 +989,7 @@ main .task-bar {
 
  @media screen and (min-width: 1440px) {
   html {
-    font-size: 95.5%;
+    font-size: 93%;
   }
 }
 
@@ -898,3 +1004,4 @@ main .task-bar {
     font-size: 152%;
   }
 }
+

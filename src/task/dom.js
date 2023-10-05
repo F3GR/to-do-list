@@ -41,18 +41,19 @@ export function renderTask(taskObj) {
     task.setAttribute('data-task-priority', `${priority}`);
 
     const taskHeadBox = createElementWithAttributes('div', {class: 'task-head-box'}, task);
+    const taskHeadBoxOne = createElementWithAttributes('div', {class: 'task-head-box-one'}, taskHeadBox);
     
     const checkbox = createElementWithAttributes('input', {
         type: 'checkbox', 
-        id: 'task-status',
+        id: `status-task-${title}-project-${projectName}`,
         class: 'status'
-    }, taskHeadBox);
+    }, taskHeadBoxOne);
     
     const label = createElementWithAttributes('label', {
-        for: 'task-status', 
+        for: `status-task-${title}-project-${projectName}`, 
         class: 'status-checkbox',
         tabindex: 0,
-    }, taskHeadBox);
+    }, taskHeadBoxOne);
     label.setAttribute('data-task-action', ACTIONS_TASKS.UPDATE_STATUS);
     
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -66,13 +67,15 @@ export function renderTask(taskObj) {
     svg.appendChild(path);
     label.appendChild(svg);
 
-    const taskTitleBox = createElementWithAttributes('div', {class: 'task-title-box'},taskHeadBox);
+    const taskTitleBox = createElementWithAttributes('div', {class: 'task-title-box'},taskHeadBoxOne);
     const taskTitle = createElementWithAttributes('span', {class: 'task-title'}, taskTitleBox);
     taskTitle.textContent = `${title}`;
 
+    const taskHeadBoxTwo = createElementWithAttributes('div', {class: 'task-head-box-two'}, taskHeadBox);
+
     const taskOverDueBox = createElementWithAttributes('div', {
         class: 'overdue-box'
-    }, taskHeadBox); 
+    }, taskHeadBoxTwo); 
 
     const taskOverDueIcon = createElementWithAttributes('img', {
         src: assets.taskOverDueIconPath, 
@@ -83,29 +86,29 @@ export function renderTask(taskObj) {
         taskOverDueIcon.classList.add('shown');
     }
 
-    const taskDueDateBox = createElementWithAttributes('div', {class: 'task-due-date', }, taskHeadBox);
+    const taskDueDateBox = createElementWithAttributes('div', {class: 'task-due-date', }, taskHeadBoxTwo);
 
     const taskDueDateText = createElementWithAttributes('span', {class: '', }, taskDueDateBox);
     taskDueDateText.textContent = `${dueDate}`;
 
     const taskEditIcon = createElementWithAttributes('button', {
         class: 'edit'
-    }, taskHeadBox);
-    taskEditIcon.ariaLabel = 'Edit task';
+    }, taskHeadBoxTwo);
+    taskEditIcon.ariaLabel = `Edit task ${title}, project - ${projectName}`;
     taskEditIcon.style.backgroundImage = `url(${assets.taskEditIconPath})`;
     taskEditIcon.setAttribute('data-task-action', ACTIONS_TASKS.EDIT);
 
     const taskRemoveIcon = createElementWithAttributes('button', {
         class: 'remove'
-    }, taskHeadBox);
-    taskEditIcon.ariaLabel = 'Remove task';
+    }, taskHeadBoxTwo);
+    taskRemoveIcon.ariaLabel = `Remove task ${title}, project - ${projectName}`;
     taskRemoveIcon.style.backgroundImage = `url(${assets.taskRemoveIconPath})`;
     taskRemoveIcon.setAttribute('data-task-action', ACTIONS_TASKS.REMOVE);
 
     const taskUnfoldIcon = createElementWithAttributes('button', {
         class: 'unfold'
-    }, taskHeadBox);
-    taskUnfoldIcon.ariaLabel = 'Unfold the task\'s details panel';
+    }, taskHeadBoxTwo);
+    taskUnfoldIcon.ariaLabel = `Unfold the task\'s details panel: task ${title}, project - ${projectName}`;
     taskUnfoldIcon.style.backgroundImage = `url(${assets.taskUnfoldIconPath})`;
     taskUnfoldIcon.setAttribute('data-task-action', ACTIONS_TASKS.UNFOLD);
 

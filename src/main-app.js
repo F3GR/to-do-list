@@ -239,7 +239,7 @@ class Application {
 
         const newTasksPageView = tasksPageController.getPageItems(newTasksPageNumber, newFilteredSortedGroup);
 
-        renderTasksCount(editedTaskList.length);
+        renderTasksCount(newFilteredSortedGroup.length);
         renderTasksPageNav(newTasksPageNumber, tasksPageController.pagesTotal(editedTaskList));
 
         return { newTasksPageView };
