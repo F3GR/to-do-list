@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { assets } from './assets';
 import {
   Enum,
@@ -9,6 +10,7 @@ import {
   STANDARD_GROUPS,
   DEFAULT_GROUP,
   isPressedKey,
+  KEYPRESS_THROTTLE_TIME,
 } from '../utils';
 
 const ERR = new Enum({
@@ -83,8 +85,7 @@ function renderErrorModal() {
   }, buttonBox);
   buttonExit.textContent = 'OK';
 
-  exitIcon.addEventListener('click', (e) => exitMenu(e));
-  buttonExit.addEventListener('click', (e) => exitMenu(e));
+  const exitMenuThrottle = _.throttle((e) => exitMenu(e), KEYPRESS_THROTTLE_TIME);
   function exitMenu(e) {
     if (isPressedKey(e)) {
       if (!isHTMLElement(heading)) {
@@ -102,6 +103,8 @@ function renderErrorModal() {
       message.textContent = '';
     }
   }
+  exitIcon.addEventListener('click', (e) => exitMenuThrottle(e));
+  buttonExit.addEventListener('click', (e) => exitMenuThrottle(e));
 }
 
 function renderRemoveConfirmationTemplate() {
@@ -154,8 +157,10 @@ function renderRemoveConfirmationTemplate() {
   buttonExit.textContent = 'Cancel';
 
   const buttons = removeMenu.querySelectorAll('.exit');
-  buttons.forEach((btn) => btn.addEventListener('click', (e) => handleExitRemoveMenu(e)));
-  buttons.forEach((btn) => btn.addEventListener('keydown', (e) => handleExitRemoveMenu(e)));
+  buttons.forEach((btn) => btn.addEventListener('click', (e) => handleExitRemoveMenuThrottle(e)));
+  buttons.forEach((btn) => btn.addEventListener('keydown', (e) => handleExitRemoveMenuThrottle(e)));
+  const handleExitRemoveMenuThrottle = (e) => _
+    .throttle(handleExitRemoveMenu(e), KEYPRESS_THROTTLE_TIME);
   function handleExitRemoveMenu(e) {
     if (isPressedKey(e)) {
       if (!isHTMLElement(menuCover)
@@ -859,35 +864,38 @@ function renderCustomDropDownMenu() {
       // Set the 'value' attribute for the custom option
       c.setAttribute('value', selElmnt.options[j].value);
       c.setAttribute('tabindex', 0); // Make the option focusable
-      c.addEventListener('click', function (e) {
+      c.addEventListener('click', (e) => updateSelectedItemThrottle(e));
+      const updateSelectedItemThrottle = _
+        .throttle((ev) => updateSelectedItem(ev), KEYPRESS_THROTTLE_TIME);
+      const updateSelectedItem = (e) => {
         /* When an item is clicked, update the original select box,
           and the selected item: */
         let y; let ii; let k; let yl;
-        const s = this.parentNode.parentNode.getElementsByTagName('select')[0];
+        const s = e.target.parentNode.parentNode.getElementsByTagName('select')[0];
         const sl = s.length;
-        const h = this.parentNode.previousSibling;
+        const h = e.target.parentNode.previousSibling;
         for (ii = 0; ii < sl; ii += 1) {
-          if (s.options[ii].innerHTML === this.innerHTML) {
+          if (s.options[ii].innerHTML === e.target.innerHTML) {
             s.selectedIndex = ii;
-            h.innerHTML = this.innerHTML;
-            y = this.parentNode.getElementsByClassName('same-as-selected');
+            h.innerHTML = e.target.innerHTML;
+            y = e.target.parentNode.getElementsByClassName('same-as-selected');
             yl = y.length;
             for (k = 0; k < yl; k += 1) {
               y[k].removeAttribute('class');
             }
-            this.setAttribute('class', 'same-as-selected');
+            e.target.setAttribute('class', 'same-as-selected');
             break;
           }
         }
         h.click();
-      });
+      };
 
       // Attach event listeners for 'keydown' ('Enter' and 'Space') events
       c.addEventListener('keydown', function (e) {
         if (e.code === 'Enter') {
           e.preventDefault(); // Prevent the default behavior (e.g., scrolling)
           this.click(); // Trigger the click event when 'Enter' or 'Space' is pressed
-          closeAllSelect(this);
+          closeAllSelectThrottle(this);
         }
       });
 
@@ -898,7 +906,7 @@ function renderCustomDropDownMenu() {
       /* When the select box is clicked, close any other select boxes,
         and open/close the current select box: */
       e.stopPropagation();
-      closeAllSelect(this);
+      closeAllSelectThrottle(this);
       this.nextSibling.classList.toggle('select-hide');
       this.classList.toggle('select-arrow-active');
     });
@@ -908,11 +916,13 @@ function renderCustomDropDownMenu() {
       if (e.code === 'Enter') {
         e.preventDefault();
         this.click();
-        closeAllSelect(this);
+        closeAllSelectThrottle(this);
       }
     });
   }
-  function closeAllSelect(elmnt) {
+  const closeAllSelectThrottle = _
+    .throttle((elmnt) => closeAllSelect(elmnt), KEYPRESS_THROTTLE_TIME);
+  function closeAllSelect(elm) {
     /* A function that will close all select boxes in the document,
       except the current select box: */
     const arrNo = [];
@@ -921,7 +931,7 @@ function renderCustomDropDownMenu() {
     const xl = xx.length;
     const yl = y.length;
     for (let iii = 0; iii < yl; iii += 1) {
-      if (elmnt === y[iii]) {
+      if (elm === y[iii]) {
         arrNo.push(iii);
       } else {
         y[iii].classList.remove('select-arrow-active');

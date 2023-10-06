@@ -1,5 +1,6 @@
+import _ from 'lodash';
 import {
-  isBoolean, isHTMLElement, isPressedKey, showErrorModal, SORTBY,
+  isBoolean, isHTMLElement, isPressedKey, KEYPRESS_THROTTLE_TIME, showErrorModal, SORTBY,
 } from '../utils';
 import { getMainNodes, getViewOptionsNodes } from './static-selectors';
 import { ERR_EVENTS } from './errors-text';
@@ -72,16 +73,24 @@ export function addListenersViewOptions(application) {
     inputSortAscendingOrder,
   };
 
-  viewOptionsIcon.addEventListener('click', (e) => handleViewBoxToggle(e));
+  const handleViewBoxToggleThrottle = _
+    .throttle((e) => handleViewBoxToggle(e), KEYPRESS_THROTTLE_TIME);
   function handleViewBoxToggle(e) {
     if (isPressedKey(e)) {
       viewBox.classList.toggle('shown');
     }
   }
+  viewOptionsIcon.addEventListener('click', (e) => handleViewBoxToggleThrottle(e));
 
-  customSelectBox.addEventListener('click', (e) => handleBoxSelection(e, queries, application));
-  customSelectBox.addEventListener('keydown', (e) => handleBoxSelection(e, queries, application));
+  const handleBoxSelectionThrottle = _
+    .throttle((e, quer, app) => handleBoxSelection(e, quer, app), KEYPRESS_THROTTLE_TIME);
+  customSelectBox.addEventListener('click', (e) => handleBoxSelectionThrottle(e, queries, application));
+  customSelectBox.addEventListener('keydown', (e) => handleBoxSelectionThrottle(e, queries, application));
 
-  toggleBoxes.forEach((box) => box.addEventListener('click', (e) => viewOptionToggleHandler(e, queries, application)));
-  toggleBoxes.forEach((box) => box.addEventListener('keydown', (e) => viewOptionToggleHandler(e, queries, application)));
+  const viewOptionToggleHandlerThrottle = _
+    .throttle((e, quer, app) => viewOptionToggleHandler(e, quer, app), KEYPRESS_THROTTLE_TIME);
+  toggleBoxes.forEach((box) => box
+    .addEventListener('click', (e) => viewOptionToggleHandlerThrottle(e, queries, application)));
+  toggleBoxes.forEach((box) => box
+    .addEventListener('keydown', (e) => viewOptionToggleHandlerThrottle(e, queries, application)));
 }

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {
   ACTIONS_TASKS,
   isHTMLElement,
@@ -7,6 +8,8 @@ import {
   handleExitRemoveMenu,
   isPressedKey,
   isReal,
+  KEYPRESS_THROTTLE_TIME,
+  SUBMIT_THROTTLE_TIME,
 } from '../utils';
 import { getTaskNodes } from './static-selectors';
 import { ERR_EVENTS } from './errors-text';
@@ -30,10 +33,9 @@ export function addListenersManageTasks(application) {
     return;
   }
 
-  main.addEventListener('click', (e) => handleTaskAction(e));
-  main.addEventListener('click', (e) => handleLabelSelection(e));
-  main.addEventListener('keydown', (e) => handleLabelSelection(e));
-  function handleTaskAction(e) {
+  const handleTaskActionThrottle = _
+    .throttle((e, app) => handleTaskAction(e, app), KEYPRESS_THROTTLE_TIME);
+  function handleTaskAction(e, app) {
     if (isPressedKey(e)) {
       const reactiveTaskIcon = e.target.closest('.task button, .task-bar .add-new');
       if (isHTMLElement(reactiveTaskIcon)) {
@@ -47,45 +49,52 @@ export function addListenersManageTasks(application) {
           return;
         }
 
-        taskAction(action, reactiveTaskIcon, application);
+        taskAction(action, reactiveTaskIcon, app);
       }
     }
   }
-  function handleLabelSelection(e) {
-    if (isPressedKey(e)) {
-      const reactiveTaskIcon = e.target.closest('.task label');
+  main.addEventListener('click', (e) => handleTaskActionThrottle(e, application));
+
+  const handleLabelSelectionThrottle = _
+    .throttle((ev, applic) => handleLabelSelection(ev, applic), KEYPRESS_THROTTLE_TIME);
+  function handleLabelSelection(event, app) {
+    if (isPressedKey(event)) {
+      const reactiveTaskIcon = event.target.closest('.task label');
       if (isHTMLElement(reactiveTaskIcon)) {
         const action = reactiveTaskIcon.getAttribute('data-task-action');
         if (!isValid(action)) {
           return;
         }
 
-        taskAction(action, reactiveTaskIcon, application);
+        taskAction(action, reactiveTaskIcon, app);
       }
     }
   }
+  main.addEventListener('click', (e) => handleLabelSelectionThrottle(e, application));
+  main.addEventListener('keydown', (e) => handleLabelSelectionThrottle(e, application));
 
-  form.addEventListener('submit', (e) => submitHandler(e, application));
-  removeConfirm.addEventListener('click', (e) => {
-    if (isPressedKey(e)) {
+  const submitHandlerThrottle = _
+    .throttle((event, app) => submitHandler(event, app), SUBMIT_THROTTLE_TIME);
+  form.addEventListener('submit', (e) => submitHandlerThrottle(e, application));
+
+  const removeHandlerThrottle = _.throttle((event, app) => {
+    if (isPressedKey(event)) {
       const taskAction = removeMenu.getAttribute('data-task-action');
       if (taskAction && taskAction !== 'null') {
-        removeHandler(e, application);
-        handleExitRemoveMenu(e);
+        removeHandler(event, app);
+        handleExitRemoveMenu(event);
       }
     }
-  });
+  }, SUBMIT_THROTTLE_TIME);
+  removeConfirm.addEventListener('click', (e) => removeHandlerThrottle(e, application));
 
-  exitButton.addEventListener('click', (e) => {
-    if (isPressedKey(e)) {
-      exitHandler(e);
+  const exitHandlerThrottle = _.throttle((event) => {
+    if (isPressedKey(event)) {
+      exitHandler(event);
     }
-  });
-  cancelButton.addEventListener('click', (e) => {
-    if (isPressedKey(e)) {
-      exitHandler(e);
-    }
-  });
+  }, SUBMIT_THROTTLE_TIME);
+  exitButton.addEventListener('click', (e) => exitHandlerThrottle(e));
+  cancelButton.addEventListener('click', (e) => exitHandlerThrottle(e));
 }
 
 const taskAction = (action, target, application) => {

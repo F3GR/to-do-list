@@ -1,3 +1,5 @@
+/* eslint-disable import/prefer-default-export */
+import _ from 'lodash';
 import { getProjectNodes } from './static-selectors';
 import {
   showErrorModal,
@@ -7,6 +9,8 @@ import {
   handleExitRemoveMenu,
   isNodeList,
   isPressedKey,
+  KEYPRESS_THROTTLE_TIME,
+  SUBMIT_THROTTLE_TIME,
 } from '../utils';
 import { ERR_EVENTS } from './errors-text';
 import {
@@ -38,35 +42,39 @@ export function addListenersManageProjects(application) {
     return;
   }
 
-  optionsIconsContainer.addEventListener('click', (e) => handleProjectIconSelection(e));
-  optionsIconsContainer.addEventListener('keydown', (e) => handleProjectIconSelection(e));
-  function handleProjectIconSelection(e) {
-    if (isPressedKey(e)
-            && e.target.tagName === 'DIV'
-            && e.target.classList.contains('project-icon-option')
+  const handleProjectIconSelectionThrottle = _
+    .throttle((event) => handleProjectIconSelection(event), KEYPRESS_THROTTLE_TIME);
+  function handleProjectIconSelection(event) {
+    if (isPressedKey(event)
+          && event.target.tagName === 'DIV'
+          && event.target.classList.contains('project-icon-option')
     ) {
       allOptions.forEach((optionNode) => optionNode.classList.remove('selected'));
 
-      const inputSelected = e.target.querySelector('input');
+      const inputSelected = event.target.querySelector('input');
       inputSelected.checked = true;
-      e.target.classList.add('selected');
+      event.target.classList.add('selected');
     }
   }
+  optionsIconsContainer.addEventListener('click', (e) => handleProjectIconSelectionThrottle(e));
+  optionsIconsContainer.addEventListener('keydown', (e) => handleProjectIconSelectionThrottle(e));
 
-  projectsBar.addEventListener('click', (e) => {
+  const openMenuThrottle = _.throttle((e) => openMenu(e), SUBMIT_THROTTLE_TIME);
+  const openMenu = (e) => {
     e.stopPropagation();
     e.stopImmediatePropagation();
     openMenuHandler(e);
-  });
-  projectsBar.addEventListener('keydown', (e) => {
-    e.stopPropagation();
-    e.stopImmediatePropagation();
-    openMenuHandler(e);
-  });
-  form.addEventListener('submit', (e) => submitHandler(e, application));
+  };
+  projectsBar.addEventListener('click', (e) => openMenuThrottle(e));
+  projectsBar.addEventListener('keydown', (e) => openMenuThrottle(e));
 
-  removeConfirm.addEventListener('click', (e) => handleProjectRemove(e));
-  function handleProjectRemove(e) {
+  const submitHandlerThrottle = _
+    .throttle((e, app) => submitHandler(e, app), SUBMIT_THROTTLE_TIME);
+  form.addEventListener('submit', (e) => submitHandlerThrottle(e, application));
+
+  const handleProjectRemoveThrottle = _
+    .throttle((e, app) => handleProjectRemove(e, app), SUBMIT_THROTTLE_TIME);
+  function handleProjectRemove(e, app) {
     if (isPressedKey(e)) {
       if (!isHTMLElement(removeMenu)) {
         showErrorModal(ERR_EVENTS.APPLY_EVENTS_PROJECT_MENU_RENDERING);
@@ -75,22 +83,20 @@ export function addListenersManageProjects(application) {
 
       const projectAction = removeMenu.getAttribute('data-project-action');
       if (projectAction && projectAction !== 'null') {
-        removeHandler(e, application);
+        removeHandler(e, app);
         handleExitRemoveMenu(e);
       }
     }
   }
+  removeConfirm.addEventListener('click', (e) => handleProjectRemoveThrottle(e, application));
 
-  exitButton.addEventListener('click', (e) => {
+  const exitThrottle = _.throttle((e) => {
     if (isPressedKey(e)) {
       exitHandler(e);
     }
-  });
-  cancelButton.addEventListener('click', (e) => {
-    if (isPressedKey(e)) {
-      exitHandler(e);
-    }
-  });
+  }, SUBMIT_THROTTLE_TIME);
+  exitButton.addEventListener('click', (e) => exitThrottle(e));
+  cancelButton.addEventListener('click', (e) => exitThrottle(e));
 }
 
 const openMenuHandler = (e) => {

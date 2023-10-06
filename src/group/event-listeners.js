@@ -1,5 +1,6 @@
+import _ from 'lodash';
 import {
-  isHTMLElement, isPressedKey, showErrorModal,
+  isHTMLElement, isPressedKey, showErrorModal, KEYPRESS_THROTTLE_TIME,
 } from '../utils';
 import { ERR_EVENTS } from './errors-text';
 import { handleGroupSelection } from './handlers';
@@ -21,15 +22,19 @@ export function addListenersSidebar(application) {
     return;
   }
 
-  sidebarIcon.addEventListener('click', (e) => handleSidebarToggle(e));
+  const handleSidebarToggleThrottle = _
+    .throttle((e) => handleSidebarToggle(e), KEYPRESS_THROTTLE_TIME);
   function handleSidebarToggle(e) {
     if (isPressedKey(e)) {
       sidebar.classList.toggle('shown');
       sidebarCover.classList.toggle('shown');
     }
   }
+  sidebarIcon.addEventListener('click', (e) => handleSidebarToggleThrottle(e));
 
-  standardGroups.addEventListener('click', (e) => handleGroupSelection(e, application));
-  projectGroups.addEventListener('click', (e) => handleGroupSelection(e, application));
-  projectGroups.addEventListener('keydown', (e) => handleGroupSelection(e, application));
+  const handleGroupSelectionThrottle = _
+    .throttle((e, app) => handleGroupSelection(e, app), KEYPRESS_THROTTLE_TIME);
+  standardGroups.addEventListener('click', (e) => handleGroupSelectionThrottle(e, application));
+  projectGroups.addEventListener('click', (e) => handleGroupSelectionThrottle(e, application));
+  projectGroups.addEventListener('keydown', (e) => handleGroupSelectionThrottle(e, application));
 }
