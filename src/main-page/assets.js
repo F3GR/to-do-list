@@ -6,12 +6,9 @@ import tasksTodayImagePath from '../assets/calendar-today.svg';
 import tasksWeekImagePath from '../assets/calendar-week.svg';
 import tasksOverdueImagePath from '../assets/calendar-overdue.svg';
 import projectsBarHeaderImagePath from '../assets/projects.svg';
-import projectsBarHeaderAddImagePath from '../assets/add-new.svg';
-import mainHeadImagePath from '../assets/calendar-all.svg';
 import addNewTaskIconPath from '../assets/add-new.svg';
 import previousPageIconPath from '../assets/previous-page.svg';
 import nextPageIconPath from '../assets/next-page.svg';
-import projectMenuExitIconPath from '../assets/close.svg';
 import iconCategoryJobPath from '../assets/category-job.svg';
 import iconCategoryStudyPath from '../assets/category-study.svg';
 import iconCategoryGiftPath from '../assets/category-gift.svg';
@@ -25,29 +22,26 @@ import tasksCompletedImagePath from '../assets/calendar-finished.svg';
 import sortOrderIconPath from '../assets/arrow-downward.svg';
 
 export const assets = {
-    sortOrderIconPath,
-    sidebarIconPath,
-    logoIconPath, 
-    viewOptionsIconPath,
-    tasksAllImagePath,
-    tasksTodayImagePath,
-    tasksWeekImagePath,
-    tasksOverdueImagePath,
-    projectsBarHeaderImagePath,
-    projectsBarHeaderAddImagePath,
-    mainHeadImagePath,
-    addNewTaskIconPath,
-    previousPageIconPath,
-    nextPageIconPath,
-    projectMenuExitIconPath,
-    iconCategoryJobPath,
-    iconCategoryStudyPath,
-    iconCategoryGiftPath,
-    iconCategoryInternationalPath,
-    iconCategoryPeoplePath,
-    iconCategorySciencePath,
-    iconCategoryITPath,
-    iconCategoryOtherPath,
-    taskMenuExitIconPath,
-    tasksCompletedImagePath,
+  sortOrderIconPath,
+  sidebarIconPath,
+  logoIconPath,
+  viewOptionsIconPath,
+  tasksAllImagePath,
+  tasksTodayImagePath,
+  tasksWeekImagePath,
+  tasksOverdueImagePath,
+  projectsBarHeaderImagePath,
+  addNewTaskIconPath,
+  previousPageIconPath,
+  nextPageIconPath,
+  iconCategoryJobPath,
+  iconCategoryStudyPath,
+  iconCategoryGiftPath,
+  iconCategoryInternationalPath,
+  iconCategoryPeoplePath,
+  iconCategorySciencePath,
+  iconCategoryITPath,
+  iconCategoryOtherPath,
+  taskMenuExitIconPath,
+  tasksCompletedImagePath,
 };

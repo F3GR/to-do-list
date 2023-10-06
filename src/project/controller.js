@@ -1,86 +1,84 @@
-import { Project } from './project.js';
-import { noDuplicateName, findIndex, isValid } from '../utils.js';
-import { ERR_CONTROLLER } from './errors-text.js';
+import { Project } from './project';
+import { noDuplicateName, findIndex, isValid } from '../utils';
+import { ERR_CONTROLLER } from './errors-text';
 
 export const projectsController = {
-    createNew: (projectsList, inputNewProject) => {
-        const { name, iconURL, altText } = inputNewProject;
+  createNew: (projectId, projectsList, inputNewProject) => {
+    const { name, iconURL, altText } = inputNewProject;
 
-        if (!Array.isArray(projectsList)) {
-            throw new Error(ERR_CONTROLLER.PROJECT_LIST);
-        }
-        if (!name || !iconURL || !altText) {
-            throw new Error(ERR_CONTROLLER.PROJECT_DATA);
-        }
+    if (!Array.isArray(projectsList)) {
+      throw new Error(ERR_CONTROLLER.PROJECT_LIST);
+    }
+    if (!name || !iconURL || !altText) {
+      throw new Error(ERR_CONTROLLER.PROJECT_DATA);
+    }
 
-        if (!noDuplicateName(projectsList, name, "")) {
-            return -1;
-        }
+    if (!noDuplicateName(projectsList, name, '')) {
+      return -1;
+    }
 
-        const newProject = new Project(name, iconURL, altText);
-        const newProjectsList = [...projectsList, newProject];
-        return newProjectsList;
-    },
+    const newProject = new Project(projectId, name, iconURL, altText);
+    const newProjectsList = [...projectsList, newProject];
+    return newProjectsList;
+  },
 
-    edit: (projectsList, inputEditedProject) => {
-        const { id, name, iconURL, altText } = inputEditedProject;
+  edit: (projectsList, inputEditedProject) => {
+    const {
+      id, name, iconURL, altText,
+    } = inputEditedProject;
 
-        if (!Array.isArray(projectsList)) {
-            throw new Error(ERR_CONTROLLER.PROJECT_LIST);
-        }
-        if (!isValid(id)) {
-            throw new Error(ERR_CONTROLLER.INVALID_INDEX);
-        }
-        if (!name || !iconURL || !altText) {
-            throw new Error(ERR_CONTROLLER.PROJECT_DATA);
-        }
+    if (!Array.isArray(projectsList)) {
+      throw new Error(ERR_CONTROLLER.PROJECT_LIST);
+    }
+    if (!isValid(id)) {
+      throw new Error(ERR_CONTROLLER.INVALID_INDEX);
+    }
+    if (!name || !iconURL || !altText) {
+      throw new Error(ERR_CONTROLLER.PROJECT_DATA);
+    }
 
-        const storedProjectIndex = findIndex(projectsList, id);
-        if (!isValid(storedProjectIndex)) {
-            throw new Error(ERR_CONTROLLER.NO_INDEX);
-        }
-        
-        if (!noDuplicateName(projectsList, name, id)) {
-            return -1;
-        }
+    const storedProjectIndex = findIndex(projectsList, id);
+    if (!isValid(storedProjectIndex)) {
+      throw new Error(ERR_CONTROLLER.NO_INDEX);
+    }
 
-        const editedProjectsList = [...projectsList];
-        const editedProject = editedProjectsList[storedProjectIndex];
+    if (!noDuplicateName(projectsList, name, id)) {
+      return -1;
+    }
 
-        if (editedProject.name !== name) {
-            editedProject.name = name;
-        }
-        if (editedProject.iconURL !== iconURL) {
-            editedProject.iconURL = iconURL;
-        }
-        if (editedProject.altText !== altText) {
-            editedProject.altText = altText;
-        }
+    const editedProjectsList = [...projectsList];
+    const editedProject = editedProjectsList[storedProjectIndex];
 
-        return { editedProjectsList, editedProject };
-    },
+    if (editedProject.name !== name) {
+      editedProject.name = name;
+    }
+    if (editedProject.iconURL !== iconURL) {
+      editedProject.iconURL = iconURL;
+    }
+    if (editedProject.altText !== altText) {
+      editedProject.altText = altText;
+    }
 
-    remove: (projectsList, projectId) => {
-        
+    return { editedProjectsList, editedProject };
+  },
 
-        if (!Array.isArray(projectsList)) {
-            throw new Error(ERR_CONTROLLER.PROJECT_LIST);
-        }
-        if (!isValid(projectId)) {
-            throw new Error(ERR_CONTROLLER.INVALID_INDEX);
-        }
+  remove: (projectsList, projectId) => {
+    if (!Array.isArray(projectsList)) {
+      throw new Error(ERR_CONTROLLER.PROJECT_LIST);
+    }
+    if (!isValid(projectId)) {
+      throw new Error(ERR_CONTROLLER.INVALID_INDEX);
+    }
 
-        const removedProjectIndex = findIndex(projectsList, projectId);
-        if (!isValid(removedProjectIndex)) {
-            throw new Error(ERR_CONTROLLER.NO_INDEX);
-        }
-        
-        const editedProjectsList = [...projectsList];
-        editedProjectsList.splice(removedProjectIndex, 1);
-        const removedId = projectId;
+    const removedProjectIndex = findIndex(projectsList, projectId);
+    if (!isValid(removedProjectIndex)) {
+      throw new Error(ERR_CONTROLLER.NO_INDEX);
+    }
 
-        return { editedProjectsList, removedId };
-    },
-    
-    resetId: () => Project.resetId,
+    const editedProjectsList = [...projectsList];
+    editedProjectsList.splice(removedProjectIndex, 1);
+    const removedId = projectId;
+
+    return { editedProjectsList, removedId };
+  },
 };

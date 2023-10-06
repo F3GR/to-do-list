@@ -5,10 +5,9 @@ import taskFoldIconPath from '../assets/fold.svg';
 import taskUnfoldIconPath from '../assets/unfold.svg';
 
 export const assets = {
-    taskOverDueIconPath,
-    taskEditIconPath, 
-    taskRemoveIconPath,
-    taskFoldIconPath,
-    taskUnfoldIconPath,
+  taskOverDueIconPath,
+  taskEditIconPath,
+  taskRemoveIconPath,
+  taskFoldIconPath,
+  taskUnfoldIconPath,
 };
-

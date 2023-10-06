@@ -475,16 +475,6 @@ main .task-bar {
 .task .task-title-box {
   padding: 0 1rem;
   display: grid;
-  align-items: start;
-}
-
-.task .task-title,
-.task .task-due-date > span,
-.task .task-project-name,
-.task .task-priority-text,
-.task .task-description,
-.task .task-notes {
-  overflow-x: hidden;
 }
 
 .task .task-due-date {
@@ -634,7 +624,7 @@ main .task-bar {
 .error-cover {
   position: absolute;
   width: 100%;
-  height: 100%;
+  height: 150%;
   z-index: var(--z-index-error);
   display: none;
 }
@@ -901,10 +891,10 @@ main .task-bar {
     gap: 2rem;
   }
   .task .task-head-box {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
   .task .task-head-box-two {
-    grid-template-columns: var(--menu-button-option-width) 10rem repeat(3, var(--menu-button-option-width));
+    grid-template-columns: var(--menu-button-option-width) 10rem repeat(3, auto);
   }
 }
 
@@ -931,8 +921,13 @@ main .task-bar {
     display: grid;
     grid-template-columns: 3rem 10rem repeat(3, 1fr);
   }
+  .task button {
+    width: max(2rem, 100%);
+  }
   .page-menu {
-    grid-template-columns: 1fr 6rem 1fr;
+   justify-self: auto;
+   display: flex;
+   justify-content: space-between;
   }
   .projects-nav {
     grid-template-columns: 1fr 6rem 1fr;
@@ -941,7 +936,7 @@ main .task-bar {
     width: 5rem;
   }
   .page-menu button {
-    width: 15rem;
+    width: max(5rem, 40%);
   }
 }
 
@@ -957,9 +952,6 @@ main .task-bar {
   }
   .content aside {
     visibility: hidden;
-  }
-  .content aside.shown {
-    visibility: visible;
   }
   header .sidebar-icon {
     visibility: visible;

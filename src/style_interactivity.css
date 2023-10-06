@@ -3,9 +3,9 @@
 
     --interactive-pointer-style: pointer;
     --scale-size-hover-panels: 1.05;
-    --scale-size-hover-big-icons: 1.1;
-    --scale-size-hover-small-icons: 1.2;
+    --scale-size-hover-icons: 1.1;
     --click-animation-duration: 0.1s;
+    --popup-animation-duration: 0.4s;
 
     --completed-task-color: rgb(50, 240, 50);
     --menu-border-color: var(--whitesmoke);
@@ -31,7 +31,7 @@ button:focus {
   outline: 0.2rem ridge var(--black);
   border: 0.1rem solid var(--selected-border-color);
   border-radius: var(--element-panels-border-radius);
-  transform: scale(var(--scale-size-hover-small-icons));
+  transform: scale(var(--scale-size-hover-icons));
 }
 
 input:focus {
@@ -41,7 +41,7 @@ input:focus {
 }
 
 button:hover {
-  transform: scale(var(--scale-size-hover-small-icons));
+  transform: scale(var(--scale-size-hover-icons));
 }
 
 button:active {
@@ -53,7 +53,7 @@ button:active {
 .task-menu,
 .remove-menu {
   opacity: 0%;
-  transition: opacity .4s ease;
+  transition: opacity var(--popup-animation-duration) ease;
 }
 
 .error-modal.shown,
@@ -65,6 +65,24 @@ button:active {
 }
 
   /* Sidebar */
+  @media only screen and (max-width: 900px) {
+    aside {
+      left: -300px;
+      transition: left var(--popup-animation-duration) ease;
+    }
+    aside.shown {
+      left: 0;
+      visibility: visible;
+    }
+  }
+
+  .content-background-container .view-options.bar {
+    transition: right var(--popup-animation-duration) ease;
+  }
+  .content-background-container .view-options.bar.shown {
+    right: 0;
+    transform-origin: right;
+  }
 
   .bar-types > *.current,
   aside .projects-list > .project.current {
@@ -134,7 +152,7 @@ button:active {
    .status-border-box .option-button:hover,
    .priority-border-box .option-button:focus,
    .status-border-box .option-button:focus {
-    transform: scale(var(--scale-size-hover-big-icons));
+    transform: scale(var(--scale-size-hover-icons));
     transition: transform var(--click-animation-duration);
   }
 
@@ -325,7 +343,17 @@ button:active {
 
   /* Task page menu */
 
+  .task-menu .button-box > button:hover,
+  .task-menu .button-box > button:focus {
+    transform: scale(var(--scale-size-hover-panels));
+  }
+
   /* Remove confirmation menu */
+
+  .remove-menu .button-box > button:hover,
+  .remove-menu .button-box > button:focus {
+    transform: scale(var(--scale-size-hover-panels));
+  }
 
   /* Error modal */
 
@@ -337,11 +365,11 @@ button:active {
     outline: 0.2rem ridge var(--black);
     border: 0.1rem solid var(--selected-border-color);
     border-radius: var(--element-panels-border-radius);
-    transform: scale(var(--scale-size-hover-big-icons));
+    transform: scale(var(--scale-size-hover-icons));
   }
   
   .error-modal .title .exit:hover {
-    transform: scale(var(--scale-size-hover-big-icons));
+    transform: scale(var(--scale-size-hover-icons));
   }
 
   .error-modal .title .exit:active {
@@ -374,11 +402,11 @@ button:active {
     outline: 0.2rem ridge var(--black);
     border: 0.1rem solid var(--selected-border-color);
     border-radius: var(--element-panels-border-radius);
-    transform: scale(var(--scale-size-hover-big-icons));
+    transform: scale(var(--scale-size-hover-icons));
   }
   
   .project-menu .title .exit:hover {
-    transform: scale(var(--scale-size-hover-big-icons));
+    transform: scale(var(--scale-size-hover-icons));
   }
 
   .project-menu .title .exit:active {
@@ -398,12 +426,12 @@ button:active {
   .project-menu fieldset > .project-options > *:focus {
     outline: 0.2rem ridge var(--black);
     border-radius: var(--element-panels-border-radius);
-    transform: scale(var(--scale-size-hover-big-icons));
+    transform: scale(var(--scale-size-hover-icons));
     transition: transform var(--click-animation-duration) ease;
   }
 
   .project-menu fieldset > .project-options > *:hover {
-    transform: scale(var(--scale-size-hover-big-icons));
+    transform: scale(var(--scale-size-hover-icons));
   }
 
   .project-menu fieldset > .project-options > *:active {
@@ -436,6 +464,49 @@ button:active {
     border: 0.1rem solid var(--selected-border-color);
     border-radius: var(--element-panels-border-radius);
     transition: transform var(--click-animation-duration) ease;
+  }
+
+  .task-menu .button-box > button:hover,
+  .task-menu .button-box > button:focus {
+    transform: scale(var(--scale-size-hover-panels));
+  }
+
+  @media only screen and (max-width: 650px) {
+    .error-modal .title .exit:focus,
+    .error-modal .title .exit:hover,
+    .error-modal .title .exit:active,
+    .error-modal .button-box .exit-ok:focus,
+    .error-modal .button-box .exit-ok:hover,
+    .error-modal .button-box .exit-ok:active,
+    .project-menu .title .exit:focus,
+    .project-menu .title .exit:focus,
+    .project-menu .title .exit:hover,
+    .project-menu .title .exit:active,
+    .project-menu fieldset > .project-options > *,
+    .project-options .project-icon-option.selected,
+    .project-menu fieldset > .project-options > *:focus,
+    .project-menu fieldset > .project-options > *:hover,
+    .project-menu fieldset > .project-options > *:active,
+    .project-menu .button-box > *:focus,
+    .project-menu .button-box > *:hover,
+    .project-menu .button-box > *:active,
+    .task-menu .title .exit:focus,
+    .task-menu input:focus,
+    .task-menu textarea:focus,
+    .task-menu .button-box > button:focus,
+    .task-menu .button-box > button:hover,
+    .task-menu .button-box > button:focus,
+    .priority-border-box .option-button:focus, 
+    .status-border-box .option-button:focus,
+    .select-selected:focus, 
+    .select-items div:focus,
+    .bar-types > *:hover, 
+    .bar-types > *:focus,
+    .project:hover, 
+    .project:focus,
+    button:focus {
+      transform: none;
+    }
   }
 
 

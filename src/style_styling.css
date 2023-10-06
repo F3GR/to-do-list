@@ -34,6 +34,10 @@
     background-repeat: no-repeat;
   }
 
+  p, span {
+    font-size: 1.3rem;
+  }
+
   button {
     background: none;
     background-size: contain;
@@ -460,3 +464,4 @@
       background-position: center;
     }
   }
+

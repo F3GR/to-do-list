@@ -2,10 +2,9 @@ import { getViewOptionsNodes } from './static-selectors';
 import {
   SORTBY, isBoolean, isHTMLElement, showErrorModal,
 } from '../utils';
-import { application } from '../main-app';
 import { ERR_RENDERING } from './errors-text';
 
-export function applySavedViewState() {
+export function applySavedViewState(application) {
   const viewState = application.getViewState();
   const {
     flagIncludeHigh,
