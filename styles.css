@@ -210,9 +210,25 @@ header .aside-icon {
   z-index: var(--z-index-sidebar);
 }
 
-.bar-footer a {
+.bar-footer {
   text-decoration: none;
-  display: block;
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  align-content: center;
+  justify-items: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.bar-footer img {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.bar-footer span {
+  font-size: 1.2rem;
 }
 
 .bar-types {
@@ -296,13 +312,6 @@ header .aside-icon {
   grid-template-columns: 1fr 6rem 1fr;
   align-items: center;
   justify-items: center;
-}
-
-.bar-footer {
-  display: grid;
-  justify-items: center;
-  place-content: center;
-  padding: 1rem;
 }
 
 /* View options */
@@ -1202,7 +1211,7 @@ main .task-bar {
     background-size: cover;
   }
   
-  .bar-footer a {
+  .bar-footer {
     text-decoration: none;
   }
   
@@ -1690,8 +1699,7 @@ button:active {
     transform: scale(1);
   }
 
-  .bar-footer,
-  .bar-footer * {
+  .bar-footer {
     cursor: pointer;
   }
 
@@ -1700,10 +1708,15 @@ button:active {
     transform: scale(var(--scale-size-hover-panels));
   }
 
+  .bar-footer:focus {
+    outline: 0.2rem ridge var(--black);
+    border: 0.1rem solid var(--selected-border-color);
+    border-radius: var(--element-panels-border-radius);
+  }
+
   .bar-footer:active {
     transform: scale(1);
   }
-
 
   /* View options */
   .priority-border-box *,
@@ -2075,5 +2088,3 @@ button:active {
 
 
 
-
-/*# sourceMappingURL=styles.css.map*/
