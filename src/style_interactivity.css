@@ -127,8 +127,8 @@ button:active {
     transform: scale(1);
   }
 
-  .bar-footer a {
-    pointer-events: none;
+  .bar-footer {
+    cursor: pointer;
   }
 
   .bar-footer:hover,
@@ -136,10 +136,15 @@ button:active {
     transform: scale(var(--scale-size-hover-panels));
   }
 
+  .bar-footer:focus {
+    outline: 0.2rem ridge var(--black);
+    border: 0.1rem solid var(--selected-border-color);
+    border-radius: var(--element-panels-border-radius);
+  }
+
   .bar-footer:active {
     transform: scale(1);
   }
-
 
   /* View options */
   .priority-border-box *,
@@ -152,7 +157,7 @@ button:active {
    .status-border-box .option-button:hover,
    .priority-border-box .option-button:focus,
    .status-border-box .option-button:focus {
-    transform: scale(var(--scale-size-hover-icons));
+    transform: scale(var(--scale-size-hover-panels));
     transition: transform var(--click-animation-duration);
   }
 

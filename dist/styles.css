@@ -212,6 +212,7 @@ header .aside-icon {
 
 .bar-footer a {
   text-decoration: none;
+  display: block;
 }
 
 .bar-types {
@@ -1689,8 +1690,9 @@ button:active {
     transform: scale(1);
   }
 
-  .bar-footer a {
-    pointer-events: none;
+  .bar-footer,
+  .bar-footer * {
+    cursor: pointer;
   }
 
   .bar-footer:hover,
@@ -1714,7 +1716,7 @@ button:active {
    .status-border-box .option-button:hover,
    .priority-border-box .option-button:focus,
    .status-border-box .option-button:focus {
-    transform: scale(var(--scale-size-hover-icons));
+    transform: scale(var(--scale-size-hover-panels));
     transition: transform var(--click-animation-duration);
   }
 
