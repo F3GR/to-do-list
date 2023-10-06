@@ -35,6 +35,8 @@ export function addListenersSidebar(application) {
   const handleGroupSelectionThrottle = _
     .throttle((e, app) => handleGroupSelection(e, app), KEYPRESS_THROTTLE_TIME);
   standardGroups.addEventListener('click', (e) => handleGroupSelectionThrottle(e, application));
+  standardGroups.addEventListener('keydown', (e) => handleGroupSelectionThrottle(e, application));
+
   projectGroups.addEventListener('click', (e) => handleGroupSelectionThrottle(e, application));
   projectGroups.addEventListener('keydown', (e) => handleGroupSelectionThrottle(e, application));
 }

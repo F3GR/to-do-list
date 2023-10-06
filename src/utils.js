@@ -187,8 +187,8 @@ export const DEFAULT_GROUP = 'all';
 export const NUM_PROJECTS_PAGE = 3;
 export const NUM_TASKS_PAGE = 6;
 
-export const SUBMIT_THROTTLE_TIME = 1000;
-export const KEYPRESS_THROTTLE_TIME = 250;
+export const SUBMIT_THROTTLE_TIME = 250;
+export const KEYPRESS_THROTTLE_TIME = 125;
 
 export const ACTIONS_PROJECTS = new Enum({
   ADD_NEW: 'add-new',

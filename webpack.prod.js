@@ -1,16 +1,15 @@
 const { merge } = require('webpack-merge');
 const path = require('path');
-const common = require('./webpack.common.js');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const common = require('./webpack.common');
 
 module.exports = merge(common, {
   mode: 'production',
-  devtool: 'source-map',
   entry: './src/index.js',
   output: {
     filename: 'main.js',
     path: path.resolve(__dirname, 'dist'),
-    assetModuleFilename: 'assets/[name][ext]'
+    assetModuleFilename: 'assets/[name][ext]',
   },
   module: {
     rules: [
@@ -18,36 +17,36 @@ module.exports = merge(common, {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
-     {
-       test: /\.(png|svg|jpg|jpeg|gif)$/i,
-       type: 'asset/resource',
-     },
-     {
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+      },
+      {
         test: /\.(woff|woff2|eot|ttf|otf)$/i,
         type: 'asset/resource',
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader"],
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
       {
         test: /\.html$/i,
-        loader: "html-loader",
+        loader: 'html-loader',
       },
     ],
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "[name].css",
+      filename: '[name].css',
     }),
   ],
   optimization: {
     splitChunks: {
       cacheGroups: {
         styles: {
-          name: "styles",
-          type: "css/mini-extract",
-          chunks: "all",
+          name: 'styles',
+          type: 'css/mini-extract',
+          chunks: 'all',
           enforce: true,
         },
       },

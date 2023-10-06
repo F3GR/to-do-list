@@ -7,6 +7,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
+      title: 'TrackIt',
       template: './src/index.html',
     }),
   ],

@@ -159,8 +159,8 @@ function renderRemoveConfirmationTemplate() {
   const buttons = removeMenu.querySelectorAll('.exit');
   buttons.forEach((btn) => btn.addEventListener('click', (e) => handleExitRemoveMenuThrottle(e)));
   buttons.forEach((btn) => btn.addEventListener('keydown', (e) => handleExitRemoveMenuThrottle(e)));
-  const handleExitRemoveMenuThrottle = (e) => _
-    .throttle(handleExitRemoveMenu(e), KEYPRESS_THROTTLE_TIME);
+  const handleExitRemoveMenuThrottle = _
+    .throttle((e) => handleExitRemoveMenu(e), KEYPRESS_THROTTLE_TIME);
   function handleExitRemoveMenu(e) {
     if (isPressedKey(e)) {
       if (!isHTMLElement(menuCover)
