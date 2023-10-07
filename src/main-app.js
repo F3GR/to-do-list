@@ -64,8 +64,6 @@ class Application {
 
     renderProjectsCount(projectsList.length);
 
-    console.log('Before forEach:', projectsList);
-
     projectsPageController.getPageItems(DEFAULT_PAGE, projectsList)
       .forEach((project) => renderProject(project));
 
@@ -91,7 +89,6 @@ class Application {
 
   createNewProject(inputNewProject, currentProjectsPage) {
     const { projectsList } = localStorageController.getProjectsList();
-    console.log('Before creating a new project (project List):', localStorage.getItem('TrackIt: projects-list'));
 
     const currentPageLength = projectsPageController
       .getPageItems(currentProjectsPage, projectsList).length;
@@ -105,12 +102,9 @@ class Application {
     localStorageController.setProjectId(Number(projectId) + 1);
     const newLength = newProjectsList.length;
     const newProject = newProjectsList[newLength - 1];
-    console.log('New project:', newProject);
 
     localStorageController.setProjectsList(newProjectsList);
     localStorageController.addTaskList(newProject.id);
-    console.log('After (project List):', localStorage.getItem('TrackIt: projects-list'));
-    console.log('After (new task List):', localStorage.getItem(`TrackIt: ${newProject.id}`));
 
     renderProjectsCount(newLength);
     renderProjectsPageNav(currentProjectsPage, projectsPageController.pagesTotal(newProjectsList));
@@ -120,7 +114,6 @@ class Application {
 
   editProject(inputEditedProject) {
     const { projectsList } = localStorageController.getProjectsList();
-    console.log('Before (editing):', localStorage.getItem('TrackIt: projects-list'));
 
     const result = projectsController.edit(projectsList, inputEditedProject);
     if (result === -1) {
@@ -128,14 +121,12 @@ class Application {
     }
     const { editedProjectsList, editedProject } = result;
 
-    console.log('Edited project:', editedProject);
     localStorageController.setProjectsList(editedProjectsList);
 
     const currentTasksList = localStorageController.getTasksListByProjectId(editedProject.id);
     const editedTasksList = tasksController.updateProjectName(currentTasksList, editedProject.name);
 
     localStorageController.setTasksListByProjectId(editedProject.id, editedTasksList);
-    console.log('After:', localStorage.getItem('TrackIt: projects-list'));
 
     return editedProject;
   }
@@ -143,18 +134,15 @@ class Application {
   removeProject(projectId, currentProjectsPageNumber, currentProjectPageLength, groupId) {
     let newProjectsPageNumber = currentProjectsPageNumber;
     const { projectsList } = localStorageController.getProjectsList();
-    console.log('Before deleting a project (project List):', localStorage.getItem('TrackIt: projects-list'));
 
     if (currentProjectPageLength === 1) {
       newProjectsPageNumber -= 1;
     }
 
     const { editedProjectsList, removedId } = projectsController.remove(projectsList, projectId);
-    console.log('Removed task List:', localStorage.getItem(`TrackIt: ${removedId}`));
 
     localStorageController.removeTaskList(removedId);
     localStorageController.setProjectsList(editedProjectsList);
-    console.log('After:', localStorage.getItem('TrackIt: projects-list'));
 
     const viewState = this.getViewState();
     const newFilteredSortedGroup = this
@@ -181,7 +169,6 @@ class Application {
     const projectName = localStorageController.getProjectName(projectId);
 
     const currentTasksList = localStorageController.getTasksListByProjectId(projectId);
-    console.log('Before tasklist:', localStorage.getItem(`TrackIt: ${projectId}`));
     const currentPageLength = tasksPageController
       .getPageItems(currentTasksPage, currentTasksList).length;
 
@@ -193,9 +180,7 @@ class Application {
     const { newTasksList, newTask } = result;
 
     localStorageController.setTaskId(Number(taskId) + 1);
-    console.log('Created task:', newTask);
     localStorageController.setTasksListByProjectId(projectId, newTasksList);
-    console.log('After tasklist:', localStorage.getItem(`TrackIt: ${projectId}`));
 
     renderTasksCount(newTasksList.length);
     renderTasksPageNav(currentTasksPage, tasksPageController.pagesTotal(newTasksList));
@@ -207,29 +192,23 @@ class Application {
     const { projectId } = inputEditedTask;
 
     const currentTasksList = localStorageController.getTasksListByProjectId(projectId);
-    console.log('Before tasklist:', localStorage.getItem(`TrackIt: ${projectId}`));
     const result = tasksController.edit(currentTasksList, inputEditedTask);
     if (result === -1) {
       return -1;
     }
     const { editedTasksList, editedTask } = result;
 
-    console.log('Edited task:', editedTask);
-
     localStorageController.setTasksListByProjectId(projectId, editedTasksList);
-    console.log('After tasklist:', localStorage.getItem(`TrackIt: ${projectId}`));
 
     return editedTask;
   }
 
   toggleTaskStatus(projectId, taskId) {
     const currentTasksList = localStorageController.getTasksListByProjectId(projectId);
-    console.log('Before tasklist:', localStorage.getItem(`TrackIt: ${projectId}`));
     const { editedTasksList, editedStatus } = tasksController
       .toggleTaskStatus(currentTasksList, taskId);
 
     localStorageController.setTasksListByProjectId(projectId, editedTasksList);
-    console.log('After tasklist:', localStorage.getItem(`TrackIt: ${projectId}`));
 
     return editedStatus;
   }
@@ -237,7 +216,6 @@ class Application {
   removeTask(projectId, taskId, currentTasksPage, currentTasksPageLength) {
     let newTasksPageNumber = currentTasksPage;
     const currentTasksList = localStorageController.getTasksListByProjectId(projectId);
-    console.log('Before tasklist:', localStorage.getItem(`TrackIt: ${projectId}`));
 
     if (currentTasksPageLength === 1) {
       newTasksPageNumber -= 1;
@@ -246,7 +224,6 @@ class Application {
     const { editedTaskList } = tasksController.remove(currentTasksList, taskId);
 
     localStorageController.setTasksListByProjectId(projectId, editedTaskList);
-    console.log('After tasklist:', localStorage.getItem(`TrackIt: ${projectId}`));
 
     const viewState = this.getViewState();
     const newFilteredSortedGroup = this
@@ -271,7 +248,6 @@ class Application {
       newGroup = localStorageController.getTasksListByProjectId(newGroupIdentifier);
     }
 
-    console.log('Selected group:', newGroup);
     localStorageController.setCurrentGroupIdentifier(newGroupIdentifier);
 
     return newGroup;
