@@ -5,7 +5,7 @@
    width="48"
    version="1.1"
    id="svg1"
-   sodipodi:docname="fold.svg"
+   sodipodi:docname="unfold.svg"
    inkscape:version="1.3 (1:1.3+202307231459+0e150ed6c4)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -32,7 +32,8 @@
      inkscape:window-maximized="1"
      inkscape:current-layer="svg1" />
   <path
-     d="m344.462-161.847-41.615-41.615L480-380.615l177.153 177.153-41.615 41.615L480-297.385 344.462-161.847ZM480-580.385 302.847-757.538l41.615-41.615L480-663.615l135.538-135.538 41.615 41.615L480-580.385Z"
+     d="m 342.308,-368.848 -42.23,-41.23 L 480,-590 l 179.922,179.922 -42.23,41.23 L 480,-506.54 Z"
      id="path1"
-     style="fill:#2d2d2d;fill-opacity:1" />
+     style="fill:#2d2d2d;fill-opacity:1"
+     sodipodi:nodetypes="ccccccc" />
 </svg>
