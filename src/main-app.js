@@ -64,6 +64,7 @@ class Application {
 
     renderProjectsCount(projectsList.length);
 
+
     projectsPageController.getPageItems(DEFAULT_PAGE, projectsList)
       .forEach((project) => renderProject(project));
 
@@ -198,6 +199,7 @@ class Application {
     }
     const { editedTasksList, editedTask } = result;
 
+
     localStorageController.setTasksListByProjectId(projectId, editedTasksList);
 
     return editedTask;
@@ -259,11 +261,12 @@ class Application {
 
   applyViewOptions(viewState, tasksGroup, currentTasksPage) {
     localStorageController.setViewState(viewState);
-    if (!tasksGroup) {
-      tasksGroup = this.getTasksGroup(localStorageController.getCurrentGroupIdentifier());
+    let group = tasksGroup;
+    if (!group) {
+      group = this.getTasksGroup(localStorageController.getCurrentGroupIdentifier());
     }
 
-    const filteredTasks = viewController.filter(tasksGroup, viewState);
+    const filteredTasks = viewController.filter(group, viewState);
     const filteredSortedTasks = viewController.sort(filteredTasks, viewState);
 
     renderTasksCount(filteredSortedTasks.length);

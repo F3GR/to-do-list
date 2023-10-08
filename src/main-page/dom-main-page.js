@@ -1034,7 +1034,7 @@ function renderMainPageTemplate() {
   }, tasksWeek);
 
   const tasksWeekText = createElementWithAttributes('span', {}, tasksWeek);
-  tasksWeekText.textContent = 'Week';
+  tasksWeekText.textContent = 'Next 7 days';
 
   const tasksCompleted = createElementWithAttributes('button', { class: 'tasks-completed' }, barTypes);
   tasksCompleted.setAttribute('data-group-id', STANDARD_GROUPS.COMPLETED);
